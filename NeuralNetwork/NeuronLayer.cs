@@ -131,6 +131,15 @@ namespace NeuralNetwork
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public int getNumberChildNodes()
+        {
+            return nChildNodes;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
         public double getNeuronValue(int node)
@@ -166,6 +175,16 @@ namespace NeuralNetwork
         public void setDesiredValue(int node, double val)
         {
             desiredVals[node] = val;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public double getBiasValue(int node)
+        {
+            return biasVals[node];
         }
 
         /// <summary>

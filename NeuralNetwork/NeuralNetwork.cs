@@ -41,23 +41,23 @@ namespace NeuralNetwork
         /// <param name="nOutputNodes"></param>
         /// <param name="fLearningRate"></param>
         /// <param name="fMomentum"></param>
-        public NeuralNetwork(int nInputNodes, int[] nHiddenNodes, int nOutputNodes, double fLearningRate, double fMomentum)
+        public NeuralNetwork(int[] nodeList, double fLearningRate, double fMomentum)
         {
             //Todo Consider removing input and output params in favour of a singular array of nodes
-            this.nHiddenLayers = nHiddenNodes.Length;
-	        this.nAllLayers = nHiddenLayers + 2;
+            this.nAllLayers = nodeList.Length;
+            this.nHiddenLayers = nAllLayers - 2;
 	        this.allLayers = new NeuronLayer[nAllLayers];
 	
 	        for (int i = 0; i < nAllLayers; i++) 
 	        {
 		        if (i == 0)
-			        allLayers[i] = inputLayer = new NeuronLayer(nInputNodes, nHiddenNodes[i], 0, fLearningRate, fMomentum);
+                    allLayers[i] = inputLayer = new NeuronLayer(nodeList[i], nodeList[i + 1], 0, fLearningRate, fMomentum);
 		        else if (i < nHiddenLayers)
-			        allLayers[i] = new NeuronLayer(nHiddenNodes[i - 1], nHiddenNodes[i], allLayers[i - 1].getNumberNodes(), fLearningRate, fMomentum);
+                    allLayers[i] = new NeuronLayer(nodeList[i], nodeList[i + 1], allLayers[i - 1].getNumberNodes(), fLearningRate, fMomentum);
 		        else if(i < nHiddenLayers + 1)
-			        allLayers[i] = new NeuronLayer(nHiddenNodes[i - 1], nOutputNodes, allLayers[i - 1].getNumberNodes(), fLearningRate, fMomentum);
-		        else 
-			        allLayers[i] = outputLayer = new NeuronLayer(nOutputNodes, 0, allLayers[i - 1].getNumberNodes(), fLearningRate, fMomentum);
+                    allLayers[i] = new NeuronLayer(nodeList[i], nodeList[i + 1], allLayers[i - 1].getNumberNodes(), fLearningRate, fMomentum);
+		        else
+                    allLayers[i] = outputLayer = new NeuronLayer(nodeList[i], 0, allLayers[i - 1].getNumberNodes(), fLearningRate, fMomentum);
 	        }
 	
 	        inputLayer.linkNeurons(null, allLayers[1]);
@@ -178,5 +178,33 @@ namespace NeuralNetwork
             return error;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public void PrintNNInfo()
+        {
+            // Test this properly
+            System.Diagnostics.Debug.WriteLine("If this is junk, come back soon...");
+            int i, j;
+
+            for (i = 0; i < nAllLayers; i++)
+            {
+                System.Diagnostics.Debug.WriteLine("--------------------------------------------------------");
+                System.Diagnostics.Debug.WriteLine("Layer: " + i);
+                System.Diagnostics.Debug.WriteLine("--------------------------------------------------------");
+                System.Diagnostics.Debug.WriteLine("Node Values:");
+                for (j = 0; j < allLayers[i].getNumberNodes(); j++)
+                {
+                    System.Diagnostics.Debug.WriteLine(j + ": " + allLayers[i].getNeuronValue(j));
+                }
+                System.Diagnostics.Debug.WriteLine("\n");
+                System.Diagnostics.Debug.WriteLine("Bias Weights:");
+                for (j = 0; j < allLayers[i].getNumberChildNodes(); j++)
+                {
+                    System.Diagnostics.Debug.WriteLine(j + ": " + allLayers[i].getBiasValue(j));
+                }
+                System.Diagnostics.Debug.WriteLine("\n");
+            }
+        }
     }
 }
