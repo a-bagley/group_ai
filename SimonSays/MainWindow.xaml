@@ -1,0 +1,57 @@
+﻿<Window x:Name="Simon_Says" x:Class="SimonSays.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Simon Says" Height="500" Width="720" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF00A0EA" Offset="0.133"/>
+                <GradientStop Color="#FF0009C7" Offset="0.731"/>
+                <GradientStop Color="#FF006AE9" Offset="0.413"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Label x:Name="lblGameName" Content="Simon Says" Margin="0,40,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Calibri" FontSize="48" FontWeight="Bold"/>
+        <Button x:Name="btnEasy" Content="Easy" Margin="93,340,517,0" VerticalAlignment="Top" Height="78" FontSize="24" FontFamily="Calibri" BorderBrush="#FF0051B2" BorderThickness="1,2,1,1" Foreground="White" FontWeight="Bold" Click="btnEasy_Click">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                    <GradientStop Color="White" Offset="0"/>
+                    <GradientStop Color="#FFEBEBEB" Offset="0.045"/>
+                    <GradientStop Color="#FFDDDDDD"/>
+                    <GradientStop Color="#FF0044D4" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="btnMedium" Content="Medium" Margin="302,340,308,0" VerticalAlignment="Top" Height="78" FontSize="24" FontFamily="Calibri" BorderBrush="#FF0051B2" BorderThickness="1,2,1,1" Foreground="White" FontWeight="Bold" Click="btnMedium_Click">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                    <GradientStop Color="White" Offset="0"/>
+                    <GradientStop Color="#FFEBEBEB" Offset="0.045"/>
+                    <GradientStop Color="#FFDDDDDD"/>
+                    <GradientStop Color="#FF0044D4" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="btnHard" Content="Hard" Margin="514,340,96,0" VerticalAlignment="Top" Height="78" FontSize="24" FontFamily="Calibri" BorderBrush="#FF0051B2" BorderThickness="1,2,1,1" Foreground="White" FontWeight="Bold" Click="btnHard_Click">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                    <GradientStop Color="White" Offset="0"/>
+                    <GradientStop Color="#FFEBEBEB" Offset="0.045"/>
+                    <GradientStop Color="#FFDDDDDD"/>
+                    <GradientStop Color="#FF0044D4" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+        <TextBlock HorizontalAlignment="Center" TextAlignment="Center" Margin="145,151,138,0" VerticalAlignment="Top" FontFamily="Calibri" Width="431" TextWrapping="Wrap" FontSize="14" Height="106"><Run Text="Copy the gesture Simon is making if he says &quot;Simon Says&quot; and hold it before the countdown ends, the more accurate the gesture the higher the score!"/><LineBreak/><Run/><LineBreak/><Run Language="en-gb" Text="The game ends when run out of lives!"/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/></TextBlock>
+        <Label x:Name="lblInstructions" Content="Instructions:" HorizontalAlignment="Center" Margin="0,114,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="20"/>
+        <Label x:Name="lblDifficulty" Content="Select a difficulty..." HorizontalAlignment="Center" Margin="0,275,0,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="20" Width="173"/>
+    </Grid>
+</Window>
