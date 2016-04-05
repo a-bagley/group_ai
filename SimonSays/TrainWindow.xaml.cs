@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
+using System.Timers;
 
 namespace SimonSays
 {
@@ -87,20 +88,41 @@ namespace SimonSays
         /// </summary>
         private DrawingImage imageSource;
 
-        private Boolean capture = false;
+        /// <summary>
+        /// Signals the recording of kinect skeleton data
+        /// </summary>
+        private Boolean bCapture = false;
 
-        List<TrainingDataRow> trainingDataList = new List<TrainingDataRow>();
+        /// <summary>
+        /// Timer for kinect data recording
+        /// </summary>
+        private Timer recordTimer;
 
-        TextWriter textWriter; 
+        /// <summary>
+        /// 
+        /// </summary>
+        private List<TrainingDataRow> trainingDataList = new List<TrainingDataRow>();
 
-        CsvHelper.CsvWriter csvWriter;
+        /// <summary>
+        /// 
+        /// </summary>
+        private TextWriter textWriter; 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private CsvHelper.CsvWriter csvWriter;
+
+        private String trainingDataPath = @"C:\simon_training_data\";
 
         public TrainWindow()
         {
             InitializeComponent();
 
-            textWriter = File.CreateText(@"C:\Users\EE User\Desktop\test.csv");
-            csvWriter = new CsvHelper.CsvWriter(textWriter);
+            if (!Directory.Exists(trainingDataPath))
+            {
+                System.IO.Directory.CreateDirectory(trainingDataPath);
+            }
         }
 
         private void ComboBox_Loaded(object sender, RoutedEventArgs e)
@@ -226,21 +248,17 @@ namespace SimonSays
                 this.sensor.Stop();
             }
 
-            csvWriter.WriteRecords(trainingDataList);
+//            csvWriter.WriteRecords(trainingDataList);
         }
 
         private void btnRecordData_Click(object sender, RoutedEventArgs e)
         {
-            if (capture == true)
+            if (bCapture == false)
             {
-                capture = false;
-            }
-            else if (capture == false)
-            {
-                capture = true;
-            }
-
-            
+                btnRecordData.IsEnabled = false;
+                bCapture = true;
+                startTimer();
+            }            
         }
 
         /// <summary>
@@ -271,21 +289,15 @@ namespace SimonSays
                     foreach (Skeleton skel in skeletons)
                     {
 
-
                         RenderClippedEdges(skel, dc);
 
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
-                          this.DrawBonesAndJoints(skel, dc);
-                          
-                          
-                              TrainingDataManager trainingDataManager = new TrainingDataManager(skel);
-                              TrainingDataRow row = trainingDataManager.calculateDistanceBetweenJoints(((ComboBoxItem)ComboBox.SelectedItem).Content.ToString());
-                                  
-                                  if (capture) 
-                                  {
-                                        trainingDataList.Add(row);
-                                  }
+                            this.DrawBonesAndJoints(skel, dc);
+                            if(bCapture)
+                            {
+                                this.saveSkeletalData(skel);
+                            }
                         }
 
                         else if (skel.TrackingState == SkeletonTrackingState.PositionOnly)
@@ -303,6 +315,43 @@ namespace SimonSays
                 // prevent drawing outside of our render area
                 this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
             }
+        }
+
+        private void saveSkeletalData(Skeleton skel)
+        {
+            TrainingDataManager trainingDataManager = new TrainingDataManager(skel);
+            TrainingDataRow row = trainingDataManager.saveSkeletalPoints();
+            trainingDataList.Add(row);
+        }
+
+        /// <summary>
+        /// Start the timer for recording kinect skeletal data
+        /// </summary>
+        private void startTimer()
+        {
+            recordTimer = new Timer();
+            recordTimer.AutoReset = false;
+            recordTimer.Interval = 5000;
+            recordTimer.Elapsed += onTimerExpired;
+            // This could be moved into the TrainingDataManager at some point
+            String gestureName = ((ComboBoxItem)ComboBox.SelectedItem).Content.ToString();
+            String gestureFileName = trainingDataPath + gestureName + ".csv";
+            textWriter = File.CreateText(gestureFileName);
+            csvWriter = new CsvHelper.CsvWriter(textWriter);
+            recordTimer.Start();
+        }
+
+        /// <summary>
+        /// Once recordTimer has expired, stop capture and release file resources.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        private void onTimerExpired(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            bCapture = false;
+            csvWriter.WriteRecords(trainingDataList);
+            textWriter.Close();
+            Dispatcher.Invoke(new Action(() => btnRecordData.IsEnabled = true));
         }
 
         /// <summary>
