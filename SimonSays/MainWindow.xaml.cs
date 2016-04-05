@@ -32,5 +32,12 @@ namespace SimonSays
             window.Show();
             this.Close();
         }
+
+        private void btnTrain_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new TrainWindow();
+            window.Show();
+            this.Close();
+        }
     }
 }
