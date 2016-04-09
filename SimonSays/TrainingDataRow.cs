@@ -29,11 +29,11 @@ namespace SimonSays
         public double shoulderLeftX { get; set; }
         public double shoulderLeftY { get; set; }
 
-        public double elbowLeftX { get; set; }
-        public double elbowLeftY { get; set; }
-
         public double elbowRightX { get; set; }
         public double elbowRightY { get; set; }
+
+        public double elbowLeftX { get; set; }
+        public double elbowLeftY { get; set; }
 
         public double wristRightX { get; set; }
         public double wristRightY { get; set; }

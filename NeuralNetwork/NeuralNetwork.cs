@@ -71,6 +71,7 @@ namespace NeuralNetwork
 	        //Todo move this to init/constructor of NeuronLayer
 	        //for (int i = 0; i < nAllLayers; i++)
 		    //    allLayers[i].RandomizeWeights();
+            ///Done?
 	
 	        for (int i = 0; i < nAllLayers; i++)
 		        System.Diagnostics.Debug.WriteLine(allLayers[i].toString());

@@ -59,7 +59,110 @@ namespace SimonSays
                             break;
                         }
 
-                        //Todo Add the rest to match the TrainingDataRow class
+                        case JointType.ElbowRight:
+                        {
+                            trainingDataRow.elbowRightX = joint.Position.X;
+                            trainingDataRow.elbowRightY = joint.Position.Y;
+                            break;
+                        }
+
+                        case JointType.ElbowLeft:
+                        {
+                            trainingDataRow.elbowLeftX = joint.Position.X;
+                            trainingDataRow.elbowLeftY = joint.Position.Y;
+                            break;
+                        }
+
+                        case JointType.WristRight:
+                        {
+                            trainingDataRow.wristRightX = joint.Position.X;
+                            trainingDataRow.wristRightY = joint.Position.Y;
+                            break;
+                        }
+
+                        case JointType.WristLeft:
+                        {
+                            trainingDataRow.wristLeftX = joint.Position.X;
+                            trainingDataRow.wristLeftY = joint.Position.Y;
+                            break;
+                        }
+
+                        case JointType.HandRight:
+                        {
+                            trainingDataRow.handRightX = joint.Position.X;
+                            trainingDataRow.handRightY = joint.Position.Y;
+                            break;
+                        }
+
+                        case JointType.HandLeft:
+                        {
+                            trainingDataRow.handLeftX = joint.Position.X;
+                            trainingDataRow.handLeftY = joint.Position.Y;
+                            break;
+                        }
+
+                        case JointType.HipCenter:
+                        {
+                            trainingDataRow.hipCenterX = joint.Position.X;
+                            trainingDataRow.hipCenterY = joint.Position.Y;
+                            break;
+                        }
+
+                        case JointType.HipRight:
+                        {
+                            trainingDataRow.hipRightX = joint.Position.X;
+                            trainingDataRow.hipRightY = joint.Position.Y;
+                            break;
+                        }
+
+                        case JointType.HipLeft:
+                        {
+                            trainingDataRow.hipLeftX = joint.Position.X;
+                            trainingDataRow.hipLeftY = joint.Position.Y;
+                            break;
+                        }
+
+                        case JointType.KneeRight:
+                        {
+                            trainingDataRow.kneeRightX = joint.Position.X;
+                            trainingDataRow.kneeRightY = joint.Position.Y;
+                            break;
+                        }
+
+                        case JointType.KneeLeft:
+                        {
+                            trainingDataRow.kneeLeftX = joint.Position.X;
+                            trainingDataRow.kneeLeftY = joint.Position.Y;
+                            break;
+                        }
+
+                        case JointType.AnkleRight:
+                        {
+                            trainingDataRow.ankleRightX = joint.Position.X;
+                            trainingDataRow.ankleRightY = joint.Position.Y;
+                            break;
+                        }
+
+                        case JointType.AnkleLeft:
+                        {
+                            trainingDataRow.ankleLeftX = joint.Position.X;
+                            trainingDataRow.ankleLeftY = joint.Position.Y;
+                            break;
+                        }
+
+                        case JointType.FootRight:
+                        {
+                            trainingDataRow.footRightX = joint.Position.X;
+                            trainingDataRow.footRightY = joint.Position.Y;
+                            break;
+                        }
+
+                        case JointType.FootLeft:
+                        {
+                            trainingDataRow.footLeftX = joint.Position.X;
+                            trainingDataRow.footLeftY = joint.Position.Y;
+                            break;
+                        }
                     }
                 }
             }
