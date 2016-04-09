@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MultilayerPerceptron.cs" />
     <Compile Include="NeuralNetwork.cs" />
     <Compile Include="NeuronLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

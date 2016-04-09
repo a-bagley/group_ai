@@ -12,38 +12,43 @@ namespace NeuralNetwork
     class NeuralNetwork
     {
         /// <summary>
-        /// 
+        /// Input layer of the neural network
         /// </summary>
         private NeuronLayer inputLayer;
 
         /// <summary>
-        /// 
+        /// Output layer of the neural network
         /// </summary>
         private NeuronLayer outputLayer;
 
         /// <summary>
-        /// 
+        /// Array containing all neural network layers
         /// </summary>
         private NeuronLayer[] allLayers;
 
         /// <summary>
-        /// 
+        /// Number of hidden layers in the neural network
         /// </summary>
         private int nHiddenLayers;
 
         /// <summary>
-        /// 
+        /// Total number of layers in the neural network
         /// </summary>
         private int nAllLayers;
 
+
         /// <summary>
-        /// 
+        /// Neural Network constructor
         /// </summary>
-        /// <param name="nInputNodes"></param>
-        /// <param name="nHiddenNodes"></param>
-        /// <param name="nOutputNodes"></param>
-        /// <param name="fLearningRate"></param>
-        /// <param name="fMomentum"></param>
+        /// <param name="nodeList">
+        /// Array of nodes
+        /// </param>
+        /// <param name="fLearningRate">
+        /// Neural network learning rate
+        /// </param>
+        /// <param name="fMomentum">
+        /// Neural network momentum factor
+        /// </param>
         public NeuralNetwork(int[] nodeList, double fLearningRate, double fMomentum)
         {
             //Todo Consider removing input and output params in favour of a singular array of nodes
@@ -185,7 +190,7 @@ namespace NeuralNetwork
         /// <summary>
         /// 
         /// </summary>
-        public void PrintNNInfo()
+        public void PrintInfo()
         {
             // Test this properly
             System.Diagnostics.Debug.WriteLine("If this is junk, come back soon...");

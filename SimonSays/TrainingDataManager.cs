@@ -179,6 +179,7 @@ namespace SimonSays
                 {
                     switch (joint.JointType) 
                     {
+                        //Todo: use some of this code for calculating useful distances from the raw training data
 
                         /////// The following code can be salvaged for disatnce calculations once training data is loaded
 
