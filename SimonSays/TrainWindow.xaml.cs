@@ -239,6 +239,7 @@ namespace SimonSays
             if (bCapture == false)
             {
                 btnRecordData.IsEnabled = false;
+                btnHome.IsEnabled = false;
                 bCapture = true;
                 startTimer();
             }            
@@ -331,6 +332,7 @@ namespace SimonSays
             bCapture = false;
             tdManager.finishAddNewTrainingSet();
             Dispatcher.Invoke(new Action(() => btnRecordData.IsEnabled = true));
+            Dispatcher.Invoke(new Action(() => btnHome.IsEnabled = true));
         }
 
         /// <summary>
