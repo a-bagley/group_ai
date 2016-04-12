@@ -42,9 +42,12 @@ namespace SimonSays
 
         private void loadTrainingDataFiles()
         {
-            string[] files = Directory.GetFiles(trainingDataPath);
-            numberOfGestures = files.Length;
-            gestureNameList = new List<string>(files);
+            String[] filePaths = Directory.GetFiles(trainingDataPath);
+            foreach(String path in filePaths)
+            {
+                gestureNameList.Add(Path.GetFileName(path));
+            }
+            numberOfGestures = gestureNameList.Count;
         }
 
         public void setSkeletalSource(Skeleton skel)
@@ -70,6 +73,16 @@ namespace SimonSays
 
             TrainingDataRow row = saveSkeletalPoints();
             trainingDataList.Add(row);
+        }
+
+        public List<String> getGestureList()
+        {
+            return gestureNameList;
+        }
+
+        public void appendGestureNameToList(String gesture)
+        {
+            gestureNameList.Add(gesture);
         }
 
         private TrainingDataRow saveSkeletalPoints()

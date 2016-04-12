@@ -93,9 +93,10 @@ namespace SimonSays
         /// </summary>
         private Boolean bCapture = false;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private TrainingDataManager tdManager;
-
-        private List<String> gestures;
 
         /// <summary>
         /// Timer for kinect data recording
@@ -109,17 +110,17 @@ namespace SimonSays
             tdManager = new TrainingDataManager();
             tdManager.init();
 
-            initializeBaseGestures();
+            //initializeBaseGestures();
         }
 
-        private void initializeBaseGestures()
-        {
-            gestures = new List<String>();
-            gestures.Add("ARM_LEFT");
-            gestures.Add("ARM_RIGHT");
-            gestures.Add("LEG_LEFT");
-            gestures.Add("LEG_RIGHT");
-            }
+        //private void initializeBaseGestures()
+        //{
+        //    gestures = new List<String>();
+        //    gestures.Add("ARM_LEFT");
+        //    gestures.Add("ARM_RIGHT");
+        //    gestures.Add("LEG_LEFT");
+        //    gestures.Add("LEG_RIGHT");
+        //    }
 
         /// <summary>
         /// Draws indicators to show which edges are clipping skeleton data
@@ -177,7 +178,7 @@ namespace SimonSays
             // Display the drawing using our image control
             imgSkeleton.Source = this.imageSource;
 
-            foreach (String gesture in gestures)
+            foreach (String gesture in tdManager.getGestureList())
             {
                 this.comboBox.Items.Add(gesture);
             }
@@ -318,7 +319,7 @@ namespace SimonSays
             recordTimer.Interval = 5000;
             recordTimer.Elapsed += onTimerExpired;
             // This could be moved into the TrainingDataManager at some point
-            String gestureName = ((ComboBoxItem)comboBox.SelectedItem).Content.ToString();
+            String gestureName = comboBox.SelectedItem.ToString();
             tdManager.startAddNewTrainingSet(gestureName);
             recordTimer.Start();
         }
@@ -473,7 +474,7 @@ namespace SimonSays
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             String newGesture = this.textBox.Text;
-            gestures.Add(newGesture);
+            tdManager.appendGestureNameToList(newGesture);
             this.comboBox.SelectedIndex = this.comboBox.Items.Add(newGesture);
             this.textBox.Clear();
         }
