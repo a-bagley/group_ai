@@ -93,36 +93,19 @@ namespace SimonSays
         /// </summary>
         private Boolean bCapture = false;
 
+        private TrainingDataManager tdManager;
+
         /// <summary>
         /// Timer for kinect data recording
         /// </summary>
         private Timer recordTimer;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private List<TrainingDataRow> trainingDataList = new List<TrainingDataRow>();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private TextWriter textWriter; 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private CsvHelper.CsvWriter csvWriter;
-
-        private String trainingDataPath = @"C:\simon_training_data\";
-
         public TrainWindow()
         {
             InitializeComponent();
 
-            if (!Directory.Exists(trainingDataPath))
-            {
-                System.IO.Directory.CreateDirectory(trainingDataPath);
-            }
+            tdManager = new TrainingDataManager();
+            tdManager.init();
         }
 
         private void ComboBox_Loaded(object sender, RoutedEventArgs e)
@@ -319,9 +302,8 @@ namespace SimonSays
 
         private void saveSkeletalData(Skeleton skel)
         {
-            TrainingDataManager trainingDataManager = new TrainingDataManager(skel);
-            TrainingDataRow row = trainingDataManager.saveSkeletalPoints();
-            trainingDataList.Add(row);
+            tdManager.setSkeletalSource(skel);
+            tdManager.saveTrainingSet();
         }
 
         /// <summary>
@@ -335,9 +317,7 @@ namespace SimonSays
             recordTimer.Elapsed += onTimerExpired;
             // This could be moved into the TrainingDataManager at some point
             String gestureName = ((ComboBoxItem)ComboBox.SelectedItem).Content.ToString();
-            String gestureFileName = trainingDataPath + gestureName + ".csv";
-            textWriter = File.CreateText(gestureFileName);
-            csvWriter = new CsvHelper.CsvWriter(textWriter);
+            tdManager.startAddNewTrainingSet(gestureName);
             recordTimer.Start();
         }
 
@@ -349,8 +329,7 @@ namespace SimonSays
         private void onTimerExpired(Object source, System.Timers.ElapsedEventArgs e)
         {
             bCapture = false;
-            csvWriter.WriteRecords(trainingDataList);
-            textWriter.Close();
+            tdManager.finishAddNewTrainingSet();
             Dispatcher.Invoke(new Action(() => btnRecordData.IsEnabled = true));
         }
 

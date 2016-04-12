@@ -37,27 +37,29 @@ namespace NeuralNetwork
             this.learningRate = learningRate;
             this.momentum = momentum;
 
-            NeuralNetwork = new NeuralNetwork(nodeList, learningRate, momentum);
+            this.neuralNetwork = new NeuralNetwork(nodeList, learningRate, momentum);
         }
 
         /// <summary>
         /// Train the Multilayer Perceptron with a traing data set
         /// </summary>
-        /// <param name="trainingData"></param>
+        /// <param name="trainingData">
+        /// 2D Array of training data sets
+        /// </param>
         public void trainMLP(double[,] trainingData)
         {
             int	i, j;
 	        double error = 1;
             int nTrainingSets = trainingData.GetLength(1);
-            int setMarker;
+            int setMarker = 0;
      
 	        System.Diagnostics.Debug.WriteLine("************Pre training*******************");
             neuralNetwork.PrintInfo();
 
-	        while((error > 0.05) && (c<50000))
+	        while((error > 0.05) ) //&& (c<50000))
 	        {
 		        error = 0;
-		        c++;
+		        //c++;
                 for (i = 0; i < nTrainingSets; i++)
 		        {
                     for (j = 0; j < nInputs; j++ )
@@ -75,7 +77,6 @@ namespace NeuralNetwork
                     neuralNetwork.feedForward();
                     error += neuralNetwork.calculateError();
                     neuralNetwork.backPropagate();
-
 		        }
                 error = error / nTrainingSets;
 	        }
@@ -89,9 +90,26 @@ namespace NeuralNetwork
 
         //Todo Add another layer (sigh) for pulling traing data together.
 
-        public void GetMLPResult()
+        /// <summary>
+        /// Generate a classification guess based on inputs
+        /// </summary>
+        /// <param name="inputData">
+        /// The input values to the MLP
+        /// </param>
+        /// <returns>
+        /// The id of the output matched
+        /// </returns>
+        public Guess GenerateMLPResult(double[] inputData)
         {
-
+            // Provide array of distances for inputs
+            for (int i = 0; i < nInputs; i++)
+            {
+                neuralNetwork.setInput(i, inputData[i]);
+            }
+            neuralNetwork.feedForward();
+            int resultId = neuralNetwork.getMaxOutputID();
+            double resultValue = neuralNetwork.getOutput(resultId);
+            return new Guess(resultId, resultValue);
         }
 
         public void testMLP()
