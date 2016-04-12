@@ -26,5 +26,6 @@
                 <TextBlock Name="statusBarText" Margin="-1 0 0 0">Click 'Seated' to change skeletal pipeline type!</TextBlock>
             </StatusBarItem>
         </StatusBar>
+        <Image Name="imgScore" HorizontalAlignment="Left" Height="61" Margin="56,80,0,0" VerticalAlignment="Top" Width="207"/>
     </Grid>
 </Window>
