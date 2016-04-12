@@ -59,6 +59,7 @@
     </ApplicationDefinition>
     <Compile Include="TrainingDataManager.cs" />
     <Compile Include="TrainingDataRow.cs" />
+    <Compile Include="TrainingDataSaver.cs" />
     <Compile Include="TrainWindow.xaml.cs">
       <DependentUpon>TrainWindow.xaml</DependentUpon>
     </Compile>
@@ -123,9 +124,23 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\star.png" />
+    <Resource Include="Images\fivestars.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\fourstars.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\onestars.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\threestars.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\twostars.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\fail.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
