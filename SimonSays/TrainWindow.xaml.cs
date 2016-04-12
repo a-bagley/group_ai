@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -14,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
 using System.Timers;
+using System.Windows.Controls;
 
 namespace SimonSays
 {
@@ -113,6 +113,8 @@ namespace SimonSays
         /// </summary>
         private CsvHelper.CsvWriter csvWriter;
 
+        private List<String> gestures;
+
         private String trainingDataPath = @"C:\simon_training_data\";
 
         public TrainWindow()
@@ -123,23 +125,17 @@ namespace SimonSays
             {
                 System.IO.Directory.CreateDirectory(trainingDataPath);
             }
+
+            initializeBaseGestures();
         }
 
-        private void ComboBox_Loaded(object sender, RoutedEventArgs e)
+        private void initializeBaseGestures()
         {
-            // ... A List.
-            var values = System.Enum.GetValues(typeof(Gesture));
-
-            // ... Get the ComboBox reference.
-            var comboBox = sender as ComboBox;
-
-            foreach (Gesture gesture in values)
-            {
-                comboBox.Items.Add(gesture);
-            }
-
-            // ... Make the first item selected.
-            comboBox.SelectedIndex = 0;
+            gestures = new List<String>();
+            gestures.Add("ARM_LEFT");
+            gestures.Add("ARM_RIGHT");
+            gestures.Add("LEG_LEFT");
+            gestures.Add("LEG_RIGHT");
         }
 
         /// <summary>
@@ -197,6 +193,11 @@ namespace SimonSays
 
             // Display the drawing using our image control
             imgSkeleton.Source = this.imageSource;
+
+            foreach (String gesture in gestures)
+            {
+                this.comboBox.Items.Add(gesture);
+            }
 
             // Look through all sensors and start the first connected one.
             // This requires that a Kinect is connected at the time of app startup.
@@ -334,7 +335,7 @@ namespace SimonSays
             recordTimer.Interval = 5000;
             recordTimer.Elapsed += onTimerExpired;
             // This could be moved into the TrainingDataManager at some point
-            String gestureName = ((ComboBoxItem)ComboBox.SelectedItem).Content.ToString();
+            String gestureName = ((ComboBoxItem)comboBox.SelectedItem).Content.ToString();
             String gestureFileName = trainingDataPath + gestureName + ".csv";
             textWriter = File.CreateText(gestureFileName);
             csvWriter = new CsvHelper.CsvWriter(textWriter);
@@ -479,6 +480,18 @@ namespace SimonSays
                 }
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            String newGesture = this.textBox.Text;
+            gestures.Add(newGesture);
+            this.comboBox.SelectedIndex = this.comboBox.Items.Add(newGesture);
+            this.textBox.Clear();
+        }
+
+   
+
+        
 
       
 

@@ -3,6 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Simon Says" Height="500" Width="720" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="109*"/>
+            <ColumnDefinition Width="248*"/>
+        </Grid.ColumnDefinitions>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                 <GradientStop Color="#FF00A0EA" Offset="0.133"/>
@@ -10,21 +14,19 @@
                 <GradientStop Color="#FF006AE9" Offset="0.413"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <StackPanel Margin="10">
-            <ComboBox Margin="0,0,557,0" Name="ComboBox" Height="37" SelectedIndex="0">
-                <ComboBoxItem>ARM_LEFT</ComboBoxItem>
-                <ComboBoxItem>ARM_RIGHT</ComboBoxItem>
-                <ComboBoxItem>LEG_LEFT</ComboBoxItem>
-                <ComboBoxItem>LEG_RIGHT</ComboBoxItem>
-            </ComboBox>
-        </StackPanel>
-        <Image x:Name="imgSkeleton" HorizontalAlignment="Left" Height="359" Margin="393,28,0,0" VerticalAlignment="Top" Width="289"/>
-        <CheckBox Content="Seated Mode" Height="51" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="499,389,0,31" Name="checkBoxSeatedMode" Checked="CheckBoxSeatedModeChanged" Unchecked="CheckBoxSeatedModeChanged"/>
-        <StatusBar Grid.Row="3" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White">
+        <ComboBox Margin="10,10,50.896,424" Name="comboBox" SelectedIndex="0" >
+        </ComboBox>
+        <TextBox Name="textBox" TextWrapping="Wrap" Margin="0,366,434,72" HorizontalAlignment="Right" Width="258" Height="34" Grid.ColumnSpan="2"/>
+
+        <Image x:Name="imgSkeleton" HorizontalAlignment="Left" Height="359" Margin="175.104,28,0,0" VerticalAlignment="Top" Width="289" Grid.Column="1"/>
+        <CheckBox Content="Seated Mode" Height="50" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="281.104,390,0,32" Name="checkBoxSeatedMode" Checked="CheckBoxSeatedModeChanged" Unchecked="CheckBoxSeatedModeChanged" Grid.Column="1"/>
+        <StatusBar HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Grid.ColumnSpan="2">
             <StatusBarItem Padding="0 0 0 10">
                 <TextBlock Name="statusBarText" Margin="-1 0 0 0">Click 'Seated' to change skeletal pipeline type!</TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <Button x:Name="btnRecordData" Content="Record Training Data" HorizontalAlignment="Left" Margin="31,202,0,0" VerticalAlignment="Top" Width="140" Click="btnRecordData_Click"/>
+        <Button x:Name="btnRecordData" Content="Record Training Data" HorizontalAlignment="Left" Margin="188,10,0,0" VerticalAlignment="Top" Width="140" Click="btnRecordData_Click" Height="25" Grid.ColumnSpan="2"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,297,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="318" Height="62" FontSize="14" Grid.ColumnSpan="2"><Run Language="en-gb" Text="* TRAIN NEW GESTURE"/><LineBreak/><Run Language="en-gb"/><LineBreak/><Run Language="en-gb" Text="Enter new Gesture name in the below text box:"/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run Text=""/></TextBlock>
+        <Button Content="Add" HorizontalAlignment="Left" Margin="10,404,0,0" VerticalAlignment="Top" Width="75" IsDefault="True" Click="Button_Click"/>
     </Grid>
 </Window>

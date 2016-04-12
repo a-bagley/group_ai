@@ -6,16 +6,9 @@ using System.Threading.Tasks;
 
 namespace SimonSays
 {
-    enum Gesture 
-    {
-        ARM_LEFT,
-        ARM_RIGHT,
-        LEG_LEFT,
-        LEG_RIGHT
-    }
-
     class TrainingDataRow
     {
+        public String gesture { get; set; }
 
         public double headX { get; set; }
         public double headY { get; set; }
