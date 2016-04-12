@@ -480,6 +480,14 @@ namespace SimonSays
             }
         }
 
+        //Handles the home button so that we can go back to the start window
+        private void btnHome_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new MainWindow();
+            window.Show();
+            this.Close();
+        }
+
       
 
         

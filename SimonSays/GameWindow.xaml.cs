@@ -459,5 +459,15 @@ namespace SimonSays
             }
         }
 
+        //Handles the home button so that we can go back to the start window
+        //Also stopping the timer when the button is pressed
+        private void btnHome_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new MainWindow();
+            _timer.Stop();
+            window.Show();
+            this.Close();
+        }
+
     }
 }
