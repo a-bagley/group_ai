@@ -93,40 +93,21 @@ namespace SimonSays
         /// </summary>
         private Boolean bCapture = false;
 
+        private TrainingDataManager tdManager;
+
+        private List<String> gestures;
+
         /// <summary>
         /// Timer for kinect data recording
         /// </summary>
         private Timer recordTimer;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private List<TrainingDataRow> trainingDataList = new List<TrainingDataRow>();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private TextWriter textWriter; 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private CsvHelper.CsvWriter csvWriter;
-
-        private List<String> gestures;
-
-        private String trainingDataPath = @"C:\simon_training_data\";
-
         public TrainWindow()
         {
             InitializeComponent();
 
-            if (!Directory.Exists(trainingDataPath))
-            {
-                System.IO.Directory.CreateDirectory(trainingDataPath);
-            }
-
-            initializeBaseGestures();
+            tdManager = new TrainingDataManager();
+            tdManager.init();
         }
 
         private void initializeBaseGestures()
@@ -136,7 +117,7 @@ namespace SimonSays
             gestures.Add("ARM_RIGHT");
             gestures.Add("LEG_LEFT");
             gestures.Add("LEG_RIGHT");
-        }
+            }
 
         /// <summary>
         /// Draws indicators to show which edges are clipping skeleton data
@@ -257,6 +238,7 @@ namespace SimonSays
             if (bCapture == false)
             {
                 btnRecordData.IsEnabled = false;
+                btnHome.IsEnabled = false;
                 bCapture = true;
                 startTimer();
             }            
@@ -320,9 +302,8 @@ namespace SimonSays
 
         private void saveSkeletalData(Skeleton skel)
         {
-            TrainingDataManager trainingDataManager = new TrainingDataManager(skel);
-            TrainingDataRow row = trainingDataManager.saveSkeletalPoints();
-            trainingDataList.Add(row);
+            tdManager.setSkeletalSource(skel);
+            tdManager.saveTrainingSet();
         }
 
         /// <summary>
@@ -335,10 +316,8 @@ namespace SimonSays
             recordTimer.Interval = 5000;
             recordTimer.Elapsed += onTimerExpired;
             // This could be moved into the TrainingDataManager at some point
-            String gestureName = ((ComboBoxItem)comboBox.SelectedItem).Content.ToString();
-            String gestureFileName = trainingDataPath + gestureName + ".csv";
-            textWriter = File.CreateText(gestureFileName);
-            csvWriter = new CsvHelper.CsvWriter(textWriter);
+            String gestureName = ((ComboBoxItem)ComboBox.SelectedItem).Content.ToString();
+            tdManager.startAddNewTrainingSet(gestureName);
             recordTimer.Start();
         }
 
@@ -350,9 +329,9 @@ namespace SimonSays
         private void onTimerExpired(Object source, System.Timers.ElapsedEventArgs e)
         {
             bCapture = false;
-            csvWriter.WriteRecords(trainingDataList);
-            textWriter.Close();
+            tdManager.finishAddNewTrainingSet();
             Dispatcher.Invoke(new Action(() => btnRecordData.IsEnabled = true));
+            Dispatcher.Invoke(new Action(() => btnHome.IsEnabled = true));
         }
 
         /// <summary>
@@ -481,6 +460,14 @@ namespace SimonSays
             }
         }
 
+        //Handles the home button so that we can go back to the start window
+        private void btnHome_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new MainWindow();
+            window.Show();
+            this.Close();
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             String newGesture = this.textBox.Text;
@@ -490,6 +477,8 @@ namespace SimonSays
         }
 
    
+
+      
 
         
 

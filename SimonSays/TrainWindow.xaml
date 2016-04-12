@@ -28,5 +28,6 @@
         <Button x:Name="btnRecordData" Content="Record Training Data" HorizontalAlignment="Left" Margin="188,10,0,0" VerticalAlignment="Top" Width="140" Click="btnRecordData_Click" Height="25" Grid.ColumnSpan="2"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,297,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="318" Height="62" FontSize="14" Grid.ColumnSpan="2"><Run Language="en-gb" Text="* TRAIN NEW GESTURE"/><LineBreak/><Run Language="en-gb"/><LineBreak/><Run Language="en-gb" Text="Enter new Gesture name in the below text box:"/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run Text=""/></TextBlock>
         <Button Content="Add" HorizontalAlignment="Left" Margin="10,404,0,0" VerticalAlignment="Top" Width="75" IsDefault="True" Click="Button_Click"/>
+        <Button x:Name="btnHome" Content="Home" HorizontalAlignment="Left" Margin="31,232,0,0" VerticalAlignment="Top" Width="75" Click="btnHome_Click"/>
     </Grid>
 </Window>
