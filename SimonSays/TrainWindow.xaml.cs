@@ -108,6 +108,8 @@ namespace SimonSays
 
             tdManager = new TrainingDataManager();
             tdManager.init();
+
+            initializeBaseGestures();
         }
 
         private void initializeBaseGestures()
@@ -316,7 +318,7 @@ namespace SimonSays
             recordTimer.Interval = 5000;
             recordTimer.Elapsed += onTimerExpired;
             // This could be moved into the TrainingDataManager at some point
-            String gestureName = ((ComboBoxItem)ComboBox.SelectedItem).Content.ToString();
+            String gestureName = ((ComboBoxItem)comboBox.SelectedItem).Content.ToString();
             tdManager.startAddNewTrainingSet(gestureName);
             recordTimer.Start();
         }
@@ -466,9 +468,9 @@ namespace SimonSays
             var window = new MainWindow();
             window.Show();
             this.Close();
-        }
+            }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             String newGesture = this.textBox.Text;
             gestures.Add(newGesture);
@@ -476,9 +478,9 @@ namespace SimonSays
             this.textBox.Clear();
         }
 
-   
-
       
+
+        
 
         
 

@@ -1,31 +1,82 @@
-﻿using System;
+﻿using Microsoft.Kinect;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Kinect;
+using System.IO;
 
 namespace SimonSays
 {
     class TrainingDataManager
     {
-        private Skeleton _skeleton;
+        private TrainingDataSaver tdSaver;
 
-        public TrainingDataManager(Skeleton skeleton)
+        private Skeleton skeleton;
+
+        private int numberOfGestures;
+
+        private List<String> gestureNameList = new List<String>();
+
+        private List<TrainingDataRow> trainingDataList = new List<TrainingDataRow>();
+
+        private TextWriter textWriter;
+
+        private CsvHelper.CsvWriter csvWriter;
+
+        private String trainingDataPath = @"C:\simon_training_data\";
+
+        public TrainingDataManager()
         {
-            this._skeleton = skeleton;
+            tdSaver = new TrainingDataSaver();
         }
 
-        private double getDistanceBetweenTwoJoints(Joint joint1, Joint joint2)
+        public void init()
         {
-            return Math.Sqrt(Math.Pow((joint1.Position.X - joint2.Position.X), 2) + Math.Pow((joint1.Position.Y - joint2.Position.Y), 2));
+            if (!Directory.Exists(trainingDataPath))
+            {
+                System.IO.Directory.CreateDirectory(trainingDataPath);
+            }
+            loadTrainingDataFiles();
         }
 
-        public TrainingDataRow saveSkeletalPoints()
+        private void loadTrainingDataFiles()
+        {
+            string[] files = Directory.GetFiles(trainingDataPath);
+            numberOfGestures = files.Length;
+            gestureNameList = new List<string>(files);
+        }
+
+        public void setSkeletalSource(Skeleton skel)
+        {
+            this.skeleton = skel;
+        }
+
+        public void startAddNewTrainingSet(String gestureName)
+        {
+            String gestureFileName = trainingDataPath + gestureName + ".csv";
+            textWriter = File.CreateText(gestureFileName);
+            csvWriter = new CsvHelper.CsvWriter(textWriter);
+        }
+
+        public void finishAddNewTrainingSet()
+        {
+            csvWriter.WriteRecords(trainingDataList);
+            textWriter.Close();
+        }
+
+        public void saveTrainingSet()
+        {
+
+            TrainingDataRow row = saveSkeletalPoints();
+            trainingDataList.Add(row);
+        }
+
+        private TrainingDataRow saveSkeletalPoints()
         {
             TrainingDataRow trainingDataRow = new TrainingDataRow();
 
-            foreach (Joint joint in _skeleton.Joints)
+            foreach (Joint joint in skeleton.Joints)
             {
                 if (joint.TrackingState == JointTrackingState.Tracked)
                 {
@@ -173,7 +224,7 @@ namespace SimonSays
         {
             TrainingDataRow trainingDataRow = new TrainingDataRow();
 
-            foreach (Joint joint in _skeleton.Joints)
+            foreach (Joint joint in skeleton.Joints)
             {
                 if (joint.TrackingState == JointTrackingState.Tracked)
                 {
@@ -217,6 +268,11 @@ namespace SimonSays
             }
 
             return trainingDataRow;
+        }
+
+        private double getDistanceBetweenTwoJoints(Joint joint1, Joint joint2)
+        {
+            return Math.Sqrt(Math.Pow((joint1.Position.X - joint2.Position.X), 2) + Math.Pow((joint1.Position.Y - joint2.Position.Y), 2));
         }
     }
 }
