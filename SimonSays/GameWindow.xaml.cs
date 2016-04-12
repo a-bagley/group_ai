@@ -21,6 +21,7 @@ namespace SimonSays
     /// </summary>
     public partial class GameWindow : Window
     {
+        #region Skeleton Properties
         /// <summary>
         /// Width of output drawing
         /// </summary>
@@ -85,14 +86,14 @@ namespace SimonSays
         /// Drawing image that we will display
         /// </summary>
         private DrawingImage imageSource;
+        #endregion
 
         System.Windows.Threading.DispatcherTimer _timer = new System.Windows.Threading.DispatcherTimer();
         TimeSpan _time;
         private bool restartTimer;
-        private bool gameOver;
         int seconds = 0;
-        bool firstTimer = true;
         int lives;
+        int totalScore = 0;
         int score = 0;
 
         public GameWindow(Difficulty difficulty)
@@ -120,26 +121,57 @@ namespace SimonSays
             }
 
             lblLives.Content = "Lives: " + lives;
-            lblScore.Content = "Score: " + score;
+            lblScore.Content = "Score: " + totalScore;
             lblSeconds.Content = seconds;
 
             StartCountdown();
 
+            score = NeuralNetworkCalculation();
+
             if (restartTimer)
             {
-                CalculateGestureScore();
+                CalculateGestureScore(score);
             }
 
         }
 
-        private void CalculateGestureScore()
+        private int NeuralNetworkCalculation()
         {
-            MessageBox.Show("Score");
+            return 0;
+        }
 
-            // Display stars and increment score
+        private void CalculateGestureScore(int score)
+        {
+            var imageName = "";
 
-            // If score is 0 lose a life
-
+            switch (score)
+            {
+                case 0:
+                    imageName = "fail.png";
+                    lives -= 1;                    
+                    break;
+                case 1:
+                    imageName = "onestars.png";
+                    break;
+                case 2:
+                    imageName = "twostars.png";
+                    break;
+                case 3:
+                    imageName = "threestars.png";
+                    break;
+                case 4:
+                    imageName = "fourstars.png";
+                    break;
+                case 5:
+                    imageName = "fivestars.png";
+                    break;
+                default:
+                    break;
+            }
+            totalScore += score;
+            imgScore.Source = new BitmapImage(new Uri("pack://application:,,,/Images/" + imageName));
+            lblLives.Content = "Lives: " + lives;
+            lblScore.Content = "Score: " + totalScore;
             if (lives == 0)
             {
                 var window = new GameOver();
@@ -164,7 +196,7 @@ namespace SimonSays
             {
                 _timer.Stop();
                 restartTimer = false;
-                CalculateGestureScore();
+                CalculateGestureScore(score);
             }
             _time = _time.Add(TimeSpan.FromSeconds(-1));
         }
@@ -174,7 +206,6 @@ namespace SimonSays
             _time = TimeSpan.FromSeconds(seconds);
             _timer.Start();
         }
-
 
         /// <summary>
         /// Draws indicators to show which edges are clipping skeleton data
