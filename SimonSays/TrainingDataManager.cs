@@ -20,11 +20,19 @@ namespace SimonSays
 
         private List<TrainingDataRow> trainingDataList = new List<TrainingDataRow>();
 
+        private Dictionary<String, List<TrainingDataRow>> trainingDataDictionary;
+
         private TextWriter textWriter;
+
+        private TextReader textReader;
 
         private CsvHelper.CsvWriter csvWriter;
 
+        private CsvHelper.CsvReader csvReader;
+
         private String trainingDataPath = @"C:\simon_training_data\";
+
+        private double[,] trainingData;
 
         public TrainingDataManager()
         {
@@ -42,9 +50,66 @@ namespace SimonSays
 
         private void loadTrainingDataFiles()
         {
-            string[] files = Directory.GetFiles(trainingDataPath);
+            String[] files = Directory.GetFiles(trainingDataPath);
             numberOfGestures = files.Length;
-            gestureNameList = new List<string>(files);
+            gestureNameList = new List<String>(files);
+
+            trainingDataDictionary = new Dictionary<String, List<TrainingDataRow>>();
+
+            foreach (String file in files)
+            {
+                textReader = File.OpenText(file);
+                csvReader = new CsvHelper.CsvReader(textReader);
+                List<TrainingDataRow> trainingDataList = csvReader.GetRecords<TrainingDataRow>().ToList();
+                trainingDataDictionary.Add(file, trainingDataList);
+            }
+        }
+
+        // nFiles is the number of outputs since each file represents a gesture.
+        // nTrainingRows is the total number of rows from each file
+        private void loadTrainingData(int nTrainingRows, int nInputs)
+        {
+            // Create new 2D Array with the required sizes.
+            trainingData = new double[nTrainingRows,nInputs+numberOfGestures];
+            
+            // Set all values as default to 0.1 (basically a cheat way to set the output values I can explain)
+            for (int i = 0; i < trainingData.GetLength(0); i++)
+            {
+                for (int j = 0; j < trainingData.GetLength(1); j++)
+                {
+                    trainingData[i, j] = 0.1;
+                }
+            }
+
+            // Index's to keep track of where we are in the trainng data based on the loop through the dictionary.
+            int columnIndex = 0, rowIndex, fileIndex = 0;
+
+            foreach (String key in trainingDataDictionary.Keys)
+            {
+                // Loop through eash row associated to the gesture.
+                foreach (TrainingDataRow row in trainingDataDictionary[key])
+                {
+                    // Add method here to return double[] containg the distances we want from
+                    // the training data row values.
+                    double[] values = new double[12];
+
+                    for (rowIndex = 0; rowIndex < values.Length; rowIndex++)
+                    {
+                        trainingData[columnIndex,rowIndex] = values[rowIndex];
+                    }
+
+                    // Here the output value will be set to 0.9 for all the training data rows it relates to.
+                    trainingData[columnIndex, rowIndex + fileIndex] = 0.9;
+                    columnIndex++;
+                }
+                // Next file/gesture is about to be looped through so we need to increase the index of the 0.9 value.
+                fileIndex++;
+            }
+        }
+
+        public double[,] getTrainingData()
+        {
+            return trainingData;
         }
 
         public void setSkeletalSource(Skeleton skel)
@@ -67,7 +132,6 @@ namespace SimonSays
 
         public void saveTrainingSet()
         {
-
             TrainingDataRow row = saveSkeletalPoints();
             trainingDataList.Add(row);
         }

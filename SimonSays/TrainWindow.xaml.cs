@@ -318,7 +318,7 @@ namespace SimonSays
             recordTimer.Interval = 5000;
             recordTimer.Elapsed += onTimerExpired;
             // This could be moved into the TrainingDataManager at some point
-            String gestureName = ((ComboBoxItem)comboBox.SelectedItem).Content.ToString();
+            String gestureName = comboBox.SelectedItem.ToString();
             tdManager.startAddNewTrainingSet(gestureName);
             recordTimer.Start();
         }
