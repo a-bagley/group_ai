@@ -45,6 +45,8 @@ namespace SimonSays
             {
                 System.IO.Directory.CreateDirectory(trainingDataPath);
             }
+            loadTrainingDataInfo();
+            // Do you want this here Sam?
             loadTrainingDataFiles();
         }
 
@@ -64,6 +66,12 @@ namespace SimonSays
                 trainingDataDictionary.Add(file, trainingDataList);
             }
         }
+
+
+        //This is great Sam but we've skipped a step.
+        //We need to load in the CSV files and calculate the key distances
+        //then we can feed them into your logic for building the actual training
+        //data for the nerual network
 
         // nFiles is the number of outputs since each file represents a gesture.
         // nTrainingRows is the total number of rows from each file
@@ -110,11 +118,15 @@ namespace SimonSays
         public double[,] getTrainingData()
         {
             return trainingData;
+        }
+
+        public void loadTrainingDataInfo()
+        {
             String[] filePaths = Directory.GetFiles(trainingDataPath);
             foreach(String path in filePaths)
             {
                 gestureNameList.Add(Path.GetFileName(path));
-        }
+            }
             numberOfGestures = gestureNameList.Count;
         }
 
