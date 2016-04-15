@@ -52,7 +52,7 @@ namespace SimonSays
 
         private void loadTrainingDataFiles()
         {
-            //loadTrainingDataInfo();
+            loadTrainingDataInfo();
             String[] files = Directory.GetFiles(trainingDataPath);
 
             trainingDataDictionary = new Dictionary<String, List<TrainingDataRow>>();
@@ -121,6 +121,7 @@ namespace SimonSays
 
         public void loadTrainingDataInfo()
         {
+            gestureNameList.Clear();
             String[] filePaths = Directory.GetFiles(trainingDataPath);
             foreach(String path in filePaths)
             {
