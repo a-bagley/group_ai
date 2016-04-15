@@ -52,9 +52,8 @@ namespace SimonSays
 
         private void loadTrainingDataFiles()
         {
+            //loadTrainingDataInfo();
             String[] files = Directory.GetFiles(trainingDataPath);
-            numberOfGestures = files.Length;
-            gestureNameList = new List<String>(files);
 
             trainingDataDictionary = new Dictionary<String, List<TrainingDataRow>>();
 
@@ -125,7 +124,12 @@ namespace SimonSays
             String[] filePaths = Directory.GetFiles(trainingDataPath);
             foreach(String path in filePaths)
             {
-                gestureNameList.Add(Path.GetFileName(path));
+                int pos = path.LastIndexOf("/") + 1;
+                String name = path.Substring(pos, path.Length - pos);
+                pos = name.LastIndexOf(".");
+                if (pos > 0)
+                    name = name.Substring(0, pos);
+                gestureNameList.Add(Path.GetFileName(name));
             }
             numberOfGestures = gestureNameList.Count;
         }

@@ -8,8 +8,6 @@ namespace SimonSays
 {
     class TrainingDataRow
     {
-        public String gesture { get; set; }
-
         public double headX { get; set; }
         public double headY { get; set; }
 
