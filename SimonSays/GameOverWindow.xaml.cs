@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace SsUtils
+namespace SimonSays
 {
     /// <summary>
     /// Interaction logic for GameOver.xaml

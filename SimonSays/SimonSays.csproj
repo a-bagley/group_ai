@@ -7,7 +7,7 @@
     <ProjectGuid>{1CEAC82E-7E13-43C7-AB1B-FD5813BB6BB3}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SsUtils</RootNamespace>
+    <RootNamespace>SimonSays</RootNamespace>
     <AssemblyName>SimonSays</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

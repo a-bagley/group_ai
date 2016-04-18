@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SsUtils.Properties {
+namespace SimonSays.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

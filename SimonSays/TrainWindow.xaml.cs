@@ -15,7 +15,7 @@ using System.IO;
 using System.Timers;
 using System.Windows.Controls;
 
-namespace SsUtils
+namespace SimonSays
 {
     /// <summary>
     /// Interaction logic for TrainWindow.xaml
