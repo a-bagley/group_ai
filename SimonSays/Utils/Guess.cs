@@ -4,29 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimonSays
+namespace SimonSays.Utils
 {
-    namespace Utils
+    class Guess
     {
-        class Guess
+        private int resultId;
+        private double resultValue;
+
+        private int guessId { get; set; }
+
+        private double guessValue { get; set; }
+
+        public Guess()
         {
-            private int resultId;
-            private double resultValue;
 
-            private int guessId { get; set; }
+        }
 
-            private double guessValue { get; set; }
-
-            public Guess()
-            {
-
-            }
-
-            public Guess(int id, double value)
-            {
-                this.guessId = id;
-                this.guessValue = value;
-            }
+        public Guess(int id, double value)
+        {
+            this.guessId = id;
+            this.guessValue = value;
         }
     }
 }

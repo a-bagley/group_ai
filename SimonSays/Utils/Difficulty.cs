@@ -1,4 +1,4 @@
-﻿namespace SimonSays
+﻿namespace SimonSays.Utils
 {
     public enum Difficulty
     {

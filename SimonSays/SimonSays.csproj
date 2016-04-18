@@ -66,6 +66,7 @@
     <Compile Include="TrainWindow.xaml.cs">
       <DependentUpon>TrainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Classifier.cs" />
     <Compile Include="Utils\Guess.cs" />
     <Page Include="GameOverWindow.xaml">
       <SubType>Designer</SubType>
@@ -83,7 +84,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Difficulty.cs" />
+    <Compile Include="Utils\Difficulty.cs" />
     <Compile Include="GameOverWindow.xaml.cs">
       <DependentUpon>GameOverWindow.xaml</DependentUpon>
     </Compile>
