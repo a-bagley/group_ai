@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace SimonSays
+namespace SsUtils
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

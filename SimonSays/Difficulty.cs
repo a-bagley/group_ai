@@ -1,4 +1,4 @@
-﻿namespace SimonSays
+﻿namespace SsUtils
 {
     public enum Difficulty
     {

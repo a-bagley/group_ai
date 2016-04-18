@@ -1,4 +1,4 @@
-﻿<Window x:Class="SimonSays.GameOver"
+﻿<Window x:Class="SsUtils.GameOver"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Game Over" Height="500" Width="720" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">

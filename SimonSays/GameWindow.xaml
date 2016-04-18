@@ -1,4 +1,4 @@
-﻿<Window x:Class="SimonSays.GameWindow"
+﻿<Window x:Class="SsUtils.GameWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Simon Says" Height="500" Width="720" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">

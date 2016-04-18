@@ -7,7 +7,7 @@
     <ProjectGuid>{1CEAC82E-7E13-43C7-AB1B-FD5813BB6BB3}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimonSays</RootNamespace>
+    <RootNamespace>SsUtils</RootNamespace>
     <AssemblyName>SimonSays</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -57,12 +57,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="NeuralNetwork\MultilayerPerceptron.cs" />
+    <Compile Include="NeuralNetwork\NeuralNetwork.cs" />
+    <Compile Include="NeuralNetwork\NeuronLayer.cs" />
     <Compile Include="TrainingDataManager.cs" />
     <Compile Include="TrainingDataRow.cs" />
     <Compile Include="TrainingDataSaver.cs" />
     <Compile Include="TrainWindow.xaml.cs">
       <DependentUpon>TrainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Guess.cs" />
     <Page Include="GameOverWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

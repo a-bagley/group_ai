@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 using Microsoft.Kinect;
 using System.IO;
 
-namespace SimonSays
+namespace SsUtils
 {
     /// <summary>
     /// Interaction logic for GameWindow.xaml
