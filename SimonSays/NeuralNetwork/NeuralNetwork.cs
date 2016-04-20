@@ -66,9 +66,11 @@ namespace SimonSays.NeuralNetwork
 		        else
                     allLayers[i] = outputLayer = new NeuronLayer(nodeList[i], 0, allLayers[i - 1].getNumberNodes(), fLearningRate, fMomentum);
 	        }
+
+
 	
 	        inputLayer.linkNeurons(null, allLayers[1]);
-	        for (int i = 1; i < nHiddenLayers; i++)
+	        for (int i = 1; i < nAllLayers - 1; i++)
 		        allLayers[i].linkNeurons(allLayers[i - 1], allLayers[i + 1]);
 	        outputLayer.linkNeurons(allLayers[nHiddenLayers], null);
 	
@@ -103,7 +105,7 @@ namespace SimonSays.NeuralNetwork
         {
             if ((i >= 0) && (i < outputLayer.getNumberNodes()))
             {
-                return outputLayer.getDesiredValue(i);
+                return outputLayer.getNeuronValue(i);
             }
 
             return (double)10000; // to indicate an error
@@ -136,10 +138,10 @@ namespace SimonSays.NeuralNetwork
         /// </summary>
         public void backPropagate()
         {
-            for (int i = 0; i < nAllLayers; i++)
+            for (int i = nAllLayers - 1; i > 0; i--)
                 allLayers[i].calculateErrors();
 
-            for (int i = 0; i < nAllLayers; i++)
+            for (int i = nHiddenLayers; i >= 0; i--)
                 allLayers[i].adjustWeights();
         }
 
@@ -209,7 +211,7 @@ namespace SimonSays.NeuralNetwork
                 System.Diagnostics.Debug.WriteLine("Bias Weights:");
                 for (j = 0; j < allLayers[i].getNumberChildNodes(); j++)
                 {
-                    System.Diagnostics.Debug.WriteLine(j + ": " + allLayers[i].getBiasValue(j));
+                    System.Diagnostics.Debug.WriteLine(j + ": " + allLayers[i].getBiasWeight(j));
                 }
                 System.Diagnostics.Debug.WriteLine("\n");
             }

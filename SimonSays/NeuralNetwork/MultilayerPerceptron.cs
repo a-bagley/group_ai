@@ -55,14 +55,15 @@ namespace SimonSays.NeuralNetwork
             int setMarker = 0;
 
             System.Diagnostics.Debug.WriteLine("************Pre training*******************");
-            neuralNetwork.PrintInfo();
-
-            while ((error > 0.05)) //&& (c<50000))
+            ////neuralNetwork.PrintInfo();
+            int c = 0;
+            while ((error > 0.0005) && (c<50000)) // error 0.05
             {
                 error = 0;
-                //c++;
+                c++;
                 for (i = 0; i < nTrainingSets; i++)
                 {
+                    System.Diagnostics.Debug.WriteLine("Error: " + error);
                     for (j = 0; j < nInputs; j++)
                     {
                         neuralNetwork.setInput(j, trainingData[i, j]);

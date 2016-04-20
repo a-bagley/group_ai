@@ -182,9 +182,9 @@ namespace SimonSays.NeuralNetwork
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public double getBiasValue(int node)
+        public double getBiasWeight(int node)
         {
-            return biasVals[node];
+            return biasWeights[node];
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace SimonSays.NeuralNetwork
                     //if ((childLayer == null) && linearOutput)
                     //    neuronVals[j] = x;
                     // else
-                        neuronVals[j] = 1.0f / (1 + Math.Exp(-x));
+                        neuronVals[j] = 1.0f / (1.0f + (double)Math.Exp(-x));
                 }
             }
         }
