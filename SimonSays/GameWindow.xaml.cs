@@ -114,20 +114,20 @@ namespace SimonSays
             switch (difficulty)
             {
                 case Difficulty.Easy:
-                    mLives = 5;
-                    mCountdownSeconds = 30;
+                    mLives = 4;
+                    mCountdownSeconds = 15;
                     break;
                 case Difficulty.Medium:
                     mLives = 3;
-                    mCountdownSeconds = 20;
+                    mCountdownSeconds = 10;
                     break;
                 case Difficulty.Hard:
-                    mLives = 1;
-                    mCountdownSeconds = 10;
+                    mLives = 2;
+                    mCountdownSeconds = 5;
                     break;
                 default:
                     mLives = 3;
-                    mCountdownSeconds = 20;
+                    mCountdownSeconds = 10;
                     break;
             }
             updateLivesUI();
