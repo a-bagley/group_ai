@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SimonSays.Utils
 {
+    /// <summary>
+    /// Used to show the results of AI systems.
+    /// </summary>
     class Guess
     {
-        private int resultId;
-        private double resultValue;
-
-        private int guessId { get; set; }
-
-        private double guessValue { get; set; }
+        private int mGuessId;
+        private double mGuessValue;
 
         public Guess()
         {
@@ -22,8 +19,18 @@ namespace SimonSays.Utils
 
         public Guess(int id, double value)
         {
-            this.guessId = id;
-            this.guessValue = value;
+            this.mGuessId = id;
+            this.mGuessValue = value;
+        }
+
+        public int getGuessId()
+        {
+            return mGuessId;
+        }
+
+        public double getGuessValue() 
+        {
+            return mGuessValue;
         }
     }
 }

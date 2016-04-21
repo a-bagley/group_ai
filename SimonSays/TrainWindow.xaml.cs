@@ -22,7 +22,7 @@ namespace SimonSays
     /// </summary>
     public partial class TrainWindow : Window
     {
-
+        #region Skeleton Properties
         /// <summary>
         /// Width of output drawing
         /// </summary>
@@ -87,6 +87,7 @@ namespace SimonSays
         /// Drawing image that we will display
         /// </summary>
         private DrawingImage imageSource;
+        #endregion
 
         /// <summary>
         /// Signals the recording of kinect skeleton data
@@ -103,24 +104,18 @@ namespace SimonSays
         /// </summary>
         private Timer recordTimer;
 
+        /// <summary>
+        /// Recording time for data sets (milliseconds)
+        /// </summary>
+        private readonly int RECORDING_TIME_PERIOD = 8000;
+
         public TrainWindow()
         {
             InitializeComponent();
 
             tdManager = new TrainingDataManager();
             tdManager.init();
-
-            //initializeBaseGestures();
         }
-
-        //private void initializeBaseGestures()
-        //{
-        //    gestures = new List<String>();
-        //    gestures.Add("ARM_LEFT");
-        //    gestures.Add("ARM_RIGHT");
-        //    gestures.Add("LEG_LEFT");
-        //    gestures.Add("LEG_RIGHT");
-        //    }
 
         /// <summary>
         /// Draws indicators to show which edges are clipping skeleton data
@@ -232,8 +227,6 @@ namespace SimonSays
             {
                 this.sensor.Stop();
             }
-
-//            csvWriter.WriteRecords(trainingDataList);
         }
 
         private void btnRecordData_Click(object sender, RoutedEventArgs e)
@@ -303,10 +296,14 @@ namespace SimonSays
             }
         }
 
+        /// <summary>
+        /// Saves the current skeleton data to CSV file.
+        /// </summary>
+        /// <param name="skel"></param>
         private void saveSkeletalData(Skeleton skel)
         {
-            tdManager.setSkeletalSource(skel);
-            tdManager.saveTrainingSet();
+            //tdManager.setSkeletalSource(skel);
+            tdManager.saveRawSkeletalSet(skel);
         }
 
         /// <summary>
@@ -314,9 +311,10 @@ namespace SimonSays
         /// </summary>
         private void startTimer()
         {
+            System.Threading.Thread.Sleep(1000);
             recordTimer = new Timer();
             recordTimer.AutoReset = false;
-            recordTimer.Interval = 5000;
+            recordTimer.Interval = RECORDING_TIME_PERIOD;
             recordTimer.Elapsed += onTimerExpired;
             // This could be moved into the TrainingDataManager at some point
             String gestureName = comboBox.SelectedItem.ToString();
@@ -478,15 +476,6 @@ namespace SimonSays
             this.comboBox.SelectedIndex = this.comboBox.Items.Add(newGesture);
             this.textBox.Clear();
         }
-
-      
-
-        
-
-        
-
-      
-
         
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimonSays
 {
-    class TrainingDataRow
+    class SkeletonDataRow
     {
         public double headX { get; set; }
         public double headY { get; set; }

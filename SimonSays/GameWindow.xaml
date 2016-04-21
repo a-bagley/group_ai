@@ -13,7 +13,7 @@
         <Label x:Name="lblScore" Content="Score:" HorizontalAlignment="Left" Margin="56,386,0,0" VerticalAlignment="Top" Width="80" BorderThickness="1" BorderBrush="#FF0051FD" FontFamily="Calibri" FontWeight="Bold" FontSize="14" Background="White"/>
         <Label x:Name="lblLives" Content="Lives:" HorizontalAlignment="Left" Margin="198,386,0,0" VerticalAlignment="Top" Width="80" BorderThickness="1" BorderBrush="#FF0051FD" FontWeight="Bold" FontFamily="Calibri" FontSize="14" Background="White"/>
 
-        <Label x:Name="lblSimonSays" Content="Simon Says..." HorizontalAlignment="Left" Margin="56,28,0,0" VerticalAlignment="Top" Width="222" BorderThickness="1" BorderBrush="#FF0051FD" FontFamily="Calibri" FontWeight="Bold" FontSize="14" Background="White"/>
+        <Label x:Name="lblSimonSaysCommand" Content="Simon Says..." HorizontalAlignment="Left" Margin="56,28,0,0" VerticalAlignment="Top" Width="222" BorderThickness="1" BorderBrush="#FF0051FD" FontFamily="Calibri" FontWeight="Bold" FontSize="14" Background="White"/>
         <Border BorderBrush="#FF0051FD" BorderThickness="1" HorizontalAlignment="Left" Height="153" Margin="111,167,0,0" VerticalAlignment="Top" Width="119" RenderTransformOrigin="0.767,0.508" Background="White">
             <Label x:Name="lblSeconds" HorizontalAlignment="Center" Margin="26,35,24,0" VerticalAlignment="Top" Height="81" Width="67" FontSize="48" FontFamily="Calibri"/>
         </Border>

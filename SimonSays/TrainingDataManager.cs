@@ -12,27 +12,29 @@ namespace SimonSays
     {
         private TrainingDataSaver tdSaver;
 
-        private Skeleton skeleton;
+        private Skeleton mSkeleton;
 
-        private int numberOfGestures;
+        private int mNumberOfGestures;
 
-        private List<String> gestureNameList = new List<String>();
+        private List<String> mGestureNameList = new List<String>();
 
-        private List<TrainingDataRow> trainingDataList = new List<TrainingDataRow>();
+        private List<SkeletonDataRow> mTrainingDataList = new List<SkeletonDataRow>();
 
-        private Dictionary<String, List<TrainingDataRow>> trainingDataDictionary;
+        private Dictionary<String, List<SkeletonDataRow>> mRawDataDictionary;
 
-        private TextWriter textWriter;
+        private TextWriter mTextWriter;
 
-        private TextReader textReader;
+        private TextReader mTextReader;
 
-        private CsvHelper.CsvWriter csvWriter;
+        private CsvHelper.CsvWriter mCsvWriter;
 
-        private CsvHelper.CsvReader csvReader;
+        private CsvHelper.CsvReader mCsvReader;
 
-        private String trainingDataPath = @"C:\simon_training_data\";
+        private readonly String RAW_DATA_PATH = @"C:\simon_training_data\";
 
-        private double[,] trainingData;
+        private double[,] mTrainingData;
+
+        private int mNumberOfDataRows = 0;
 
         public TrainingDataManager()
         {
@@ -41,88 +43,84 @@ namespace SimonSays
 
         public void init()
         {
-            if (!Directory.Exists(trainingDataPath))
+            if (!Directory.Exists(RAW_DATA_PATH))
             {
-                System.IO.Directory.CreateDirectory(trainingDataPath);
+                System.IO.Directory.CreateDirectory(RAW_DATA_PATH);
             }
             loadTrainingDataInfo();
             // Do you want this here Sam?
-            loadTrainingDataFiles();
+            loadRawDataFiles();
         }
 
-        private void loadTrainingDataFiles()
+        private void loadRawDataFiles()
         {
             loadTrainingDataInfo();
-            String[] files = Directory.GetFiles(trainingDataPath);
-
-            trainingDataDictionary = new Dictionary<String, List<TrainingDataRow>>();
+            String[] files = Directory.GetFiles(RAW_DATA_PATH);
+            mNumberOfDataRows = 0;
+            mRawDataDictionary = new Dictionary<String, List<SkeletonDataRow>>();
 
             foreach (String file in files)
             {
-                textReader = File.OpenText(file);
-                csvReader = new CsvHelper.CsvReader(textReader);
-                List<TrainingDataRow> trainingDataList = csvReader.GetRecords<TrainingDataRow>().ToList();
-                trainingDataDictionary.Add(file, trainingDataList);
+                mTextReader = File.OpenText(file);
+                mCsvReader = new CsvHelper.CsvReader(mTextReader);
+                List<SkeletonDataRow> trainingDataList = mCsvReader.GetRecords<SkeletonDataRow>().ToList();
+                mNumberOfDataRows += trainingDataList.Count;
+                mRawDataDictionary.Add(file, trainingDataList);
             }
         }
 
-
-        //This is great Sam but we've skipped a step.
-        //We need to load in the CSV files and calculate the key distances
-        //then we can feed them into your logic for building the actual training
-        //data for the nerual network
 
         // nFiles is the number of outputs since each file represents a gesture.
         // nTrainingRows is the total number of rows from each file
-        private void loadTrainingData(int nTrainingRows, int nInputs)
-        {
-            // Create new 2D Array with the required sizes.
-            trainingData = new double[nTrainingRows,nInputs+numberOfGestures];
+        //private void loadTrainingData(int nTrainingRows, int nInputs)
+        //{
+        //    // Create new 2D Array with the required sizes.
+        //    mTrainingData = new double[nTrainingRows,nInputs+mNumberOfGestures];
             
-            // Set all values as default to 0.1 (basically a cheat way to set the output values I can explain)
-            for (int i = 0; i < trainingData.GetLength(0); i++)
-            {
-                for (int j = 0; j < trainingData.GetLength(1); j++)
-                {
-                    trainingData[i, j] = 0.1;
-                }
-            }
+        //    // Set all values as default to 0.1 (basically a cheat way to set the output values I can explain)
+        //    for (int i = 0; i < mTrainingData.GetLength(0); i++)
+        //    {
+        //        for (int j = 0; j < mTrainingData.GetLength(1); j++)
+        //        {
+        //            mTrainingData[i, j] = 0.1;
+        //        }
+        //    }
 
-            // Index's to keep track of where we are in the trainng data based on the loop through the dictionary.
-            int columnIndex = 0, rowIndex, fileIndex = 0;
+        //    // Index's to keep track of where we are in the trainng data based on the loop through the dictionary.
+        //    int columnIndex = 0, rowIndex, fileIndex = 0;
 
-            foreach (String key in trainingDataDictionary.Keys)
-            {
-                // Loop through eash row associated to the gesture.
-                foreach (TrainingDataRow row in trainingDataDictionary[key])
-                {
-                    // Add method here to return double[] containg the distances we want from
-                    // the training data row values.
-                    double[] values = new double[12];
+        //    foreach (String key in mRawDataDictionary.Keys)
+        //    {
+        //        // Loop through eash row associated to the gesture.
+        //        foreach (SkeletonDataRow row in mRawDataDictionary[key])
+        //        {
+        //            // Add method here to return double[] containg the distances we want from
+        //            // the training data row values.
+        //            double[] values = new double[12];
 
-                    for (rowIndex = 0; rowIndex < values.Length; rowIndex++)
-                    {
-                        trainingData[columnIndex,rowIndex] = values[rowIndex];
-                    }
+        //            for (rowIndex = 0; rowIndex < values.Length; rowIndex++)
+        //            {
+        //                mTrainingData[columnIndex,rowIndex] = values[rowIndex];
+        //            }
 
-                    // Here the output value will be set to 0.9 for all the training data rows it relates to.
-                    trainingData[columnIndex, rowIndex + fileIndex] = 0.9;
-                    columnIndex++;
-                }
-                // Next file/gesture is about to be looped through so we need to increase the index of the 0.9 value.
-                fileIndex++;
-            }
-        }
+        //            // Here the output value will be set to 0.9 for all the training data rows it relates to.
+        //            mTrainingData[columnIndex, rowIndex + fileIndex] = 0.9;
+        //            columnIndex++;
+        //        }
+        //        // Next file/gesture is about to be looped through so we need to increase the index of the 0.9 value.
+        //        fileIndex++;
+        //    }
+        //}
 
         public double[,] getTrainingData()
         {
-            return trainingData;
+            return mTrainingData;
         }
 
         public void loadTrainingDataInfo()
         {
-            gestureNameList.Clear();
-            String[] filePaths = Directory.GetFiles(trainingDataPath);
+            mGestureNameList.Clear();
+            String[] filePaths = Directory.GetFiles(RAW_DATA_PATH);
             foreach(String path in filePaths)
             {
                 int pos = path.LastIndexOf("/") + 1;
@@ -130,50 +128,71 @@ namespace SimonSays
                 pos = name.LastIndexOf(".");
                 if (pos > 0)
                     name = name.Substring(0, pos);
-                gestureNameList.Add(Path.GetFileName(name));
+                mGestureNameList.Add(Path.GetFileName(name));
             }
-            numberOfGestures = gestureNameList.Count;
+            mNumberOfGestures = mGestureNameList.Count;
         }
 
         public void setSkeletalSource(Skeleton skel)
         {
-            this.skeleton = skel;
+            this.mSkeleton = skel;
         }
 
         public void startAddNewTrainingSet(String gestureName)
         {
-            String gestureFileName = trainingDataPath + gestureName + ".csv";
-            textWriter = File.CreateText(gestureFileName);
-            csvWriter = new CsvHelper.CsvWriter(textWriter);
+            String gestureFileName = RAW_DATA_PATH + gestureName + ".csv";
+            mTextWriter = File.CreateText(gestureFileName);
+            mCsvWriter = new CsvHelper.CsvWriter(mTextWriter);
         }
 
         public void finishAddNewTrainingSet()
         {
-            csvWriter.WriteRecords(trainingDataList);
-            textWriter.Close();
+            mCsvWriter.WriteRecords(mTrainingDataList);
+            mTextWriter.Close();
         }
 
-        public void saveTrainingSet()
+        public void saveRawSkeletalSet(Skeleton skel)
         {
-            TrainingDataRow row = saveSkeletalPoints();
-            trainingDataList.Add(row);
+            SkeletonDataRow row = createSkeletalDataRow(skel);
+            mTrainingDataList.Add(row);
         }
 
         public List<String> getGestureList()
         {
-            return gestureNameList;
+            return mGestureNameList;
+        }
+        
+        public String getGestureName(int gestureNumber)
+        {
+            return mGestureNameList.ElementAt(gestureNumber);
+        }
+
+        public Dictionary<String, List<SkeletonDataRow>> getRawDataDictionary()
+        {
+            return mRawDataDictionary;
+        }
+
+        public int getNumberOfDataRows()
+        {
+            return mNumberOfDataRows;
         }
 
         public void appendGestureNameToList(String gesture)
         {
-            gestureNameList.Add(gesture);
+            mGestureNameList.Add(gesture);
         }
 
-        private TrainingDataRow saveSkeletalPoints()
+        public String getRandomGesture()
         {
-            TrainingDataRow trainingDataRow = new TrainingDataRow();
+            Random rand = new Random();
+            return mGestureNameList.ElementAt(rand.Next(mGestureNameList.Count - 1));
+        }
 
-            foreach (Joint joint in skeleton.Joints)
+        public SkeletonDataRow createSkeletalDataRow(Skeleton skel)
+        {
+            SkeletonDataRow trainingDataRow = new SkeletonDataRow();
+
+            foreach (Joint joint in skel.Joints)
             {
                 if (joint.TrackingState == JointTrackingState.Tracked)
                 {
@@ -315,61 +334,6 @@ namespace SimonSays
                 }
             }
             return trainingDataRow;
-        }
-
-        public TrainingDataRow calculateDistanceBetweenJoints()
-        {
-            TrainingDataRow trainingDataRow = new TrainingDataRow();
-
-            foreach (Joint joint in skeleton.Joints)
-            {
-                if (joint.TrackingState == JointTrackingState.Tracked)
-                {
-                    switch (joint.JointType) 
-                    {
-                        //Todo: use some of this code for calculating useful distances from the raw training data
-
-                        /////// The following code can be salvaged for disatnce calculations once training data is loaded
-
-                        //case JointType.Head:
-                        //{
-                        //    trainingDataRow._distanceBetweenHeadAndHandRight = getDistanceBetweenTwoJoints(joint, _skeleton.Joints.FirstOrDefault(s => s.JointType == JointType.HandRight));
-                        //    trainingDataRow._distanceBetweenHeadAndHandLeft = getDistanceBetweenTwoJoints(joint, _skeleton.Joints.FirstOrDefault(s => s.JointType == JointType.HandLeft));
-                            
-                        //    break;
-                        //}
-                        
-                        //case JointType.HipCenter:
-                        //{
-                        //    trainingDataRow._distanceBetweenHipCenterAndElbowRight = getDistanceBetweenTwoJoints(joint, _skeleton.Joints.FirstOrDefault(s => s.JointType == JointType.ElbowRight));
-                        //    trainingDataRow._distanceBetweenHipCenterAndElbowLeft = getDistanceBetweenTwoJoints(joint, _skeleton.Joints.FirstOrDefault(s => s.JointType == JointType.ElbowLeft));
-
-                        //    trainingDataRow._distanceBetweenHipCenterAndKneeRight = getDistanceBetweenTwoJoints(joint, _skeleton.Joints.FirstOrDefault(s => s.JointType == JointType.KneeRight));
-                        //    trainingDataRow._distanceBetweenHipCenterAndKneeLeft = getDistanceBetweenTwoJoints(joint, _skeleton.Joints.FirstOrDefault(s => s.JointType == JointType.KneeLeft));
-
-                        //    trainingDataRow._distanceBetweenHipCenterAndFootRight = getDistanceBetweenTwoJoints(joint, _skeleton.Joints.FirstOrDefault(s => s.JointType == JointType.FootRight));
-                        //    trainingDataRow._distanceBetweenHipCenterAndFootLeft = getDistanceBetweenTwoJoints(joint, _skeleton.Joints.FirstOrDefault(s => s.JointType == JointType.FootLeft));
-                            
-                        //    break;
-                        //}
-
-                        //case JointType.ShoulderCenter:
-                        //{
-                        //    trainingDataRow._distanceBetweenShoulderCenterAndElbowRight = getDistanceBetweenTwoJoints(joint, _skeleton.Joints.FirstOrDefault(s => s.JointType == JointType.ElbowRight));
-                        //    trainingDataRow._distanceBetweenShoulderCenterAndElbowLeft = getDistanceBetweenTwoJoints(joint, _skeleton.Joints.FirstOrDefault(s => s.JointType == JointType.ElbowLeft));
-
-                        //    break;
-                        //}
-                    }
-                }
-            }
-
-            return trainingDataRow;
-        }
-
-        private double getDistanceBetweenTwoJoints(Joint joint1, Joint joint2)
-        {
-            return Math.Sqrt(Math.Pow((joint1.Position.X - joint2.Position.X), 2) + Math.Pow((joint1.Position.Y - joint2.Position.Y), 2));
         }
     }
 }
