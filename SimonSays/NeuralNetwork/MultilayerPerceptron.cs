@@ -51,19 +51,17 @@ namespace SimonSays.NeuralNetwork
         {
             int i, j;
             double error = 1;
-            int nTrainingSets = trainingData.GetLength(1);
+            int nTrainingSets = trainingData.GetLength(0);
             int setMarker = 0;
 
             System.Diagnostics.Debug.WriteLine("************Pre training*******************");
-            ////neuralNetwork.PrintInfo();
             int c = 0;
-            while ((error > 0.0005) && (c<50000)) // error 0.05
+            while ((error > 0.0001) && (c<50000)) // error 0.05
             {
                 error = 0;
                 c++;
                 for (i = 0; i < nTrainingSets; i++)
                 {
-                    System.Diagnostics.Debug.WriteLine("Error: " + error);
                     for (j = 0; j < nInputs; j++)
                     {
                         neuralNetwork.setInput(j, trainingData[i, j]);
@@ -81,6 +79,7 @@ namespace SimonSays.NeuralNetwork
                     neuralNetwork.backPropagate();
                 }
                 error = error / nTrainingSets;
+                System.Diagnostics.Debug.WriteLine("Error: " + error);
             }
             System.Diagnostics.Debug.WriteLine("************Post training*******************");
             neuralNetwork.PrintInfo();

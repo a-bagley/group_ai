@@ -29,10 +29,9 @@ namespace SimonSays.NeuralNetwork
 
         public void trainAI(RawSkeletalDataPackage sdp)
         {
-            // 9 is the magic number!
             //square root of the product of the number of inputs and outputs
-            int n = (int)Math.Sqrt(9 * sdp.getTotalGestures());
-            //int n = 1;
+            //int n = (int)Math.Sqrt(9 * sdp.getTotalGestures());
+            int n = 2; // 1 works
             // add input and output
             n += 2;
             int[] nodeSet = new int[n];

@@ -130,7 +130,9 @@ namespace SimonSays.NeuralNetwork
         public void feedForward()
         {
             for (int i = 0; i < nAllLayers; i++)
+            {
                 allLayers[i].CalculateNeuronValues();
+            }
         }
 
         /// <summary>

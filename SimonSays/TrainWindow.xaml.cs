@@ -235,6 +235,7 @@ namespace SimonSays
         {
             if (bCapture == false)
             {
+                System.Threading.Thread.Sleep(6000);
                 btnRecordData.IsEnabled = false;
                 btnHome.IsEnabled = false;
                 captureCount = 0;

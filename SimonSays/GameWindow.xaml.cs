@@ -95,8 +95,8 @@ namespace SimonSays
         TimeSpan _time;
         private bool restartTimer;
         int mCountdownSeconds = 0;
-        int lives;
-        int totalScore = 0;
+        int mLives;
+        int mScoreTotal = 0;
         int score = 0;
 
         private String mTargetGesture = "unassigned";
@@ -105,7 +105,7 @@ namespace SimonSays
         private MLPClassifier mBrain;
         private Boolean mAIReady = false;
         private Boolean mAIBusy = false;
-        private int mGuessInterval = 0;
+        private int mTickCounter = 0;
 
         public GameWindow(Difficulty difficulty)
         {
@@ -114,35 +114,26 @@ namespace SimonSays
             switch (difficulty)
             {
                 case Difficulty.Easy:
-                    lives = 5;
+                    mLives = 5;
                     mCountdownSeconds = 30;
                     break;
                 case Difficulty.Medium:
-                    lives = 3;
+                    mLives = 3;
                     mCountdownSeconds = 20;
                     break;
                 case Difficulty.Hard:
-                    lives = 1;
+                    mLives = 1;
                     mCountdownSeconds = 10;
                     break;
                 default:
-                    lives = 3;
+                    mLives = 3;
                     mCountdownSeconds = 20;
                     break;
             }
-
-            lblLives.Content = "Lives: " + lives;
-            lblScore.Content = "Score: " + totalScore;
+            updateLivesUI();
+            updateScoreUI();
             lblSeconds.Content = mCountdownSeconds;
 
-            //StartCountdown();
-
-            score = NeuralNetworkCalculation();
-
-            if (restartTimer)
-            {
-                updateScoreUI(score);
-            }
             // NN stuff
             mTDManager = new TrainingDataManager();
             mTDManager.initForPlaying();
@@ -153,10 +144,8 @@ namespace SimonSays
                 {
                     mBrain.trainAI(new RawSkeletalDataPackage(mTDManager.getRawDataDictionary(), mTDManager.getGestureList(), mTDManager.getNumberOfDataRows()));
                     System.Diagnostics.Debug.WriteLine("MLP trained and ready!");
-                    // Get the first target gesture
-                    mTargetGesture = mTDManager.getRandomGesture();
-                    Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
                     mAIReady = true;
+                    restartGame();
                     StartCountdown();
                 }
                 else
@@ -177,25 +166,30 @@ namespace SimonSays
         {
             var imageName = "";
             score = score * 10;
-            if (score > 8)
+            if (score > 8.5)
             {
                 imageName = "fivestars.png";
+                score = 5;
             }
-            else if (score > 6)
+            else if (score > 8)
             {
                 imageName = "fourstars.png";
+                score = 4;
             }
-            else if (score > 4)
+            else if (score > 7.5)
             {
                 imageName = "threestars.png";
+                score = 3;
             }
-            else if (score > 2)
+            else if (score > 7)
             {
                 imageName = "twostars.png";
+                score = 2;
             }
             else
             {
                 imageName = "onestars.png";
+                score = 1;
             }
             //switch (score)
             //{
@@ -221,11 +215,32 @@ namespace SimonSays
             //    default:
             //        break;
             //}
-            totalScore += (int)score;
+            mScoreTotal += (int)score;
             imgScore.Source = new BitmapImage(new Uri("pack://application:,,,/Images/" + imageName));
-            lblLives.Content = "Lives: " + lives;
-            lblScore.Content = "Score: " + totalScore;
-            if (lives == 0)
+            lblLives.Content = "Lives: " + mLives;
+            lblScore.Content = "Score: " + mScoreTotal;
+            //if (mLives == 0)
+            //{
+            //    var window = new GameOver();
+            //    window.Show();
+            //    this.Close();
+            //}
+        }
+
+        private void updateScoreUI()
+        {
+            lblScore.Content = "Score: " + mScoreTotal;
+        }
+
+        private void updateLivesUI()
+        {
+            lblLives.Content = "Lives: " + mLives;
+        }
+
+        private void subtractLife()
+        {
+            mLives--;
+            if (mLives == 0)
             {
                 var window = new GameOver();
                 window.Show();
@@ -246,6 +261,12 @@ namespace SimonSays
             _timer.Start();
         }
 
+        private void restartCountDown()
+        {
+            _time = TimeSpan.FromSeconds(mCountdownSeconds);
+            _timer.Start();
+        }
+
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             lblSeconds.Content = _time.ToString("ss");
@@ -253,21 +274,24 @@ namespace SimonSays
             if (_time == TimeSpan.Zero)
             {
                 _timer.Stop();
-                restartTimer = false;
-                //updateScoreUI(score);
+                subtractLife();
+                updateLivesUI();
+                restartCountDown();
             }
             _time = _time.Add(TimeSpan.FromSeconds(-1));
         }
 
-        private void btnRestartTimer_Click(object sender, RoutedEventArgs e)
+        private void btnRestartGame_Click(object sender, RoutedEventArgs e)
         {
-            restartCountDown();
+            restartGame();
         }
 
-        private void restartCountDown()
+        private void restartGame()
         {
-            _time = TimeSpan.FromSeconds(mCountdownSeconds);
-            _timer.Start();
+            mScoreTotal = 0;
+            mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
+            Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
+            restartCountDown();
         }
 
         private void testPlayerGesture(Skeleton currentPlayerSkel)
@@ -287,11 +311,11 @@ namespace SimonSays
         {
             // Update UI here
             String gestureMatched = mTDManager.getGestureName(aiGuess.getGuessId());
-            if (gestureMatched.Equals(mTargetGesture))
+            if (gestureMatched.Equals(mTargetGesture) && aiGuess.getGuessValue() > 0.7)
             {
                 //get next target gesture
                 // display new target gesture
-                mTargetGesture = mTDManager.getRandomGesture();
+                mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
                 Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
                 Dispatcher.Invoke(new Action(() => updateScoreUI(aiGuess.getGuessValue())));
                 Dispatcher.Invoke(new Action(() => restartCountDown()));
@@ -444,11 +468,17 @@ namespace SimonSays
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             this.DrawBonesAndJoints(skel, dc);
-                            if (mAIReady && !mAIBusy)
+                            if (mTickCounter % 60 == 0)
                             {
-                                mAIBusy = true;
-                                testPlayerGesture(skel);
+                                if (mAIReady && !mAIBusy)
+                                {
+                                    mAIBusy = true;
+                                    testPlayerGesture(skel);
+                                }
                             }
+                            mTickCounter++;
+                            if (mTickCounter == Int32.MaxValue)
+                                mTickCounter = 0;
                         }
                         else if (skel.TrackingState == SkeletonTrackingState.PositionOnly)
                         {

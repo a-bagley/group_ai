@@ -13,20 +13,20 @@
         <Label x:Name="lblScore" Content="Score:" HorizontalAlignment="Left" Margin="56,386,0,0" VerticalAlignment="Top" Width="80" BorderThickness="1" BorderBrush="#FF0051FD" FontFamily="Calibri" FontWeight="Bold" FontSize="14" Background="White"/>
         <Label x:Name="lblLives" Content="Lives:" HorizontalAlignment="Left" Margin="198,386,0,0" VerticalAlignment="Top" Width="80" BorderThickness="1" BorderBrush="#FF0051FD" FontWeight="Bold" FontFamily="Calibri" FontSize="14" Background="White"/>
 
-        <Label x:Name="lblSimonSaysCommand" Content="Simon Says..." HorizontalAlignment="Left" Margin="56,28,0,0" VerticalAlignment="Top" Width="222" BorderThickness="1" BorderBrush="#FF0051FD" FontFamily="Calibri" FontWeight="Bold" FontSize="14" Background="White"/>
+        <Label x:Name="lblSimonSaysCommand" Content="Simon is thinking..." HorizontalAlignment="Left" Margin="45,28,0,0" VerticalAlignment="Top" Width="637" BorderThickness="1" BorderBrush="#FF0051FD" FontFamily="Calibri" FontWeight="Bold" FontSize="34" Background="White" Height="60"/>
         <Border BorderBrush="#FF0051FD" BorderThickness="1" HorizontalAlignment="Left" Height="153" Margin="111,167,0,0" VerticalAlignment="Top" Width="119" RenderTransformOrigin="0.767,0.508" Background="White">
             <Label x:Name="lblSeconds" HorizontalAlignment="Center" Margin="26,35,24,0" VerticalAlignment="Top" Height="81" Width="67" FontSize="48" FontFamily="Calibri"/>
         </Border>
         <Label Content="Seconds&#xD;&#xA;" HorizontalAlignment="Left" Margin="142,285,0,0" VerticalAlignment="Top" Height="25" Width="58" FontFamily="Calibri" FontWeight="Bold" FontSize="14"/>
-        <Button x:Name="btnRestartTimer" Content="Restart" HorizontalAlignment="Left" Margin="301,389,0,0" VerticalAlignment="Top" Width="75" Click="btnRestartTimer_Click"/>
-        <Button x:Name="btnHome" Content="Home" HorizontalAlignment="Left" Margin="301,355,0,0" VerticalAlignment="Top" Width="75" Click="btnHome_Click"/>
-        <Image x:Name="imgSkeleton" HorizontalAlignment="Left" Height="359" Margin="393,28,0,0" VerticalAlignment="Top" Width="289"/>
+        <Button x:Name="btnRestartGame" Content="Restart" HorizontalAlignment="Left" Margin="301,389,0,0" VerticalAlignment="Top" Width="75" Click="btnRestartGame_Click"/>
+        <Button x:Name="btnHome" Content="Home" HorizontalAlignment="Left" Margin="393,389,0,0" VerticalAlignment="Top" Width="75" Click="btnHome_Click"/>
+        <Image x:Name="imgSkeleton" HorizontalAlignment="Left" Height="265" Margin="393,110,0,0" VerticalAlignment="Top" Width="289"/>
         <CheckBox Content="Seated Mode" Height="51" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="499,389,0,31" Name="checkBoxSeatedMode" Checked="CheckBoxSeatedModeChanged" Unchecked="CheckBoxSeatedModeChanged"/>
         <StatusBar Grid.Row="3" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White">
             <StatusBarItem Padding="0 0 0 10">
                 <TextBlock Name="statusBarText" Margin="-1 0 0 0">Click 'Seated' to change skeletal pipeline type!</TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <Image Name="imgScore" HorizontalAlignment="Left" Height="61" Margin="56,80,0,0" VerticalAlignment="Top" Width="207"/>
+        <Image Name="imgScore" HorizontalAlignment="Left" Height="43" Margin="56,110,0,0" VerticalAlignment="Top" Width="207"/>
     </Grid>
 </Window>

@@ -10,8 +10,6 @@ namespace SimonSays
 {
     class TrainingDataManager
     {
-        private TrainingDataSaver tdSaver;
-
         private Skeleton mSkeleton;
 
         private int mNumberOfGestures;
@@ -38,7 +36,7 @@ namespace SimonSays
 
         public TrainingDataManager()
         {
-            tdSaver = new TrainingDataSaver();
+
         }
 
         public void initForTraining()
@@ -93,6 +91,7 @@ namespace SimonSays
                 mNumberOfDataRows += trainingDataList.Count;
                 mRawDataDictionary.Add(file, trainingDataList);
             }
+            mTextReader.Close();
         }
 
 
@@ -194,10 +193,15 @@ namespace SimonSays
             mGestureNameList.Add(gesture);
         }
 
-        public String getRandomGesture()
+        public String getRandomGesture(String lastGesture)
         {
             Random rand = new Random();
-            return mGestureNameList.ElementAt(rand.Next(mGestureNameList.Count - 1));
+            String nextGesture = mGestureNameList.ElementAt(rand.Next(mGestureNameList.Count - 1));
+            while (lastGesture.Equals(nextGesture))
+            {
+                nextGesture = mGestureNameList.ElementAt(rand.Next(mGestureNameList.Count - 1)); // Exclude standing
+            }
+            return nextGesture;
         }
 
         public SkeletonDataRow createSkeletalDataRow(Skeleton skel)
