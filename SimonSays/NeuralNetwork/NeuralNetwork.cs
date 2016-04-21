@@ -165,7 +165,7 @@ namespace SimonSays.NeuralNetwork
                     id = i;
                 }
             }
-
+            System.Diagnostics.Debug.WriteLine("Output: " + id + " guessed");
             return id;
         }
 

@@ -104,6 +104,8 @@ namespace SimonSays
         /// </summary>
         private Timer recordTimer;
 
+        private int captureCount = 0;
+
         /// <summary>
         /// Recording time for data sets (milliseconds)
         /// </summary>
@@ -114,7 +116,7 @@ namespace SimonSays
             InitializeComponent();
 
             tdManager = new TrainingDataManager();
-            tdManager.init();
+            tdManager.initForTraining();
         }
 
         /// <summary>
@@ -235,8 +237,12 @@ namespace SimonSays
             {
                 btnRecordData.IsEnabled = false;
                 btnHome.IsEnabled = false;
+                captureCount = 0;
+                String gestureName = comboBox.SelectedItem.ToString();
+                tdManager.startAddNewTrainingSet(gestureName);
                 bCapture = true;
-                startTimer();
+                //startTimer();
+                
             }            
         }
 
@@ -273,9 +279,19 @@ namespace SimonSays
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             this.DrawBonesAndJoints(skel, dc);
-                            if(bCapture)
+                            //if(bCapture)
+                            if (bCapture && captureCount < 200)
                             {
                                 this.saveSkeletalData(skel);
+                                captureCount++;
+                            }
+                            else if (bCapture)
+                            {
+                                tdManager.finishAddNewTrainingSet();
+                                bCapture = false;
+                                captureCount = 0;
+                                btnRecordData.IsEnabled = true;
+                                btnHome.IsEnabled = true;
                             }
                         }
 
@@ -317,8 +333,7 @@ namespace SimonSays
             recordTimer.Interval = RECORDING_TIME_PERIOD;
             recordTimer.Elapsed += onTimerExpired;
             // This could be moved into the TrainingDataManager at some point
-            String gestureName = comboBox.SelectedItem.ToString();
-            tdManager.startAddNewTrainingSet(gestureName);
+            
             recordTimer.Start();
         }
 

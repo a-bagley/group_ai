@@ -18,7 +18,7 @@ namespace SimonSays
 
         private List<String> mGestureNameList = new List<String>();
 
-        private List<SkeletonDataRow> mTrainingDataList = new List<SkeletonDataRow>();
+        private List<SkeletonDataRow> mCurrentTrainingDataList = new List<SkeletonDataRow>();
 
         private Dictionary<String, List<SkeletonDataRow>> mRawDataDictionary;
 
@@ -41,7 +41,18 @@ namespace SimonSays
             tdSaver = new TrainingDataSaver();
         }
 
-        public void init()
+        public void initForTraining()
+        {
+            if (!Directory.Exists(RAW_DATA_PATH))
+            {
+                System.IO.Directory.CreateDirectory(RAW_DATA_PATH);
+            }
+            loadTrainingDataInfo();
+            // Do you want this here Sam?
+            //loadRawDataFiles();
+        }
+
+        public void initForPlaying()
         {
             if (!Directory.Exists(RAW_DATA_PATH))
             {
@@ -52,9 +63,24 @@ namespace SimonSays
             loadRawDataFiles();
         }
 
+        public void loadTrainingDataInfo()
+        {
+            mGestureNameList.Clear();
+            String[] filePaths = Directory.GetFiles(RAW_DATA_PATH);
+            foreach (String path in filePaths)
+            {
+                int pos = path.LastIndexOf("/") + 1;
+                String name = path.Substring(pos, path.Length - pos);
+                pos = name.LastIndexOf(".");
+                if (pos > 0)
+                    name = name.Substring(0, pos);
+                mGestureNameList.Add(Path.GetFileName(name));
+            }
+            mNumberOfGestures = mGestureNameList.Count;
+        }
+
         private void loadRawDataFiles()
         {
-            loadTrainingDataInfo();
             String[] files = Directory.GetFiles(RAW_DATA_PATH);
             mNumberOfDataRows = 0;
             mRawDataDictionary = new Dictionary<String, List<SkeletonDataRow>>();
@@ -117,22 +143,6 @@ namespace SimonSays
             return mTrainingData;
         }
 
-        public void loadTrainingDataInfo()
-        {
-            mGestureNameList.Clear();
-            String[] filePaths = Directory.GetFiles(RAW_DATA_PATH);
-            foreach(String path in filePaths)
-            {
-                int pos = path.LastIndexOf("/") + 1;
-                String name = path.Substring(pos, path.Length - pos);
-                pos = name.LastIndexOf(".");
-                if (pos > 0)
-                    name = name.Substring(0, pos);
-                mGestureNameList.Add(Path.GetFileName(name));
-            }
-            mNumberOfGestures = mGestureNameList.Count;
-        }
-
         public void setSkeletalSource(Skeleton skel)
         {
             this.mSkeleton = skel;
@@ -143,18 +153,20 @@ namespace SimonSays
             String gestureFileName = RAW_DATA_PATH + gestureName + ".csv";
             mTextWriter = File.CreateText(gestureFileName);
             mCsvWriter = new CsvHelper.CsvWriter(mTextWriter);
+            mCurrentTrainingDataList = new List<SkeletonDataRow>();
         }
 
         public void finishAddNewTrainingSet()
         {
-            mCsvWriter.WriteRecords(mTrainingDataList);
+            mCsvWriter.WriteRecords(mCurrentTrainingDataList);
             mTextWriter.Close();
+            //mCurrentTrainingDataList.Clear();
         }
 
         public void saveRawSkeletalSet(Skeleton skel)
         {
             SkeletonDataRow row = createSkeletalDataRow(skel);
-            mTrainingDataList.Add(row);
+            mCurrentTrainingDataList.Add(row);
         }
 
         public List<String> getGestureList()

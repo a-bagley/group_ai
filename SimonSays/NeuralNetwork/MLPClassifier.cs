@@ -31,8 +31,8 @@ namespace SimonSays.NeuralNetwork
         {
             // 9 is the magic number!
             //square root of the product of the number of inputs and outputs
-            ////int n = (int)Math.Sqrt(9 * sdp.getTotalGestures());
-            int n = 1;
+            int n = (int)Math.Sqrt(9 * sdp.getTotalGestures());
+            //int n = 1;
             // add input and output
             n += 2;
             int[] nodeSet = new int[n];
@@ -102,7 +102,17 @@ namespace SimonSays.NeuralNetwork
             newTrainingDataRow[6] = dCalc.getElbowLeftToHipCentre();
             newTrainingDataRow[7] = dCalc.getWristLeftToHipLeft();
             newTrainingDataRow[8] = dCalc.getWristRightToHipRight();
+
+            for (int i = 0; i < newTrainingDataRow.Length; i++)
+            {
+                newTrainingDataRow[i] = normaliseData(newTrainingDataRow[i]); 
+            }
             return newTrainingDataRow;
+        }
+
+        private double normaliseData(double val)
+        {
+            return val / 2;
         }
 
     }

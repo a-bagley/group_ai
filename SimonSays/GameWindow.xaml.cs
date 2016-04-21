@@ -145,7 +145,7 @@ namespace SimonSays
             }
             // NN stuff
             mTDManager = new TrainingDataManager();
-            mTDManager.init();
+            mTDManager.initForPlaying();
             mBrain = new MLPClassifier(0.1, 0.9); //learning rate 0.2, and momentum 0.9
             Thread aiTrainingThread = new System.Threading.Thread(delegate()
             {
