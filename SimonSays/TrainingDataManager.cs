@@ -57,7 +57,6 @@ namespace SimonSays
                 System.IO.Directory.CreateDirectory(RAW_DATA_PATH);
             }
             loadTrainingDataInfo();
-            // Do you want this here Sam?
             loadRawDataFiles();
         }
 
@@ -67,12 +66,7 @@ namespace SimonSays
             String[] filePaths = Directory.GetFiles(RAW_DATA_PATH);
             foreach (String path in filePaths)
             {
-                int pos = path.LastIndexOf("/") + 1;
-                String name = path.Substring(pos, path.Length - pos);
-                pos = name.LastIndexOf(".");
-                if (pos > 0)
-                    name = name.Substring(0, pos);
-                mGestureNameList.Add(Path.GetFileName(name));
+                mGestureNameList.Add(getFileNameFromPath(path));
             }
             mNumberOfGestures = mGestureNameList.Count;
         }
@@ -86,14 +80,23 @@ namespace SimonSays
             foreach (String file in files)
             {
                 mTextReader = File.OpenText(file);
+                String name = getFileNameFromPath(file);
                 mCsvReader = new CsvHelper.CsvReader(mTextReader);
                 List<SkeletonDataRow> trainingDataList = mCsvReader.GetRecords<SkeletonDataRow>().ToList();
                 mNumberOfDataRows += trainingDataList.Count;
-                mRawDataDictionary.Add(file, trainingDataList);
+                mRawDataDictionary.Add(name, trainingDataList);
             }
             mTextReader.Close();
         }
 
+        private String getFileNameFromPath(String filePath)
+        {
+            String name = Path.GetFileName(filePath);
+            int pos = name.LastIndexOf(".");
+            if (pos > 0)
+                name = name.Substring(0, pos);
+            return name;
+        }
 
         // nFiles is the number of outputs since each file represents a gesture.
         // nTrainingRows is the total number of rows from each file

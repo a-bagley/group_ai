@@ -14,22 +14,22 @@ namespace SimonSays
         }
 
         private void btnEasy_Click(object sender, RoutedEventArgs e)
-        {            
-            var window = new GameWindow(Difficulty.Easy);
+        {
+            var window = new GameWindow(AISystemEnum.NN, DifficultyEnum.Easy);
             window.Show();
             this.Close();
         }
 
         private void btnMedium_Click(object sender, RoutedEventArgs e)
         {
-            var window = new GameWindow(Difficulty.Medium);
+            var window = new GameWindow(AISystemEnum.NN, DifficultyEnum.Medium);
             window.Show();
             this.Close();
         }
 
         private void btnHard_Click(object sender, RoutedEventArgs e)
         {
-            var window = new GameWindow(Difficulty.Hard);
+            var window = new GameWindow(AISystemEnum.NN, DifficultyEnum.Hard);
             window.Show();
             this.Close();
         }

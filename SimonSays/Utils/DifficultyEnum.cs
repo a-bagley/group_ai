@@ -1,6 +1,6 @@
 ﻿namespace SimonSays.Utils
 {
-    public enum Difficulty
+    public enum DifficultyEnum
     {
         Easy, Medium, Hard
     }
