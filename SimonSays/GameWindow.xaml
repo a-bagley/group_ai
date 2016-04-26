@@ -10,14 +10,14 @@
                 <GradientStop Color="#FF006AE9" Offset="0.413"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <Label x:Name="lblScore" Content="Score:" HorizontalAlignment="Left" Margin="139,433,0,0" VerticalAlignment="Top" Width="160" BorderThickness="1" BorderBrush="#FF0051FD" FontFamily="Calibri" FontWeight="Bold" FontSize="32" Background="White" Height="60"/>
-        <Label x:Name="lblLives" Content="Lives:" HorizontalAlignment="Left" Margin="439,433,0,0" VerticalAlignment="Top" Width="160" BorderThickness="1" BorderBrush="#FF0051FD" FontWeight="Bold" FontFamily="Calibri" FontSize="32" Background="White" Height="60"/>
+        <Label x:Name="lblScore" Content="Score:" HorizontalAlignment="Left" Margin="139,457,0,0" VerticalAlignment="Top" Width="160" BorderThickness="1" BorderBrush="#FF0051FD" FontFamily="Calibri" FontWeight="Bold" FontSize="32" Background="White" Height="60"/>
+        <Label x:Name="lblLives" Content="Lives:" HorizontalAlignment="Left" Margin="439,457,0,0" VerticalAlignment="Top" Width="160" BorderThickness="1" BorderBrush="#FF0051FD" FontWeight="Bold" FontFamily="Calibri" FontSize="32" Background="White" Height="60"/>
 
         <Label x:Name="lblSimonSaysCommand" Content="Simon is thinking..." HorizontalAlignment="Left" Margin="45,28,0,0" VerticalAlignment="Top" Width="637" BorderThickness="1" BorderBrush="#FF0051FD" FontFamily="Calibri" FontWeight="Bold" FontSize="34" Background="White" Height="60"/>
-        <Border BorderBrush="#FF0051FD" BorderThickness="1" HorizontalAlignment="Left" Height="233" Margin="244,140,0,0" VerticalAlignment="Top" Width="249" RenderTransformOrigin="0.767,0.508" Background="White">
+        <Border BorderBrush="#FF0051FD" BorderThickness="1" HorizontalAlignment="Left" Height="233" Margin="263,176,0,0" VerticalAlignment="Top" Width="249" RenderTransformOrigin="0.767,0.508" Background="White">
             <Label x:Name="lblSeconds" HorizontalAlignment="Center" Margin="71,35,9,0" VerticalAlignment="Top" Height="137" Width="167" FontSize="72" FontFamily="Calibri"/>
         </Border>
-        <Label Content="Seconds&#xD;&#xA;" HorizontalAlignment="Left" Margin="283,293,0,0" VerticalAlignment="Top" Height="60" Width="159" FontFamily="Calibri" FontWeight="Bold" FontSize="40"/>
+        <Label Content="Seconds&#xD;&#xA;" HorizontalAlignment="Left" Margin="302,329,0,0" VerticalAlignment="Top" Height="60" Width="159" FontFamily="Calibri" FontWeight="Bold" FontSize="40"/>
         <Button x:Name="btnRestartGame" Content="Restart" Height="60" HorizontalAlignment="Left" Margin="139,547,0,0" VerticalAlignment="Top" Width="160" FontSize="24" FontFamily="Calibri" BorderBrush="#FF0051B2" BorderThickness="1,2,1,1" Foreground="White" FontWeight="Bold" Click="btnRestartGame_Click">
             <Button.Background>
                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -50,6 +50,6 @@
                 <TextBlock Name="statusBarText" Margin="-1 0 0 0">Click 'Seated' to change skeletal pipeline type!</TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <Image Name="imgScore" HorizontalAlignment="Left" Height="43" Margin="56,110,0,0" VerticalAlignment="Top" Width="207"/>
+        <Image Name="imgScore" HorizontalAlignment="Left" Height="43" Margin="281,110,0,0" VerticalAlignment="Top" Width="207"/>
     </Grid>
 </Window>
