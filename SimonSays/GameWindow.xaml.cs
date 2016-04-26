@@ -242,7 +242,7 @@ namespace SimonSays
             mLives--;
             if (mLives == 0)
             {
-                var window = new GameOver();
+                var window = new GameOver(score);
                 window.Show();
                 this.Close();
             }
@@ -601,26 +601,6 @@ namespace SimonSays
             }
 
             drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
-        }
-
-        /// <summary>
-        /// Handles the checking or unchecking of the seated mode combo box
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
-        private void CheckBoxSeatedModeChanged(object sender, RoutedEventArgs e)
-        {
-            if (null != this.sensor)
-            {
-                if (this.checkBoxSeatedMode.IsChecked.GetValueOrDefault())
-                {
-                    this.sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
-                }
-                else
-                {
-                    this.sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
-                }
-            }
         }
 
         //Handles the home button so that we can go back to the start window
