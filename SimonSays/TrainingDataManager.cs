@@ -31,8 +31,6 @@ namespace SimonSays
 
         private readonly String RAW_DATA_PATH = @"C:\simon_training_data\";
 
-        private double[,] mTrainingData;
-
         private int mNumberOfDataRows = 0;
 
         public TrainingDataManager()
@@ -47,8 +45,6 @@ namespace SimonSays
                 System.IO.Directory.CreateDirectory(RAW_DATA_PATH);
             }
             loadTrainingDataInfo();
-            // Do you want this here Sam?
-            //loadRawDataFiles();
         }
 
         public void initForPlaying()
@@ -105,58 +101,6 @@ namespace SimonSays
             if (pos > 0)
                 name = name.Substring(0, pos);
             return name;
-        }
-
-        // nFiles is the number of outputs since each file represents a gesture.
-        // nTrainingRows is the total number of rows from each file
-        //private void loadTrainingData(int nTrainingRows, int nInputs)
-        //{
-        //    // Create new 2D Array with the required sizes.
-        //    mTrainingData = new double[nTrainingRows,nInputs+mNumberOfGestures];
-
-        //    // Set all values as default to 0.1 (basically a cheat way to set the output values I can explain)
-        //    for (int i = 0; i < mTrainingData.GetLength(0); i++)
-        //    {
-        //        for (int j = 0; j < mTrainingData.GetLength(1); j++)
-        //        {
-        //            mTrainingData[i, j] = 0.1;
-        //        }
-        //    }
-
-        //    // Index's to keep track of where we are in the trainng data based on the loop through the dictionary.
-        //    int columnIndex = 0, rowIndex, fileIndex = 0;
-
-        //    foreach (String key in mRawDataDictionary.Keys)
-        //    {
-        //        // Loop through eash row associated to the gesture.
-        //        foreach (SkeletonDataRow row in mRawDataDictionary[key])
-        //        {
-        //            // Add method here to return double[] containg the distances we want from
-        //            // the training data row values.
-        //            double[] values = new double[12];
-
-        //            for (rowIndex = 0; rowIndex < values.Length; rowIndex++)
-        //            {
-        //                mTrainingData[columnIndex,rowIndex] = values[rowIndex];
-        //            }
-
-        //            // Here the output value will be set to 0.9 for all the training data rows it relates to.
-        //            mTrainingData[columnIndex, rowIndex + fileIndex] = 0.9;
-        //            columnIndex++;
-        //        }
-        //        // Next file/gesture is about to be looped through so we need to increase the index of the 0.9 value.
-        //        fileIndex++;
-        //    }
-        //}
-
-        public double[,] getTrainingData()
-        {
-            return mTrainingData;
-        }
-
-        public void setSkeletalSource(Skeleton skel)
-        {
-            this.mSkeleton = skel;
         }
 
         public void startAddNewTrainingSet(String gestureName)
