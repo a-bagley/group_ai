@@ -113,6 +113,7 @@ namespace SimonSays
         public GameWindow(AISystemEnum ai, DifficultyEnum difficulty)
         {
             InitializeComponent();
+            blockUI(true);
             mAIType = ai;
             switch (difficulty)
             {
@@ -151,6 +152,7 @@ namespace SimonSays
                         System.Diagnostics.Debug.WriteLine("MLP trained and ready!");
                         mAIReady = true;
                         restartGame();
+                        blockUI(false);
                         StartCountdown();
                     }
                     else
@@ -171,6 +173,7 @@ namespace SimonSays
                     System.Diagnostics.Debug.WriteLine("MLP trained and ready!");
                     mAIReady = true;
                     restartGame();
+                    blockUI(false);
                     StartCountdown();
                 }
                 else
@@ -270,6 +273,20 @@ namespace SimonSays
         private void setSimonSaysCommand(String command)
         {
             lblSimonSaysCommand.Content = "Simon says " + command;
+        }
+
+        private void blockUI(bool block)
+        {
+            if (block)
+            {
+                 Dispatcher.Invoke(new Action(() => btnHome.IsEnabled = false));
+                 Dispatcher.Invoke(new Action(() => btnRestartGame.IsEnabled = false));
+            }
+            else
+            {
+                 Dispatcher.Invoke(new Action(() => btnHome.IsEnabled = true));
+                 Dispatcher.Invoke(new Action(() => btnRestartGame.IsEnabled = true));
+            }
         }
 
         private void StartCountdown()
@@ -521,7 +538,7 @@ namespace SimonSays
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             this.DrawBonesAndJoints(skel, dc);
-                            if (mTickCounter % 60 == 0)
+                            if (mTickCounter % 45 == 0)
                             {
                                 if (mAIReady && !mAIBusy)
                                 {

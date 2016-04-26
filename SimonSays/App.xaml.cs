@@ -13,5 +13,13 @@ namespace SimonSays
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            //add speech engine here
+            MainWindow startWindow = new MainWindow();
+            startWindow.Show();
+        }
     }
 }
