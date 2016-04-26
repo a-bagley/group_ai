@@ -461,6 +461,7 @@ namespace SimonSays
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
             var window = new MainWindow();
+            sensor.Stop();
             window.Show();
             this.Close();
             }

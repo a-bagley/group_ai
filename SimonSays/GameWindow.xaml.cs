@@ -679,7 +679,7 @@ namespace SimonSays
         {
             var window = new MainWindow();
             _timer.Stop();
-            _timer = null;
+            sensor.Stop();
             window.Show();
             this.Close();
         }
