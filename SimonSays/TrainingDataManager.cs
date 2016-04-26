@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Windows;
 
 namespace SimonSays
 {
@@ -83,6 +84,7 @@ namespace SimonSays
             mNumberOfDataRows = 0;
             mRawDataDictionary = new Dictionary<String, List<SkeletonDataRow>>();
 
+
             foreach (String file in files)
             {
                 mTextReader = File.OpenText(file);
@@ -91,7 +93,14 @@ namespace SimonSays
                 mNumberOfDataRows += trainingDataList.Count;
                 mRawDataDictionary.Add(file, trainingDataList);
             }
-            mTextReader.Close();
+            if (mTextReader != null)
+            {
+                mTextReader.Close();
+            }
+            else
+            {
+                MessageBox.Show("No CSV Files detected");
+            }
         }
 
 
@@ -101,7 +110,7 @@ namespace SimonSays
         //{
         //    // Create new 2D Array with the required sizes.
         //    mTrainingData = new double[nTrainingRows,nInputs+mNumberOfGestures];
-            
+
         //    // Set all values as default to 0.1 (basically a cheat way to set the output values I can explain)
         //    for (int i = 0; i < mTrainingData.GetLength(0); i++)
         //    {
@@ -172,7 +181,7 @@ namespace SimonSays
         {
             return mGestureNameList;
         }
-        
+
         public String getGestureName(int gestureNumber)
         {
             return mGestureNameList.ElementAt(gestureNumber);
@@ -212,140 +221,140 @@ namespace SimonSays
             {
                 if (joint.TrackingState == JointTrackingState.Tracked)
                 {
-                    switch(joint.JointType)
+                    switch (joint.JointType)
                     {
                         case JointType.Head:
-                        {
-                            trainingDataRow.headX = joint.Position.X;
-                            trainingDataRow.headY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.headX = joint.Position.X;
+                                trainingDataRow.headY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.ShoulderCenter:
-                        {
-                            trainingDataRow.shoulderCenterX = joint.Position.X;
-                            trainingDataRow.shoulderCenterY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.shoulderCenterX = joint.Position.X;
+                                trainingDataRow.shoulderCenterY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.ShoulderRight:
-                        {
-                            trainingDataRow.shoulderRightX = joint.Position.X;
-                            trainingDataRow.shoulderRightY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.shoulderRightX = joint.Position.X;
+                                trainingDataRow.shoulderRightY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.ShoulderLeft:
-                        {
-                            trainingDataRow.shoulderLeftX = joint.Position.X;
-                            trainingDataRow.shoulderLeftY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.shoulderLeftX = joint.Position.X;
+                                trainingDataRow.shoulderLeftY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.ElbowRight:
-                        {
-                            trainingDataRow.elbowRightX = joint.Position.X;
-                            trainingDataRow.elbowRightY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.elbowRightX = joint.Position.X;
+                                trainingDataRow.elbowRightY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.ElbowLeft:
-                        {
-                            trainingDataRow.elbowLeftX = joint.Position.X;
-                            trainingDataRow.elbowLeftY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.elbowLeftX = joint.Position.X;
+                                trainingDataRow.elbowLeftY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.WristRight:
-                        {
-                            trainingDataRow.wristRightX = joint.Position.X;
-                            trainingDataRow.wristRightY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.wristRightX = joint.Position.X;
+                                trainingDataRow.wristRightY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.WristLeft:
-                        {
-                            trainingDataRow.wristLeftX = joint.Position.X;
-                            trainingDataRow.wristLeftY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.wristLeftX = joint.Position.X;
+                                trainingDataRow.wristLeftY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.HandRight:
-                        {
-                            trainingDataRow.handRightX = joint.Position.X;
-                            trainingDataRow.handRightY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.handRightX = joint.Position.X;
+                                trainingDataRow.handRightY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.HandLeft:
-                        {
-                            trainingDataRow.handLeftX = joint.Position.X;
-                            trainingDataRow.handLeftY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.handLeftX = joint.Position.X;
+                                trainingDataRow.handLeftY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.HipCenter:
-                        {
-                            trainingDataRow.hipCenterX = joint.Position.X;
-                            trainingDataRow.hipCenterY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.hipCenterX = joint.Position.X;
+                                trainingDataRow.hipCenterY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.HipRight:
-                        {
-                            trainingDataRow.hipRightX = joint.Position.X;
-                            trainingDataRow.hipRightY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.hipRightX = joint.Position.X;
+                                trainingDataRow.hipRightY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.HipLeft:
-                        {
-                            trainingDataRow.hipLeftX = joint.Position.X;
-                            trainingDataRow.hipLeftY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.hipLeftX = joint.Position.X;
+                                trainingDataRow.hipLeftY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.KneeRight:
-                        {
-                            trainingDataRow.kneeRightX = joint.Position.X;
-                            trainingDataRow.kneeRightY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.kneeRightX = joint.Position.X;
+                                trainingDataRow.kneeRightY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.KneeLeft:
-                        {
-                            trainingDataRow.kneeLeftX = joint.Position.X;
-                            trainingDataRow.kneeLeftY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.kneeLeftX = joint.Position.X;
+                                trainingDataRow.kneeLeftY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.AnkleRight:
-                        {
-                            trainingDataRow.ankleRightX = joint.Position.X;
-                            trainingDataRow.ankleRightY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.ankleRightX = joint.Position.X;
+                                trainingDataRow.ankleRightY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.AnkleLeft:
-                        {
-                            trainingDataRow.ankleLeftX = joint.Position.X;
-                            trainingDataRow.ankleLeftY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.ankleLeftX = joint.Position.X;
+                                trainingDataRow.ankleLeftY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.FootRight:
-                        {
-                            trainingDataRow.footRightX = joint.Position.X;
-                            trainingDataRow.footRightY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.footRightX = joint.Position.X;
+                                trainingDataRow.footRightY = joint.Position.Y;
+                                break;
+                            }
 
                         case JointType.FootLeft:
-                        {
-                            trainingDataRow.footLeftX = joint.Position.X;
-                            trainingDataRow.footLeftY = joint.Position.Y;
-                            break;
-                        }
+                            {
+                                trainingDataRow.footLeftX = joint.Position.X;
+                                trainingDataRow.footLeftY = joint.Position.Y;
+                                break;
+                            }
                     }
                 }
             }
