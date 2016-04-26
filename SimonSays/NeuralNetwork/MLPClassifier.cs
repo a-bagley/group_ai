@@ -31,7 +31,7 @@ namespace SimonSays.NeuralNetwork
         {
             //square root of the product of the number of inputs and outputs
             //int n = (int)Math.Sqrt(9 * sdp.getTotalGestures());
-            int n = 2; // 1 works
+            int n = 2; // 1 or 2 works
             // add input and output
             n += 2;
             int[] nodeSet = new int[n];

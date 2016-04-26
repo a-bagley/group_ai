@@ -16,6 +16,7 @@ using System.IO;
 using System.Threading;
 using SimonSays.Utils;
 using SimonSays.NeuralNetwork;
+using SimonSays.NaiveBayes;
 
 namespace SimonSays
 {
@@ -102,26 +103,29 @@ namespace SimonSays
         private String mTargetGesture = "unassigned";
 
         private TrainingDataManager mTDManager;
+        private AISystemEnum mAIType = AISystemEnum.NN;
         private MLPClassifier mBrain;
+        private NaiveBayesClassifier mNaiveBayes;
         private Boolean mAIReady = false;
         private Boolean mAIBusy = false;
         private int mTickCounter = 0;
 
-        public GameWindow(Difficulty difficulty)
+        public GameWindow(AISystemEnum ai, DifficultyEnum difficulty)
         {
             InitializeComponent();
-
+            blockUI(true);
+            mAIType = ai;
             switch (difficulty)
             {
-                case Difficulty.Easy:
+                case DifficultyEnum.Easy:
                     mLives = 4;
                     mCountdownSeconds = 15;
                     break;
-                case Difficulty.Medium:
+                case DifficultyEnum.Medium:
                     mLives = 3;
                     mCountdownSeconds = 10;
                     break;
-                case Difficulty.Hard:
+                case DifficultyEnum.Hard:
                     mLives = 2;
                     mCountdownSeconds = 5;
                     break;
@@ -137,15 +141,39 @@ namespace SimonSays
             // NN stuff
             mTDManager = new TrainingDataManager();
             mTDManager.initForPlaying();
-            mBrain = new MLPClassifier(0.1, 0.9); //learning rate 0.2, and momentum 0.9
-            Thread aiTrainingThread = new System.Threading.Thread(delegate()
+            if (mAIType == AISystemEnum.NN)
+            {
+                mBrain = new MLPClassifier(0.1, 0.9); //learning rate 0.2, and momentum 0.9
+                Thread aiTrainingThread = new System.Threading.Thread(delegate()
+                {
+                    if (mTDManager.getNumberOfDataRows() > 0)
+                    {
+                        mBrain.trainAI(new RawSkeletalDataPackage(mTDManager.getRawDataDictionary(), mTDManager.getGestureList(), mTDManager.getNumberOfDataRows()));
+                        System.Diagnostics.Debug.WriteLine("MLP trained and ready!");
+                        mAIReady = true;
+                        restartGame();
+                        blockUI(false);
+                        StartCountdown();
+                    }
+                    else
+                    {
+                        // Show error on screen
+                        System.Diagnostics.Debug.WriteLine("\n**Warning! No training data found, you need training data before you can play\n");
+                    }
+                });
+                aiTrainingThread.IsBackground = true;
+                aiTrainingThread.Start();
+            }
+            else if (mAIType == AISystemEnum.NaiveBayes)
             {
                 if (mTDManager.getNumberOfDataRows() > 0)
                 {
-                    mBrain.trainAI(new RawSkeletalDataPackage(mTDManager.getRawDataDictionary(), mTDManager.getGestureList(), mTDManager.getNumberOfDataRows()));
+                    mNaiveBayes = new NaiveBayesClassifier();
+                    mNaiveBayes.trainAI(new RawSkeletalDataPackage(mTDManager.getRawDataDictionary(), mTDManager.getGestureList(), mTDManager.getNumberOfDataRows()));
                     System.Diagnostics.Debug.WriteLine("MLP trained and ready!");
                     mAIReady = true;
                     restartGame();
+                    blockUI(false);
                     StartCountdown();
                 }
                 else
@@ -153,13 +181,7 @@ namespace SimonSays
                     // Show error on screen
                     System.Diagnostics.Debug.WriteLine("\n**Warning! No training data found, you need training data before you can play\n");
                 }
-            });
-            aiTrainingThread.Start();         
-        }
-
-        private int NeuralNetworkCalculation()
-        {
-            return 0;
+            }
         }
 
         private void updateScoreUI(double score)
@@ -253,6 +275,20 @@ namespace SimonSays
             lblSimonSaysCommand.Content = "Simon says " + command;
         }
 
+        private void blockUI(bool block)
+        {
+            if (block)
+            {
+                 Dispatcher.Invoke(new Action(() => btnHome.IsEnabled = false));
+                 Dispatcher.Invoke(new Action(() => btnRestartGame.IsEnabled = false));
+            }
+            else
+            {
+                 Dispatcher.Invoke(new Action(() => btnHome.IsEnabled = true));
+                 Dispatcher.Invoke(new Action(() => btnRestartGame.IsEnabled = true));
+            }
+        }
+
         private void StartCountdown()
         {
             _time = TimeSpan.FromSeconds(mCountdownSeconds);
@@ -298,12 +334,26 @@ namespace SimonSays
         {
             if (mAIReady)
             {
-                Thread aiClassifyThread = new System.Threading.Thread(delegate()
+                if (mAIType == AISystemEnum.NN)
                 {
-                    Guess aiGuess = mBrain.makeGuess(mTDManager.createSkeletalDataRow(currentPlayerSkel));
-                    processGuess(aiGuess);
-                });
-                aiClassifyThread.Start();
+                    Thread aiClassifyThread = new System.Threading.Thread(delegate()
+                    {
+                        Guess aiGuess = mBrain.makeGuess(mTDManager.createSkeletalDataRow(currentPlayerSkel));
+                        processGuess(aiGuess);
+                    });
+                    aiClassifyThread.IsBackground = true;
+                    aiClassifyThread.Start();
+                }
+                else if (mAIType == AISystemEnum.NaiveBayes)
+                {
+                    Thread aiClassifyThread = new System.Threading.Thread(delegate()
+                    {
+                        Guess aiGuess = mNaiveBayes.makeGuess(mTDManager.createSkeletalDataRow(currentPlayerSkel));
+                        processGuessNB(aiGuess);
+                    });
+                    aiClassifyThread.IsBackground = true;
+                    aiClassifyThread.Start();
+                }
             }
         }
 
@@ -324,7 +374,27 @@ namespace SimonSays
             else
             {
                 System.Diagnostics.Debug.WriteLine("\n%%% Wrong gesture\n");
-                //Dispatcher.Invoke(new Action(() => updateScoreUI(aiGuess.getGuessValue())));
+            }
+            mAIBusy = false;
+        }
+
+        private void processGuessNB(Guess aiGuess)
+        {
+            // Update UI here
+            String gestureMatched = mTDManager.getGestureName(aiGuess.getGuessId());
+            if (gestureMatched.Equals(mTargetGesture))// && aiGuess.getGuessValue() > 0.7)
+            {
+                //get next target gesture
+                // display new target gesture
+                mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
+                Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
+                Dispatcher.Invoke(new Action(() => updateScoreUI(aiGuess.getGuessValue())));
+                Dispatcher.Invoke(new Action(() => restartCountDown()));
+                System.Diagnostics.Debug.WriteLine("\n*** Correct gesture\n");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("\n%%% Wrong gesture\n");
             }
             mAIBusy = false;
         }
@@ -468,7 +538,7 @@ namespace SimonSays
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             this.DrawBonesAndJoints(skel, dc);
-                            if (mTickCounter % 60 == 0)
+                            if (mTickCounter % 45 == 0)
                             {
                                 if (mAIReady && !mAIBusy)
                                 {
@@ -609,6 +679,7 @@ namespace SimonSays
         {
             var window = new MainWindow();
             _timer.Stop();
+            _timer = null;
             window.Show();
             this.Close();
         }

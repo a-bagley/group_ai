@@ -57,16 +57,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="NaiveBayes\NaiveBayesClassifier.cs" />
+    <Compile Include="NaiveBayes\NaiveBayesEngine.cs" />
     <Compile Include="NeuralNetwork\MLPClassifier.cs" />
     <Compile Include="NeuralNetwork\MultilayerPerceptron.cs" />
     <Compile Include="NeuralNetwork\NeuralNetwork.cs" />
     <Compile Include="NeuralNetwork\NeuronLayer.cs" />
     <Compile Include="TrainingDataManager.cs" />
     <Compile Include="SkeletonDataRow.cs" />
-    <Compile Include="TrainingDataSaver.cs" />
     <Compile Include="TrainWindow.xaml.cs">
       <DependentUpon>TrainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\AISystemEnum.cs" />
     <Compile Include="Utils\Classifier.cs" />
     <Compile Include="Utils\DistanceCalculator.cs" />
     <Compile Include="Utils\Guess.cs" />
@@ -87,7 +89,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utils\Difficulty.cs" />
+    <Compile Include="Utils\DifficultyEnum.cs" />
     <Compile Include="GameOverWindow.xaml.cs">
       <DependentUpon>GameOverWindow.xaml</DependentUpon>
     </Compile>
@@ -149,6 +151,7 @@
   <ItemGroup>
     <Resource Include="Images\fail.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
