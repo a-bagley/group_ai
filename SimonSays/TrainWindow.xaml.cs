@@ -228,6 +228,7 @@ namespace SimonSays
             if (null != this.sensor)
             {
                 this.sensor.Stop();
+                this.sensor.Dispose();
             }
         }
 
@@ -235,7 +236,7 @@ namespace SimonSays
         {
             if (bCapture == false)
             {
-                System.Threading.Thread.Sleep(6000);
+                //System.Threading.Thread.Sleep(6000);
                 btnRecordData.IsEnabled = false;
                 btnHome.IsEnabled = false;
                 captureCount = 0;
@@ -461,7 +462,6 @@ namespace SimonSays
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
             var window = new MainWindow();
-            sensor.Stop();
             window.Show();
             this.Close();
             }

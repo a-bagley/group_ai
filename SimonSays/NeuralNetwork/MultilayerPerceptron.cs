@@ -56,7 +56,7 @@ namespace SimonSays.NeuralNetwork
 
             System.Diagnostics.Debug.WriteLine("************Pre training*******************");
             int c = 0;
-            while ((error > 0.0001) && (c<50000)) // error 0.05
+            while ((error > 0.0005) && (c<50000)) // error 0.05
             {
                 error = 0;
                 c++;

@@ -341,7 +341,7 @@ namespace SimonSays
                         Guess aiGuess = mBrain.makeGuess(mTDManager.createSkeletalDataRow(currentPlayerSkel));
                         processGuess(aiGuess);
                     });
-                    aiClassifyThread.IsBackground = true;
+                    //aiClassifyThread.IsBackground = true;
                     aiClassifyThread.Start();
                 }
                 else if (mAIType == AISystemEnum.NaiveBayes)
@@ -351,7 +351,7 @@ namespace SimonSays
                         Guess aiGuess = mNaiveBayes.makeGuess(mTDManager.createSkeletalDataRow(currentPlayerSkel));
                         processGuessNB(aiGuess);
                     });
-                    aiClassifyThread.IsBackground = true;
+                    //aiClassifyThread.IsBackground = true;
                     aiClassifyThread.Start();
                 }
             }
@@ -498,11 +498,12 @@ namespace SimonSays
         /// </summary>
         /// <param name="sender">object sending the event</param>
         /// <param name="e">event arguments</param>
-        private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (null != this.sensor)
             {
                 this.sensor.Stop();
+                this.sensor.Dispose();
             }
         }
 
@@ -679,7 +680,6 @@ namespace SimonSays
         {
             var window = new MainWindow();
             _timer.Stop();
-            sensor.Stop();
             window.Show();
             this.Close();
         }
