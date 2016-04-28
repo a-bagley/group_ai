@@ -67,7 +67,6 @@
     <Compile Include="NeuralNetwork\MultilayerPerceptron.cs" />
     <Compile Include="NeuralNetwork\NeuralNetwork.cs" />
     <Compile Include="NeuralNetwork\NeuronLayer.cs" />
-    <Compile Include="SpeechEngine.cs" />
     <Compile Include="TrainingDataManager.cs" />
     <Compile Include="SkeletonDataRow.cs" />
     <Compile Include="TrainWindow.xaml.cs">

@@ -83,6 +83,8 @@
         <RadioButton x:Name="rbANN" Content="Artificial Neural Network" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="46,64,0,0" FontSize="25" Grid.ColumnSpan="2" Width="339" FontFamily="Calibri" Foreground="White" Grid.IsSharedSizeScope="True" Checked="RadioButton_Checked"/>
         <RadioButton x:Name="rbNB" Content="Naive Bayes" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="46,101,0,0" FontSize="25" Foreground="White" Grid.ColumnSpan="2" Width="258" Grid.IsSharedSizeScope="True" Checked="RadioButton_Checked"/>
         <Label x:Name="lblGameName_Copy" Content="Select AI Technique:" Margin="32,22,991,0" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Calibri" FontSize="25" FontWeight="Bold" Width="251" Height="40" Grid.ColumnSpan="2"/>
+        <CheckBox x:Name="speech_CheckBox" Content="Enable Speech Recognition" HorizontalAlignment="Left" Margin="8,659,0,-4" VerticalAlignment="Top" Foreground="White" FontFamily="Calibri" FontSize="15" Grid.ColumnSpan="2" Height="37" Width="281" Checked="Speech_Checked"/>
+        
 
 
 
