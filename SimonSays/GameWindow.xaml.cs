@@ -459,6 +459,7 @@ namespace SimonSays
 
             if (null == this.sensor)
             {
+                this.statusBar.Visibility = Visibility.Visible;
                 this.statusBarText.Text = Properties.Resources.NoKinectReady;
             }
         }
