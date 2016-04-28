@@ -18,7 +18,7 @@ namespace SimonSays.NeuralNetwork
         /// <summary>
         /// Number of desired inputs to MLP.
         /// </summary>
-        private readonly int NUMBER_OF_INPUTS = 9;
+        private readonly int NUMBER_OF_INPUTS = 12; //9
 
         public MLPClassifier(double learningRate, double momentum)
         {
@@ -101,6 +101,10 @@ namespace SimonSays.NeuralNetwork
             newTrainingDataRow[6] = dCalc.getElbowLeftToHipCentre();
             newTrainingDataRow[7] = dCalc.getWristLeftToHipLeft();
             newTrainingDataRow[8] = dCalc.getWristRightToHipRight();
+            newTrainingDataRow[9] = dCalc.getWristRightToKneeRight();
+            newTrainingDataRow[10] = dCalc.getWristLeftToKneeLeft();
+            newTrainingDataRow[11] = dCalc.getAnkleRightToAnkleLeft();
+            
 
             for (int i = 0; i < newTrainingDataRow.Length; i++)
             {

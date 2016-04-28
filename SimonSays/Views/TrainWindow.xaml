@@ -20,9 +20,9 @@
         </Grid.Background>
         <ComboBox Margin="27,10,51,508" Name="comboBox" SelectedIndex="0" >
         </ComboBox>
-        <TextBox Name="textBox" TextWrapping="Wrap" Margin="27,475,513,41" Height="34" Grid.ColumnSpan="2"/>
+        <TextBox Name="textBox" TextWrapping="Wrap" Margin="27,475,685,41" Height="34" Grid.ColumnSpan="2"/>
 
-        <Image x:Name="imgSkeleton" HorizontalAlignment="Left" Height="405" Margin="224,32,0,0" VerticalAlignment="Top" Width="565" Grid.Column="1"/>
+        <Image x:Name="imgSkeleton" HorizontalAlignment="Left" Height="405" Margin="223,23,0,0" VerticalAlignment="Top" Width="565" Grid.Column="1"/>
         <StatusBar HorizontalAlignment="Stretch" Name="statusBar" Visibility="Hidden" VerticalAlignment="Bottom" Background="White" Grid.ColumnSpan="2" Grid.Row="1">
             <StatusBarItem Padding="0 0 0 10">
                 <TextBlock Name="statusBarText" Margin="-1 0 0 0"></TextBlock>
@@ -41,7 +41,7 @@
                 <DropShadowEffect/>
             </Button.Effect>
         </Button>
-        <Button x:Name="btnHome" Content="Home" HorizontalAlignment="Left" Margin="125,0,0,0" VerticalAlignment="Top" Width="75" Height="50" FontSize="20" FontFamily="Calibri" BorderBrush="#FF0051B2" BorderThickness="1,2,1,1" Foreground="White" FontWeight="Bold" Click="btnHome_Click" Grid.Column="1" Grid.Row="1">
+        <Button x:Name="btnHome" Content="Home" HorizontalAlignment="Left" Margin="125,0,0,0" VerticalAlignment="Top" Width="75" Height="50" FontSize="20" FontFamily="Calibri" BorderBrush="#FF0051B2" BorderThickness="1,2,1,1" Foreground="White" FontWeight="Bold" Click="btnHome_Click" Grid.Column="1" Grid.Row="1" RenderTransformOrigin="-1.938,0.599">
             <Button.Background>
                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                     <GradientStop Color="White" Offset="0"/>
@@ -69,6 +69,8 @@
                 <DropShadowEffect/>
             </Button.Effect>
         </Button>
+        <Label Content="Warning! Your skeletal data will be saved." Grid.Column="1" HorizontalAlignment="Left" FontWeight="Bold" Foreground="White" FontSize="22" Margin="388,10,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+        <Image Grid.Column="1" Source="pack://application:,,,/Images/warning.png" Visibility="Visible" HorizontalAlignment="Left" Height="100" Margin="283,531,0,0" VerticalAlignment="Top" Width="100" Grid.RowSpan="2"/>
 
     </Grid>
 </Window>

@@ -16,7 +16,7 @@ namespace SimonSays.NaiveBayes
 
         private NaiveBayesEngine mNB;
 
-        private readonly int NUMBER_OF_ATTRIBUTES = 9;
+        private readonly int NUMBER_OF_ATTRIBUTES = 12;
 
         private List<String> mGestureNameList;
 
@@ -99,6 +99,9 @@ namespace SimonSays.NaiveBayes
             newTrainingDataRow[6] = dCalc.getElbowLeftToHipCentre();
             newTrainingDataRow[7] = dCalc.getWristLeftToHipLeft();
             newTrainingDataRow[8] = dCalc.getWristRightToHipRight();
+            newTrainingDataRow[9] = dCalc.getWristRightToKneeRight();
+            newTrainingDataRow[10] = dCalc.getWristLeftToKneeLeft();
+            newTrainingDataRow[11] = dCalc.getAnkleRightToAnkleLeft();
 
             for (int i = 0; i < newTrainingDataRow.Length; i++)
             {

@@ -449,6 +449,8 @@ namespace SimonSays.Views
             {
                 //get next target gesture
                 // display new target gesture
+                if (mNoneSimonTimer != null)
+                    mNoneSimonTimer.Dispose();
                 Dispatcher.BeginInvoke(new Action(() => updateScoreUI((mSimonAsked) ? aiGuess.getGuessValue() : -1)));
                 mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
                 Dispatcher.BeginInvoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
@@ -603,7 +605,7 @@ namespace SimonSays.Views
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             this.DrawBonesAndJoints(skel, dc);
-                            if (mTickCounter % 50 == 0)
+                            if (mTickCounter % 45 == 0)
                             {
                                 if (mAIReady && !mAIBusy)
                                 {
