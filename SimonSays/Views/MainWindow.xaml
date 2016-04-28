@@ -3,6 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Simon Says" Height="720" Width="1280" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="13*"/>
+            <ColumnDefinition Width="85*"/>
+        </Grid.ColumnDefinitions>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                 <GradientStop Color="#FF00A0EA" Offset="0.133"/>
@@ -10,8 +14,17 @@
                 <GradientStop Color="#FF006AE9" Offset="0.413"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <Label x:Name="lblGameName" Content="Simon Says" Margin="0,40,0,0" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Calibri" FontSize="75" FontWeight="Bold"/>
-        <Button x:Name="btnEasy" Content="Easy" Margin="122,558,822,0" VerticalAlignment="Top" Height="78" FontSize="24" FontFamily="Calibri" BorderBrush="#FF0051B2" BorderThickness="1,2,1,1" Foreground="White" FontWeight="Bold" Click="btnEasy_Click" Width="330">
+
+        <Rectangle HorizontalAlignment="Left" Height="132" Stroke="White" VerticalAlignment="Top" Width="318" Grid.ColumnSpan="2" Margin="20,22,0,0" StrokeThickness="2">
+            <Rectangle.Fill>
+                <SolidColorBrush Color="#FFF4F4F5" Opacity="0"/>
+            </Rectangle.Fill>
+        </Rectangle>
+
+
+
+        <Label x:Name="lblGameName" Content="Simon Says" Margin="289,40,426,0" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Calibri" FontSize="75" FontWeight="Bold" Grid.Column="1" Width="390"/>
+        <Button x:Name="btnEasy" Content="Easy" Margin="122,558,822,0" VerticalAlignment="Top" Height="78" FontSize="24" FontFamily="Calibri" BorderBrush="#FF0051B2" BorderThickness="1,2,1,1" Foreground="White" FontWeight="Bold" Click="btnEasy_Click" Width="330" Grid.ColumnSpan="2">
             <Button.Background>
                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                     <GradientStop Color="White" Offset="0"/>
@@ -24,7 +37,7 @@
                 <DropShadowEffect/>
             </Button.Effect>
         </Button>
-        <Button x:Name="btnMedium" Content="Medium" Margin="487,558,457,0" VerticalAlignment="Top" Height="78" FontSize="24" FontFamily="Calibri" BorderBrush="#FF0051B2" BorderThickness="1,2,1,1" Foreground="White" FontWeight="Bold" Click="btnMedium_Click" Width="330">
+        <Button x:Name="btnMedium" Content="Medium" Margin="318.358,558,457,0" VerticalAlignment="Top" Height="78" FontSize="24" FontFamily="Calibri" BorderBrush="#FF0051B2" BorderThickness="1,2,1,1" Foreground="White" FontWeight="Bold" Click="btnMedium_Click" Width="330" Grid.Column="1">
             <Button.Background>
                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                     <GradientStop Color="White" Offset="0"/>
@@ -37,7 +50,7 @@
                 <DropShadowEffect/>
             </Button.Effect>
         </Button>
-        <Button x:Name="btnHard" Content="Hard" Margin="848,558,96,0" VerticalAlignment="Top" Height="78" FontSize="24" FontFamily="Calibri" BorderBrush="#FF0051B2" BorderThickness="1,2,1,1" Foreground="White" FontWeight="Bold" Click="btnHard_Click">
+        <Button x:Name="btnHard" Content="Hard" Margin="679.358,558,96,0" VerticalAlignment="Top" Height="78" FontSize="24" FontFamily="Calibri" BorderBrush="#FF0051B2" BorderThickness="1,2,1,1" Foreground="White" FontWeight="Bold" Click="btnHard_Click" Grid.Column="1">
             <Button.Background>
                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                     <GradientStop Color="White" Offset="0"/>
@@ -50,10 +63,10 @@
                 <DropShadowEffect/>
             </Button.Effect>
         </Button>
-        <TextBlock HorizontalAlignment="Center" TextAlignment="Center" Foreground="White" Margin="154,219,142,0" Padding="5,5,5,5" VerticalAlignment="Top" FontFamily="Calibri" Width="978" TextWrapping="Wrap" FontSize="30" Height="174"><Run Text="Copy the gesture Simon is making if he says &quot;Simon Says&quot; and hold it before the countdown ends, the more accurate the gesture the higher the score!"/><LineBreak/><Run/><LineBreak/><Run Language="en-gb" Text="The game ends when run out of lives!"/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/></TextBlock>
-        <Label x:Name="lblInstructions" Content="Instructions:" Foreground="White" HorizontalAlignment="Center" Margin="531,137,531,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="40"/>
-        <Label x:Name="lblDifficulty" Content="Select a difficulty..." HorizontalAlignment="Center" Foreground="White" Margin="504,417,440,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="45" Width="330" Height="69"/>
-        <Button x:Name="btnTrain" Content="Train" Margin="1044,24,31,0" VerticalAlignment="Top" Height="44" FontSize="24" FontFamily="Calibri" BorderBrush="#FF0051B2" BorderThickness="1,2,1,1" Foreground="White" FontWeight="Bold" Click="btnTrain_Click">
+        <TextBlock HorizontalAlignment="Center" TextAlignment="Center" Foreground="White" Margin="154,219,142,0" Padding="5,5,5,5" VerticalAlignment="Top" FontFamily="Calibri" Width="978" TextWrapping="Wrap" FontSize="30" Height="174" Grid.ColumnSpan="2"><Run Text="Copy the gesture Simon is making if he says &quot;Simon Says&quot; and hold it before the countdown ends, the more accurate the gesture the higher the score!"/><LineBreak/><Run/><LineBreak/><Run Language="en-gb" Text="The game ends when run out of lives!"/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/></TextBlock>
+        <Label x:Name="lblInstructions" Content="Instructions:" Foreground="White" HorizontalAlignment="Center" Margin="362.358,137,531,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="40" Grid.Column="1"/>
+        <Label x:Name="lblDifficulty" Content="Select a difficulty..." HorizontalAlignment="Center" Foreground="White" Margin="335.358,417,440,0" VerticalAlignment="Top" FontFamily="Calibri" FontSize="45" Width="330" Height="69" Grid.Column="1"/>
+        <Button x:Name="btnTrain" Content="Train" Margin="875.358,24,31,0" VerticalAlignment="Top" Height="44" FontSize="24" FontFamily="Calibri" BorderBrush="#FF0051B2" BorderThickness="1,2,1,1" Foreground="White" FontWeight="Bold" Click="btnTrain_Click" Grid.Column="1">
             <Button.Background>
                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                     <GradientStop Color="White" Offset="0"/>
@@ -66,5 +79,13 @@
                 <DropShadowEffect/>
             </Button.Effect>
         </Button>
+
+        <RadioButton x:Name="rbANN" Content="Artificial Neural Network" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="46,64,0,0" FontSize="25" Grid.ColumnSpan="2" Width="339" FontFamily="Calibri" Foreground="White" Grid.IsSharedSizeScope="True" Checked="RadioButton_Checked"/>
+        <RadioButton x:Name="rbNB" Content="Naive Bayes" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="46,101,0,0" FontSize="25" Foreground="White" Grid.ColumnSpan="2" Width="258" Grid.IsSharedSizeScope="True" Checked="RadioButton_Checked"/>
+        <Label x:Name="lblGameName_Copy" Content="Select AI Technique:" Margin="32,22,991,0" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="Calibri" FontSize="25" FontWeight="Bold" Width="251" Height="40" Grid.ColumnSpan="2"/>
+
+
+
+
     </Grid>
 </Window>
