@@ -69,7 +69,7 @@
     <Compile Include="NeuralNetwork\NeuronLayer.cs" />
     <Compile Include="TrainingDataManager.cs" />
     <Compile Include="SkeletonDataRow.cs" />
-    <Compile Include="TrainWindow.xaml.cs">
+    <Compile Include="Views\TrainWindow.xaml.cs">
       <DependentUpon>TrainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\AISystemEnum.cs" />
@@ -77,15 +77,15 @@
     <Compile Include="Utils\DistanceCalculator.cs" />
     <Compile Include="Utils\Guess.cs" />
     <Compile Include="Utils\RawSkeletalDataPackage.cs" />
-    <Page Include="GameOverWindow.xaml">
+    <Page Include="Views\GameOverWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GameWindow.xaml">
+    <Page Include="Views\GameWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -94,17 +94,17 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utils\DifficultyEnum.cs" />
-    <Compile Include="GameOverWindow.xaml.cs">
+    <Compile Include="Views\GameOverWindow.xaml.cs">
       <DependentUpon>GameOverWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GameWindow.xaml.cs">
+    <Compile Include="Views\GameWindow.xaml.cs">
       <DependentUpon>GameWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="TrainWindow.xaml">
+    <Page Include="Views\TrainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -155,7 +155,12 @@
   <ItemGroup>
     <Resource Include="Images\fail.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\correct.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\warning.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

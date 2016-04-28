@@ -1,29 +1,27 @@
-﻿﻿using System;
+﻿using System.Windows;
+using Microsoft.Kinect;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Microsoft.Kinect;
 using System.IO;
-using System.Threading;
-using SimonSays.Utils;
-using SimonSays.NeuralNetwork;
-using SimonSays.NaiveBayes;
+using System.Timers;
+using System.Windows.Controls;
+using SimonSays.Views;
 
-namespace SimonSays
+namespace SimonSays.Views
 {
     /// <summary>
-    /// Interaction logic for GameWindow.xaml
+    /// Interaction logic for TrainWindow.xaml
     /// </summary>
-    public partial class GameWindow : Window
+    public partial class TrainWindow : Window
     {
         #region Skeleton Properties
         /// <summary>
@@ -92,281 +90,29 @@ namespace SimonSays
         private DrawingImage imageSource;
         #endregion
 
-        System.Windows.Threading.DispatcherTimer _timer = new System.Windows.Threading.DispatcherTimer();
-        TimeSpan _time;
-        private bool restartTimer;
-        int mCountdownSeconds = 0;
-        int mLives;
-        int mScoreTotal = 0;
-        int score = 0;
+        /// <summary>
+        /// Signals the recording of kinect skeleton data
+        /// </summary>
+        private Boolean bCapture = false;
 
-        private String mTargetGesture = "unassigned";
+        /// <summary>
+        /// 
+        /// </summary>
+        private TrainingDataManager tdManager;
 
-        private TrainingDataManager mTDManager;
-        private AISystemEnum mAIType = AISystemEnum.NN;
-        private MLPClassifier mBrain;
-        private NaiveBayesClassifier mNaiveBayes;
-        private Boolean mAIReady = false;
-        private Boolean mAIBusy = false;
-        private int mTickCounter = 0;
+        private int captureCount = 0;
 
-        public GameWindow(AISystemEnum ai, DifficultyEnum difficulty)
+        /// <summary>
+        /// Recording time for data sets (milliseconds)
+        /// </summary>
+        private readonly int RECORDING_TIME_PERIOD = 8000;
+
+        public TrainWindow()
         {
             InitializeComponent();
-            blockUI(true);
-            mAIType = ai;
-            switch (difficulty)
-            {
-                case DifficultyEnum.Easy:
-                    mLives = 4;
-                    mCountdownSeconds = 15;
-                    break;
-                case DifficultyEnum.Medium:
-                    mLives = 3;
-                    mCountdownSeconds = 10;
-                    break;
-                case DifficultyEnum.Hard:
-                    mLives = 2;
-                    mCountdownSeconds = 5;
-                    break;
-                default:
-                    mLives = 3;
-                    mCountdownSeconds = 10;
-                    break;
-            }
-            updateLivesUI();
-            updateScoreUI();
-            lblSeconds.Content = mCountdownSeconds;
 
-            // NN stuff
-            mTDManager = new TrainingDataManager();
-            mTDManager.initForPlaying();
-            if (mAIType == AISystemEnum.NN)
-            {
-                mBrain = new MLPClassifier(0.1, 0.9); //learning rate 0.2, and momentum 0.9
-                Thread aiTrainingThread = new System.Threading.Thread(delegate()
-                {
-                    if (mTDManager.getNumberOfDataRows() > 0)
-                    {
-                        mBrain.trainAI(new RawSkeletalDataPackage(mTDManager.getRawDataDictionary(), mTDManager.getGestureList(), mTDManager.getNumberOfDataRows()));
-                        System.Diagnostics.Debug.WriteLine("MLP trained and ready!");
-                        mAIReady = true;
-                        restartGame();
-                        blockUI(false);
-                        StartCountdown();
-                    }
-                    else
-                    {
-                        // Show error on screen
-                        System.Diagnostics.Debug.WriteLine("\n**Warning! No training data found, you need training data before you can play\n");
-                    }
-                });
-                aiTrainingThread.IsBackground = true;
-                aiTrainingThread.Start();
-            }
-            else if (mAIType == AISystemEnum.NaiveBayes)
-            {
-                if (mTDManager.getNumberOfDataRows() > 0)
-                {
-                    mNaiveBayes = new NaiveBayesClassifier();
-                    mNaiveBayes.trainAI(new RawSkeletalDataPackage(mTDManager.getRawDataDictionary(), mTDManager.getGestureList(), mTDManager.getNumberOfDataRows()));
-                    System.Diagnostics.Debug.WriteLine("MLP trained and ready!");
-                    mAIReady = true;
-                    restartGame();
-                    blockUI(false);
-                    StartCountdown();
-                }
-                else
-                {
-                    // Show error on screen
-                    System.Diagnostics.Debug.WriteLine("\n**Warning! No training data found, you need training data before you can play\n");
-                }
-            }
-        }
-
-        private void updateScoreUI(double score)
-        {
-            var imageName = "";
-            score = score * 10;
-            if (score > 8.5)
-            {
-                imageName = "fivestars.png";
-                score = 5;
-            }
-            else if (score > 8)
-            {
-                imageName = "fourstars.png";
-                score = 4;
-            }
-            else if (score > 7.5)
-            {
-                imageName = "threestars.png";
-                score = 3;
-            }
-            else if (score > 7)
-            {
-                imageName = "twostars.png";
-                score = 2;
-            }
-            else
-            {
-                imageName = "onestars.png";
-                score = 1;
-            }
-            mScoreTotal += (int)score;
-            imgScore.Source = new BitmapImage(new Uri("pack://application:,,,/Images/" + imageName));
-            lblLives.Content = "Lives: " + mLives;
-            lblScore.Content = "Score: " + mScoreTotal;
-        }
-
-        private void updateScoreUI()
-        {
-            lblScore.Content = "Score: " + mScoreTotal;
-        }
-
-        private void updateLivesUI()
-        {
-            lblLives.Content = "Lives: " + mLives;
-        }
-
-        private void subtractLife()
-        {
-            mLives--;
-            if (mLives == 0)
-            {
-                var window = new GameOver(score);
-                window.Show();
-                this.Close();
-            }
-        }
-
-        private void setSimonSaysCommand(String command)
-        {
-            lblSimonSaysCommand.Content = "Simon says " + command;
-        }
-
-        private void blockUI(bool block)
-        {
-            if (block)
-            {
-                 Dispatcher.Invoke(new Action(() => btnHome.IsEnabled = false));
-                 Dispatcher.Invoke(new Action(() => btnRestartGame.IsEnabled = false));
-            }
-            else
-            {
-                 Dispatcher.Invoke(new Action(() => btnHome.IsEnabled = true));
-                 Dispatcher.Invoke(new Action(() => btnRestartGame.IsEnabled = true));
-            }
-        }
-
-        private void StartCountdown()
-        {
-            _time = TimeSpan.FromSeconds(mCountdownSeconds);
-            _timer.Tick += new EventHandler(dispatcherTimer_Tick);
-            _timer.Interval = new TimeSpan(0, 0, 1);
-            _timer.Start();
-        }
-
-        private void restartCountDown()
-        {
-            _time = TimeSpan.FromSeconds(mCountdownSeconds);
-            _timer.Start();
-        }
-
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
-        {
-            lblSeconds.Content = _time.ToString("ss");
-
-            if (_time == TimeSpan.Zero)
-            {
-                _timer.Stop();
-                subtractLife();
-                updateLivesUI();
-                restartCountDown();
-            }
-            _time = _time.Add(TimeSpan.FromSeconds(-1));
-        }
-
-        private void btnRestartGame_Click(object sender, RoutedEventArgs e)
-        {
-            restartGame();
-        }
-
-        private void restartGame()
-        {
-            mScoreTotal = 0;
-            mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
-            Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
-            restartCountDown();
-        }
-
-        private void testPlayerGesture(Skeleton currentPlayerSkel)
-        {
-            if (mAIReady)
-            {
-                if (mAIType == AISystemEnum.NN)
-                {
-                    Thread aiClassifyThread = new System.Threading.Thread(delegate()
-                    {
-                        Guess aiGuess = mBrain.makeGuess(mTDManager.createSkeletalDataRow(currentPlayerSkel));
-                        processGuess(aiGuess);
-                    });
-                    aiClassifyThread.IsBackground = true;
-                    aiClassifyThread.Start();
-                }
-                else if (mAIType == AISystemEnum.NaiveBayes)
-                {
-                    Thread aiClassifyThread = new System.Threading.Thread(delegate()
-                    {
-                        Guess aiGuess = mNaiveBayes.makeGuess(mTDManager.createSkeletalDataRow(currentPlayerSkel));
-                        processGuessNB(aiGuess);
-                    });
-                    aiClassifyThread.IsBackground = true;
-                    aiClassifyThread.Start();
-                }
-            }
-        }
-
-        private void processGuess(Guess aiGuess)
-        {
-            // Update UI here
-            String gestureMatched = mTDManager.getGestureName(aiGuess.getGuessId());
-            if (gestureMatched.Equals(mTargetGesture) && aiGuess.getGuessValue() > 0.7)
-            {
-                //get next target gesture
-                // display new target gesture
-                mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
-                Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
-                Dispatcher.Invoke(new Action(() => updateScoreUI(aiGuess.getGuessValue())));
-                Dispatcher.Invoke(new Action(() => restartCountDown()));
-                System.Diagnostics.Debug.WriteLine("\n*** Correct gesture\n");
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("\n%%% Wrong gesture\n");
-            }
-            mAIBusy = false;
-        }
-
-        private void processGuessNB(Guess aiGuess)
-        {
-            // Update UI here
-            String gestureMatched = mTDManager.getGestureName(aiGuess.getGuessId());
-            if (gestureMatched.Equals(mTargetGesture))// && aiGuess.getGuessValue() > 0.7)
-            {
-                //get next target gesture
-                // display new target gesture
-                mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
-                Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
-                Dispatcher.Invoke(new Action(() => updateScoreUI(aiGuess.getGuessValue())));
-                Dispatcher.Invoke(new Action(() => restartCountDown()));
-                System.Diagnostics.Debug.WriteLine("\n*** Correct gesture\n");
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("\n%%% Wrong gesture\n");
-            }
-            mAIBusy = false;
+            tdManager = new TrainingDataManager();
+            tdManager.initForTraining();
         }
 
         /// <summary>
@@ -425,6 +171,11 @@ namespace SimonSays
             // Display the drawing using our image control
             imgSkeleton.Source = this.imageSource;
 
+            foreach (String gesture in tdManager.getGestureList())
+            {
+                this.comboBox.Items.Add(gesture);
+            }
+
             // Look through all sensors and start the first connected one.
             // This requires that a Kinect is connected at the time of app startup.
             // To make your app robust against plug/unplug, 
@@ -478,6 +229,20 @@ namespace SimonSays
             }
         }
 
+        private void btnRecordData_Click(object sender, RoutedEventArgs e)
+        {
+            if (bCapture == false)
+            {
+                btnRecordData.IsEnabled = false;
+                btnHome.IsEnabled = false;
+                captureCount = 0;
+                String gestureName = comboBox.SelectedItem.ToString();
+                tdManager.startAddNewTrainingSet(gestureName);
+                bCapture = true;
+                
+            }            
+        }
+
         /// <summary>
         /// Event handler for Kinect sensor's SkeletonFrameReady event
         /// </summary>
@@ -505,23 +270,28 @@ namespace SimonSays
                 {
                     foreach (Skeleton skel in skeletons)
                     {
+
                         RenderClippedEdges(skel, dc);
 
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             this.DrawBonesAndJoints(skel, dc);
-                            if (mTickCounter % 45 == 0)
+                            //if(bCapture)
+                            if (bCapture && captureCount < 200)
                             {
-                                if (mAIReady && !mAIBusy)
-                                {
-                                    mAIBusy = true;
-                                    testPlayerGesture(skel);
-                                }
+                                this.saveSkeletalData(skel);
+                                captureCount++;
                             }
-                            mTickCounter++;
-                            if (mTickCounter == Int32.MaxValue)
-                                mTickCounter = 0;
+                            else if (bCapture)
+                            {
+                                tdManager.finishAddNewTrainingSet();
+                                bCapture = false;
+                                captureCount = 0;
+                                btnRecordData.IsEnabled = true;
+                                btnHome.IsEnabled = true;
+                            }
                         }
+
                         else if (skel.TrackingState == SkeletonTrackingState.PositionOnly)
                         {
                             dc.DrawEllipse(
@@ -537,6 +307,16 @@ namespace SimonSays
                 // prevent drawing outside of our render area
                 this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
             }
+        }
+
+        /// <summary>
+        /// Saves the current skeleton data to CSV file.
+        /// </summary>
+        /// <param name="skel"></param>
+        private void saveSkeletalData(Skeleton skel)
+        {
+            //tdManager.setSkeletalSource(skel);
+            tdManager.saveRawSkeletalSet(skel);
         }
 
         /// <summary>
@@ -646,14 +426,20 @@ namespace SimonSays
         }
 
         //Handles the home button so that we can go back to the start window
-        //Also stopping the timer when the button is pressed
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
             var window = new MainWindow();
-            _timer.Stop();
             window.Show();
             this.Close();
-        }
+            }
 
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            String newGesture = this.textBox.Text;
+            tdManager.appendGestureNameToList(newGesture);
+            this.comboBox.SelectedIndex = this.comboBox.Items.Add(newGesture);
+            this.textBox.Clear();
+        }
+        
     }
 }

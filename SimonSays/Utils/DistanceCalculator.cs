@@ -75,5 +75,27 @@ namespace SimonSays.Utils
             return getDistanceBetweenPoints(mSkeleton.wristLeftX, mSkeleton.wristLeftY, mSkeleton.wristRightX, mSkeleton.wristRightY);
         }
 
+        public double getWristRightToKneeRight()
+        {
+            return getDistanceBetweenPoints(mSkeleton.wristRightX, mSkeleton.wristRightY, mSkeleton.kneeRightX, mSkeleton.kneeRightY);
+        }
+        public double getWristLeftToKneeLeft()
+        {
+            return getDistanceBetweenPoints(mSkeleton.wristLeftX, mSkeleton.wristLeftY, mSkeleton.kneeLeftX, mSkeleton.kneeLeftY);
+        }
+
+        public double getWristRightToKneeLeft()
+        {
+            return getDistanceBetweenPoints(mSkeleton.wristRightX, mSkeleton.wristRightY, mSkeleton.kneeLeftX, mSkeleton.kneeLeftY);
+        }
+        public double getWristLeftToKneeRight()
+        {
+            return getDistanceBetweenPoints(mSkeleton.wristLeftX, mSkeleton.wristLeftY, mSkeleton.kneeRightX, mSkeleton.kneeRightY);
+        }
+
+        public double getAnkleRightToAnkleLeft()
+        {
+            return getDistanceBetweenPoints(mSkeleton.ankleRightX, mSkeleton.ankleRightY, mSkeleton.ankleLeftX, mSkeleton.ankleLeftY);
+        }
     }
 }

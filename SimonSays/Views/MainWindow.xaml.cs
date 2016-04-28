@@ -10,9 +10,9 @@ using System.Linq;
 using System.IO;
 using System.Threading;
 using System;
+using SimonSays.Views;
 
-
-namespace SimonSays
+namespace SimonSays.Views
 {
 
     /// <summary>
