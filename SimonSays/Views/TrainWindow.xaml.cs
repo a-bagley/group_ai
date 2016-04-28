@@ -14,8 +14,9 @@ using System.Windows.Shapes;
 using System.IO;
 using System.Timers;
 using System.Windows.Controls;
+using SimonSays.Views;
 
-namespace SimonSays
+namespace SimonSays.Views
 {
     /// <summary>
     /// Interaction logic for TrainWindow.xaml

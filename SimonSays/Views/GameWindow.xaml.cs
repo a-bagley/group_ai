@@ -18,8 +18,9 @@ using System.Threading;
 using SimonSays.Utils;
 using SimonSays.NeuralNetwork;
 using SimonSays.NaiveBayes;
+using SimonSays.Views;
 
-namespace SimonSays
+namespace SimonSays.Views
 {
     /// <summary>
     /// Interaction logic for GameWindow.xaml
@@ -95,14 +96,14 @@ namespace SimonSays
 
         System.Windows.Threading.DispatcherTimer _timer = new System.Windows.Threading.DispatcherTimer();
         TimeSpan _time;
-        private bool restartTimer;
         int mCountdownSeconds = 0;
+        int mLivesReset;
         int mLives;
         int mScoreTotal = 0;
-        int score = 0;
 
         private String mTargetGesture = "unassigned";
 
+        private AISystemEnum mCurrentAI;
         private TrainingDataManager mTDManager;
         private AISystemEnum mAIType = AISystemEnum.NN;
         private MLPClassifier mBrain;
@@ -118,34 +119,16 @@ namespace SimonSays
         public GameWindow(AISystemEnum ai, DifficultyEnum difficulty)
         {
             InitializeComponent();
+            mCurrentAI = ai;
             blockUI(true);
             mAIType = ai;
-            switch (difficulty)
-            {
-                case DifficultyEnum.Easy:
-                    mLives = 4;
-                    mCountdownSeconds = 15;
-                    mNoneSimonWaitPeriod = 5000;
-                    break;
-                case DifficultyEnum.Medium:
-                    mLives = 3;
-                    mCountdownSeconds = 10;
-                    mNoneSimonWaitPeriod = 5000;
-                    break;
-                case DifficultyEnum.Hard:
-                    mLives = 2;
-                    mCountdownSeconds = 5;
-                    mNoneSimonWaitPeriod = 3000;
-                    break;
-                default:
-                    mLives = 3;
-                    mCountdownSeconds = 10;
-                    mNoneSimonWaitPeriod = 5000;
-                    break;
-            }
+
+            SetDifficulty(difficulty);
+            
             updateLivesUI();
             updateScoreUI();
             lblSeconds.Content = mCountdownSeconds;
+            mNoneSimonWaitPeriod = 4500;
 
             // NN stuff
             mTDManager = new TrainingDataManager();
@@ -193,47 +176,95 @@ namespace SimonSays
             }
         }
 
+        private void SetDifficulty(DifficultyEnum difficulty)
+        {
+            switch (difficulty)
+            {
+                case DifficultyEnum.Easy:
+                    mLivesReset = 4;
+                    mLives = 4;
+                    mCountdownSeconds = 15;
+                    break;
+                case DifficultyEnum.Medium:
+                    mLivesReset = 3;
+                    mLives = 3;
+                    mCountdownSeconds = 10;
+                    break;
+                case DifficultyEnum.Hard:
+                    mLivesReset = 2;
+                    mLives = 2;
+                    mCountdownSeconds = 5;
+                    break;
+                default:
+                    mLivesReset = 3;
+                    mLives = 3;
+                    mCountdownSeconds = 10;
+                    break;
+            }
+        }
+
         private void updateScoreUI(double score)
         {
-            var imageName = "";
-            if (score != -1)
+            setStarRating(score);
+            lblLives.Content = "Lives: " + mLives;
+            lblScore.Content = "Score: " + mScoreTotal;
+        }
+
+        private void setStarRating(double score)
+        {
+            String imageName = "";
+            if (mCurrentAI == AISystemEnum.NN)
             {
-                score = score * 10;
-                if (score > 8.5)
+                if (score != -1)
                 {
-                    imageName = "fivestars.png";
-                    score = 5;
-                }
-                else if (score > 8)
-                {
-                    imageName = "fourstars.png";
-                    score = 4;
-                }
-                else if (score > 7.5)
-                {
-                    imageName = "threestars.png";
-                    score = 3;
-                }
-                else if (score > 7)
-                {
-                    imageName = "twostars.png";
-                    score = 2;
+                    score = score * 10;
+                    if (score > 8.5)
+                    {
+                        imageName = "fivestars.png";
+                        score = 5;
+                    }
+                    else if (score > 8)
+                    {
+                        imageName = "fourstars.png";
+                        score = 4;
+                    }
+                    else if (score > 7.5)
+                    {
+                        imageName = "threestars.png";
+                        score = 3;
+                    }
+                    else if (score > 7)
+                    {
+                        imageName = "twostars.png";
+                        score = 2;
+                    }
+                    else
+                    {
+                        imageName = "onestars.png";
+                        score = 1;
+                    }
+                    mScoreTotal += (int)score;
                 }
                 else
                 {
-                    imageName = "onestars.png";
-                    score = 1;
+                    imageName = "fail.png";
+                    subtractLife();
                 }
-                mScoreTotal += (int)score;
             }
-            else
+            else if (mCurrentAI == AISystemEnum.NaiveBayes)
             {
-                imageName = "fail.png";
-                subtractLife();
+                if (score != -1)
+                {
+                    imageName = "correct.png";
+                    mScoreTotal += 5;
+                }
+                else
+                {
+                    imageName = "fail.png";
+                    subtractLife();
+                }
             }
             imgScore.Source = new BitmapImage(new Uri("pack://application:,,,/Images/" + imageName));
-            lblLives.Content = "Lives: " + mLives;
-            lblScore.Content = "Score: " + mScoreTotal;
         }
 
         private void updateScoreUI()
@@ -251,7 +282,7 @@ namespace SimonSays
             mLives--;
             if (mLives == 0)
             {
-                var window = new GameOver(score);
+                var window = new GameOver(mScoreTotal);
                 window.Show();
                 this.Close();
             }
@@ -262,7 +293,7 @@ namespace SimonSays
             int isSimon = rand.Next(2);
             if (isSimon == 1)
             {
-                lblSimonSaysCommand.Content = "Simon says " + command;
+            lblSimonSaysCommand.Content = "Simon says " + command;
                 mSimonAsked = true;
             }
             else if (isSimon == 0)
@@ -351,6 +382,9 @@ namespace SimonSays
         private void restartGame()
         {
             mScoreTotal = 0;
+            mLives = mLivesReset;
+            updateLivesUI();
+            updateScoreUI();
             mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
             Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
             restartCountDown();
@@ -566,7 +600,7 @@ namespace SimonSays
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             this.DrawBonesAndJoints(skel, dc);
-                            if (mTickCounter % 45 == 0)
+                            if (mTickCounter % 60 == 0)
                             {
                                 if (mAIReady && !mAIBusy)
                                 {
