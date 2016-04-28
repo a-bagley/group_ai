@@ -213,40 +213,10 @@ namespace SimonSays
                 imageName = "onestars.png";
                 score = 1;
             }
-            //switch (score)
-            //{
-            //    case 0:
-            //        imageName = "fail.png";
-            //        lives -= 1;                    
-            //        break;
-            //    case 1:
-            //        imageName = "onestars.png";
-            //        break;
-            //    case 2:
-            //        imageName = "twostars.png";
-            //        break;
-            //    case 3:
-            //        imageName = "threestars.png";
-            //        break;
-            //    case 4:
-            //        imageName = "fourstars.png";
-            //        break;
-            //    case 5:
-            //        imageName = "fivestars.png";
-            //        break;
-            //    default:
-            //        break;
-            //}
             mScoreTotal += (int)score;
             imgScore.Source = new BitmapImage(new Uri("pack://application:,,,/Images/" + imageName));
             lblLives.Content = "Lives: " + mLives;
             lblScore.Content = "Score: " + mScoreTotal;
-            //if (mLives == 0)
-            //{
-            //    var window = new GameOver();
-            //    window.Show();
-            //    this.Close();
-            //}
         }
 
         private void updateScoreUI()
@@ -341,7 +311,7 @@ namespace SimonSays
                         Guess aiGuess = mBrain.makeGuess(mTDManager.createSkeletalDataRow(currentPlayerSkel));
                         processGuess(aiGuess);
                     });
-                    //aiClassifyThread.IsBackground = true;
+                    aiClassifyThread.IsBackground = true;
                     aiClassifyThread.Start();
                 }
                 else if (mAIType == AISystemEnum.NaiveBayes)
@@ -351,7 +321,7 @@ namespace SimonSays
                         Guess aiGuess = mNaiveBayes.makeGuess(mTDManager.createSkeletalDataRow(currentPlayerSkel));
                         processGuessNB(aiGuess);
                     });
-                    //aiClassifyThread.IsBackground = true;
+                    aiClassifyThread.IsBackground = true;
                     aiClassifyThread.Start();
                 }
             }
