@@ -100,11 +100,6 @@ namespace SimonSays.Views
         /// </summary>
         private TrainingDataManager tdManager;
 
-        /// <summary>
-        /// Timer for kinect data recording
-        /// </summary>
-        private Timer recordTimer;
-
         private int captureCount = 0;
 
         /// <summary>
@@ -238,14 +233,12 @@ namespace SimonSays.Views
         {
             if (bCapture == false)
             {
-                //System.Threading.Thread.Sleep(6000);
                 btnRecordData.IsEnabled = false;
                 btnHome.IsEnabled = false;
                 captureCount = 0;
                 String gestureName = comboBox.SelectedItem.ToString();
                 tdManager.startAddNewTrainingSet(gestureName);
                 bCapture = true;
-                //startTimer();
                 
             }            
         }
@@ -324,34 +317,6 @@ namespace SimonSays.Views
         {
             //tdManager.setSkeletalSource(skel);
             tdManager.saveRawSkeletalSet(skel);
-        }
-
-        /// <summary>
-        /// Start the timer for recording kinect skeletal data
-        /// </summary>
-        private void startTimer()
-        {
-            System.Threading.Thread.Sleep(1000);
-            recordTimer = new Timer();
-            recordTimer.AutoReset = false;
-            recordTimer.Interval = RECORDING_TIME_PERIOD;
-            recordTimer.Elapsed += onTimerExpired;
-            // This could be moved into the TrainingDataManager at some point
-            
-            recordTimer.Start();
-        }
-
-        /// <summary>
-        /// Once recordTimer has expired, stop capture and release file resources.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="e"></param>
-        private void onTimerExpired(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            bCapture = false;
-            tdManager.finishAddNewTrainingSet();
-            Dispatcher.Invoke(new Action(() => btnRecordData.IsEnabled = true));
-            Dispatcher.Invoke(new Action(() => btnHome.IsEnabled = true));
         }
 
         /// <summary>

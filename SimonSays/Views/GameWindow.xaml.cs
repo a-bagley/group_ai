@@ -269,12 +269,12 @@ namespace SimonSays.Views
 
         private void updateScoreUI()
         {
-            lblScore.Content = "Score: " + mScoreTotal;
+             Dispatcher.BeginInvoke(new Action(() =>lblScore.Content = "Score: " + mScoreTotal));
         }
 
         private void updateLivesUI()
         {
-            lblLives.Content = "Lives: " + mLives;
+             Dispatcher.BeginInvoke(new Action(() => lblLives.Content = "Lives: " + mLives));
         }
 
         private void subtractLife()
@@ -283,6 +283,9 @@ namespace SimonSays.Views
             if (mLives == 0)
             {
                 var window = new GameOver(mScoreTotal);
+                _timer.Stop();
+                mNoneSimonTimer.Stop();
+                mNoneSimonTimer.Dispose();
                 window.Show();
                 this.Close();
             }
@@ -308,13 +311,13 @@ namespace SimonSays.Views
         {
             if (block)
             {
-                 Dispatcher.Invoke(new Action(() => btnHome.IsEnabled = false));
-                 Dispatcher.Invoke(new Action(() => btnRestartGame.IsEnabled = false));
+                 Dispatcher.BeginInvoke(new Action(() => btnHome.IsEnabled = false));
+                 Dispatcher.BeginInvoke(new Action(() => btnRestartGame.IsEnabled = false));
             }
             else
             {
-                 Dispatcher.Invoke(new Action(() => btnHome.IsEnabled = true));
-                 Dispatcher.Invoke(new Action(() => btnRestartGame.IsEnabled = true));
+                 Dispatcher.BeginInvoke(new Action(() => btnHome.IsEnabled = true));
+                 Dispatcher.BeginInvoke(new Action(() => btnRestartGame.IsEnabled = true));
             }
         }
 
@@ -343,7 +346,7 @@ namespace SimonSays.Views
                 updateLivesUI();
                 restartCountDown();
                 mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
-                Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
+                Dispatcher.BeginInvoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
             }
             _time = _time.Add(TimeSpan.FromSeconds(-1));
         }
@@ -369,8 +372,8 @@ namespace SimonSays.Views
         private void onTimerExpired(Object source, System.Timers.ElapsedEventArgs e)
         {
             mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
-            Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
-            Dispatcher.Invoke(new Action(() => restartCountDown()));
+            Dispatcher.BeginInvoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
+            Dispatcher.BeginInvoke(new Action(() => restartCountDown()));
             System.Diagnostics.Debug.WriteLine("\n---Player passed None Simon says round\n");
         }
 
@@ -386,7 +389,7 @@ namespace SimonSays.Views
             updateLivesUI();
             updateScoreUI();
             mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
-            Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
+            Dispatcher.BeginInvoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
             restartCountDown();
         }
 
@@ -425,10 +428,10 @@ namespace SimonSays.Views
             {
                 //get next target gesture
                 // display new target gesture
-                Dispatcher.Invoke(new Action(() => updateScoreUI((mSimonAsked) ? aiGuess.getGuessValue() : -1)));
+                Dispatcher.BeginInvoke(new Action(() => updateScoreUI((mSimonAsked) ? aiGuess.getGuessValue() : -1)));
                 mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
-                Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
-                Dispatcher.Invoke(new Action(() => restartCountDown()));
+                Dispatcher.BeginInvoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
+                Dispatcher.BeginInvoke(new Action(() => restartCountDown()));
                 System.Diagnostics.Debug.WriteLine("\n*** Correct gesture\n");
             }
             else
@@ -446,10 +449,10 @@ namespace SimonSays.Views
             {
                 //get next target gesture
                 // display new target gesture
-                Dispatcher.Invoke(new Action(() => updateScoreUI((mSimonAsked) ? aiGuess.getGuessValue() : -1)));
+                Dispatcher.BeginInvoke(new Action(() => updateScoreUI((mSimonAsked) ? aiGuess.getGuessValue() : -1)));
                 mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
-                Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
-                Dispatcher.Invoke(new Action(() => restartCountDown()));
+                Dispatcher.BeginInvoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
+                Dispatcher.BeginInvoke(new Action(() => restartCountDown()));
                 System.Diagnostics.Debug.WriteLine("\n*** Correct gesture\n");
             }
             else
@@ -600,7 +603,7 @@ namespace SimonSays.Views
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             this.DrawBonesAndJoints(skel, dc);
-                            if (mTickCounter % 60 == 0)
+                            if (mTickCounter % 50 == 0)
                             {
                                 if (mAIReady && !mAIBusy)
                                 {
@@ -741,6 +744,8 @@ namespace SimonSays.Views
         {
             var window = new MainWindow();
             _timer.Stop();
+            mNoneSimonTimer.Stop();
+            mNoneSimonTimer.Dispose();
             window.Show();
             this.Close();
         }
