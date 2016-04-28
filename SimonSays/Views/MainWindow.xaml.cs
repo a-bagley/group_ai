@@ -1,7 +1,8 @@
 ﻿using System.Windows;
 using SimonSays.Utils;
+using SimonSays.Views;
 
-namespace SimonSays
+namespace SimonSays.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

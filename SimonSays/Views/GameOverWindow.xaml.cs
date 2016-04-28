@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace SimonSays
+namespace SimonSays.Views
 {
     /// <summary>
     /// Interaction logic for GameOver.xaml
@@ -15,12 +15,17 @@ namespace SimonSays
 
         private void btnExit_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            ExitApplication();
         }
 
         private void btnPlayAgain_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+            ExitApplication();
+        }
+
+        private void ExitApplication()
+        {
             Application.Current.Shutdown();
         }
     }

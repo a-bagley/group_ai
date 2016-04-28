@@ -17,8 +17,9 @@ using System.Threading;
 using SimonSays.Utils;
 using SimonSays.NeuralNetwork;
 using SimonSays.NaiveBayes;
+using SimonSays.Views;
 
-namespace SimonSays
+namespace SimonSays.Views
 {
     /// <summary>
     /// Interaction logic for GameWindow.xaml
@@ -113,29 +114,13 @@ namespace SimonSays
         public GameWindow(AISystemEnum ai, DifficultyEnum difficulty)
         {
             InitializeComponent();
-            blockUI(true);
+            BlockUI(true);
             mAIType = ai;
-            switch (difficulty)
-            {
-                case DifficultyEnum.Easy:
-                    mLives = 4;
-                    mCountdownSeconds = 15;
-                    break;
-                case DifficultyEnum.Medium:
-                    mLives = 3;
-                    mCountdownSeconds = 10;
-                    break;
-                case DifficultyEnum.Hard:
-                    mLives = 2;
-                    mCountdownSeconds = 5;
-                    break;
-                default:
-                    mLives = 3;
-                    mCountdownSeconds = 10;
-                    break;
-            }
-            updateLivesUI();
-            updateScoreUI();
+
+            SetDifficulty(difficulty);
+            
+            UpdateLivesUI();
+            UpdateScoreUI();
             lblSeconds.Content = mCountdownSeconds;
 
             // NN stuff
@@ -151,8 +136,8 @@ namespace SimonSays
                         mBrain.trainAI(new RawSkeletalDataPackage(mTDManager.getRawDataDictionary(), mTDManager.getGestureList(), mTDManager.getNumberOfDataRows()));
                         System.Diagnostics.Debug.WriteLine("MLP trained and ready!");
                         mAIReady = true;
-                        restartGame();
-                        blockUI(false);
+                        RestartGame();
+                        BlockUI(false);
                         StartCountdown();
                     }
                     else
@@ -172,8 +157,8 @@ namespace SimonSays
                     mNaiveBayes.trainAI(new RawSkeletalDataPackage(mTDManager.getRawDataDictionary(), mTDManager.getGestureList(), mTDManager.getNumberOfDataRows()));
                     System.Diagnostics.Debug.WriteLine("MLP trained and ready!");
                     mAIReady = true;
-                    restartGame();
-                    blockUI(false);
+                    RestartGame();
+                    BlockUI(false);
                     StartCountdown();
                 }
                 else
@@ -181,6 +166,29 @@ namespace SimonSays
                     // Show error on screen
                     System.Diagnostics.Debug.WriteLine("\n**Warning! No training data found, you need training data before you can play\n");
                 }
+            }
+        }
+
+        private void SetDifficulty(DifficultyEnum difficulty)
+        {
+            switch (difficulty)
+            {
+                case DifficultyEnum.Easy:
+                    mLives = 4;
+                    mCountdownSeconds = 15;
+                    break;
+                case DifficultyEnum.Medium:
+                    mLives = 3;
+                    mCountdownSeconds = 10;
+                    break;
+                case DifficultyEnum.Hard:
+                    mLives = 2;
+                    mCountdownSeconds = 5;
+                    break;
+                default:
+                    mLives = 3;
+                    mCountdownSeconds = 10;
+                    break;
             }
         }
 
@@ -219,12 +227,12 @@ namespace SimonSays
             lblScore.Content = "Score: " + mScoreTotal;
         }
 
-        private void updateScoreUI()
+        private void UpdateScoreUI()
         {
             lblScore.Content = "Score: " + mScoreTotal;
         }
 
-        private void updateLivesUI()
+        private void UpdateLivesUI()
         {
             lblLives.Content = "Lives: " + mLives;
         }
@@ -240,12 +248,12 @@ namespace SimonSays
             }
         }
 
-        private void setSimonSaysCommand(String command)
+        private void SetSimonSaysCommand(String command)
         {
             lblSimonSaysCommand.Content = "Simon says " + command;
         }
 
-        private void blockUI(bool block)
+        private void BlockUI(bool block)
         {
             if (block)
             {
@@ -267,7 +275,7 @@ namespace SimonSays
             _timer.Start();
         }
 
-        private void restartCountDown()
+        private void RestartCountDown()
         {
             _time = TimeSpan.FromSeconds(mCountdownSeconds);
             _timer.Start();
@@ -281,23 +289,23 @@ namespace SimonSays
             {
                 _timer.Stop();
                 subtractLife();
-                updateLivesUI();
-                restartCountDown();
+                UpdateLivesUI();
+                RestartCountDown();
             }
             _time = _time.Add(TimeSpan.FromSeconds(-1));
         }
 
         private void btnRestartGame_Click(object sender, RoutedEventArgs e)
         {
-            restartGame();
+            RestartGame();
         }
 
-        private void restartGame()
+        private void RestartGame()
         {
             mScoreTotal = 0;
             mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
-            Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
-            restartCountDown();
+            Dispatcher.Invoke(new Action(() => SetSimonSaysCommand(mTargetGesture)));
+            RestartCountDown();
         }
 
         private void testPlayerGesture(Skeleton currentPlayerSkel)
@@ -336,9 +344,9 @@ namespace SimonSays
                 //get next target gesture
                 // display new target gesture
                 mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
-                Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
+                Dispatcher.Invoke(new Action(() => SetSimonSaysCommand(mTargetGesture)));
                 Dispatcher.Invoke(new Action(() => updateScoreUI(aiGuess.getGuessValue())));
-                Dispatcher.Invoke(new Action(() => restartCountDown()));
+                Dispatcher.Invoke(new Action(() => RestartCountDown()));
                 System.Diagnostics.Debug.WriteLine("\n*** Correct gesture\n");
             }
             else
@@ -357,9 +365,9 @@ namespace SimonSays
                 //get next target gesture
                 // display new target gesture
                 mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
-                Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
+                Dispatcher.Invoke(new Action(() => SetSimonSaysCommand(mTargetGesture)));
                 Dispatcher.Invoke(new Action(() => updateScoreUI(aiGuess.getGuessValue())));
-                Dispatcher.Invoke(new Action(() => restartCountDown()));
+                Dispatcher.Invoke(new Action(() => RestartCountDown()));
                 System.Diagnostics.Debug.WriteLine("\n*** Correct gesture\n");
             }
             else
