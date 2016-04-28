@@ -56,7 +56,7 @@ namespace SimonSays.NeuralNetwork
 
             System.Diagnostics.Debug.WriteLine("************Pre training*******************");
             int c = 0;
-            while ((error > 0.0001) && (c<50000)) // error 0.05
+            while ((error > 0.0005) && (c<50000)) // error 0.0001
             {
                 error = 0;
                 c++;
@@ -84,12 +84,6 @@ namespace SimonSays.NeuralNetwork
             System.Diagnostics.Debug.WriteLine("************Post training*******************");
             neuralNetwork.PrintInfo();
         }
-
-        //Todo finish implementing the Multilyaer Perceptron.
-
-        //Todo decide on how training data will be pulled together from multiple files.
-
-        //Todo Add another layer (sigh) for pulling traing data together.
 
         /// <summary>
         /// Generate a classification guess based on inputs

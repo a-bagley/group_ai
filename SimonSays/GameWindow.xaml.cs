@@ -213,40 +213,10 @@ namespace SimonSays
                 imageName = "onestars.png";
                 score = 1;
             }
-            //switch (score)
-            //{
-            //    case 0:
-            //        imageName = "fail.png";
-            //        lives -= 1;                    
-            //        break;
-            //    case 1:
-            //        imageName = "onestars.png";
-            //        break;
-            //    case 2:
-            //        imageName = "twostars.png";
-            //        break;
-            //    case 3:
-            //        imageName = "threestars.png";
-            //        break;
-            //    case 4:
-            //        imageName = "fourstars.png";
-            //        break;
-            //    case 5:
-            //        imageName = "fivestars.png";
-            //        break;
-            //    default:
-            //        break;
-            //}
             mScoreTotal += (int)score;
             imgScore.Source = new BitmapImage(new Uri("pack://application:,,,/Images/" + imageName));
             lblLives.Content = "Lives: " + mLives;
             lblScore.Content = "Score: " + mScoreTotal;
-            //if (mLives == 0)
-            //{
-            //    var window = new GameOver();
-            //    window.Show();
-            //    this.Close();
-            //}
         }
 
         private void updateScoreUI()
@@ -264,7 +234,7 @@ namespace SimonSays
             mLives--;
             if (mLives == 0)
             {
-                var window = new GameOver();
+                var window = new GameOver(score);
                 window.Show();
                 this.Close();
             }
@@ -498,11 +468,12 @@ namespace SimonSays
         /// </summary>
         /// <param name="sender">object sending the event</param>
         /// <param name="e">event arguments</param>
-        private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (null != this.sensor)
             {
                 this.sensor.Stop();
+                this.sensor.Dispose();
             }
         }
 
@@ -673,33 +644,12 @@ namespace SimonSays
             drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
         }
 
-        /// <summary>
-        /// Handles the checking or unchecking of the seated mode combo box
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
-        private void CheckBoxSeatedModeChanged(object sender, RoutedEventArgs e)
-        {
-            if (null != this.sensor)
-            {
-                if (this.checkBoxSeatedMode.IsChecked.GetValueOrDefault())
-                {
-                    this.sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
-                }
-                else
-                {
-                    this.sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
-                }
-            }
-        }
-
         //Handles the home button so that we can go back to the start window
         //Also stopping the timer when the button is pressed
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
             var window = new MainWindow();
             _timer.Stop();
-            _timer = null;
             window.Show();
             this.Close();
         }

@@ -7,9 +7,10 @@ namespace SimonSays
     /// </summary>
     public partial class GameOver : Window
     {
-        public GameOver()
+        public GameOver(int score)
         {
             InitializeComponent();
+            lblScoreValue.Content = score;
         }
 
         private void btnExit_Click(object sender, RoutedEventArgs e)
