@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Timers;
 using Microsoft.Kinect;
 using System.IO;
 using System.Threading;
@@ -109,6 +110,10 @@ namespace SimonSays
         private Boolean mAIReady = false;
         private Boolean mAIBusy = false;
         private int mTickCounter = 0;
+        private Random rand = new Random();
+        private Boolean mSimonAsked = false;
+        private System.Timers.Timer mNoneSimonTimer;
+        private int mNoneSimonWaitPeriod;
 
         public GameWindow(AISystemEnum ai, DifficultyEnum difficulty)
         {
@@ -120,18 +125,22 @@ namespace SimonSays
                 case DifficultyEnum.Easy:
                     mLives = 4;
                     mCountdownSeconds = 15;
+                    mNoneSimonWaitPeriod = 5000;
                     break;
                 case DifficultyEnum.Medium:
                     mLives = 3;
                     mCountdownSeconds = 10;
+                    mNoneSimonWaitPeriod = 5000;
                     break;
                 case DifficultyEnum.Hard:
                     mLives = 2;
                     mCountdownSeconds = 5;
+                    mNoneSimonWaitPeriod = 3000;
                     break;
                 default:
                     mLives = 3;
                     mCountdownSeconds = 10;
+                    mNoneSimonWaitPeriod = 5000;
                     break;
             }
             updateLivesUI();
@@ -187,33 +196,41 @@ namespace SimonSays
         private void updateScoreUI(double score)
         {
             var imageName = "";
-            score = score * 10;
-            if (score > 8.5)
+            if (score != -1)
             {
-                imageName = "fivestars.png";
-                score = 5;
-            }
-            else if (score > 8)
-            {
-                imageName = "fourstars.png";
-                score = 4;
-            }
-            else if (score > 7.5)
-            {
-                imageName = "threestars.png";
-                score = 3;
-            }
-            else if (score > 7)
-            {
-                imageName = "twostars.png";
-                score = 2;
+                score = score * 10;
+                if (score > 8.5)
+                {
+                    imageName = "fivestars.png";
+                    score = 5;
+                }
+                else if (score > 8)
+                {
+                    imageName = "fourstars.png";
+                    score = 4;
+                }
+                else if (score > 7.5)
+                {
+                    imageName = "threestars.png";
+                    score = 3;
+                }
+                else if (score > 7)
+                {
+                    imageName = "twostars.png";
+                    score = 2;
+                }
+                else
+                {
+                    imageName = "onestars.png";
+                    score = 1;
+                }
+                mScoreTotal += (int)score;
             }
             else
             {
-                imageName = "onestars.png";
-                score = 1;
+                imageName = "fail.png";
+                subtractLife();
             }
-            mScoreTotal += (int)score;
             imgScore.Source = new BitmapImage(new Uri("pack://application:,,,/Images/" + imageName));
             lblLives.Content = "Lives: " + mLives;
             lblScore.Content = "Score: " + mScoreTotal;
@@ -242,7 +259,18 @@ namespace SimonSays
 
         private void setSimonSaysCommand(String command)
         {
-            lblSimonSaysCommand.Content = "Simon says " + command;
+            int isSimon = rand.Next(2);
+            if (isSimon == 1)
+            {
+                lblSimonSaysCommand.Content = "Simon says " + command;
+                mSimonAsked = true;
+            }
+            else if (isSimon == 0)
+            {
+                lblSimonSaysCommand.Content = command;
+                mSimonAsked = false;
+                startNoneSimonTimer();
+            }
         }
 
         private void blockUI(bool block)
@@ -283,8 +311,36 @@ namespace SimonSays
                 subtractLife();
                 updateLivesUI();
                 restartCountDown();
+                mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
+                Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
             }
             _time = _time.Add(TimeSpan.FromSeconds(-1));
+        }
+
+        /// <summary>
+        /// Start the timer for an none simon gesture
+        /// </summary>
+        private void startNoneSimonTimer()
+        {
+            System.Threading.Thread.Sleep(1000);
+            mNoneSimonTimer = new System.Timers.Timer();
+            mNoneSimonTimer.AutoReset = false;
+            mNoneSimonTimer.Interval = mNoneSimonWaitPeriod;
+            mNoneSimonTimer.Elapsed += onTimerExpired;
+            mNoneSimonTimer.Start();
+        }
+
+        /// <summary>
+        /// Clear none simon gesture
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        private void onTimerExpired(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
+            Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
+            Dispatcher.Invoke(new Action(() => restartCountDown()));
+            System.Diagnostics.Debug.WriteLine("\n---Player passed None Simon says round\n");
         }
 
         private void btnRestartGame_Click(object sender, RoutedEventArgs e)
@@ -335,9 +391,9 @@ namespace SimonSays
             {
                 //get next target gesture
                 // display new target gesture
+                Dispatcher.Invoke(new Action(() => updateScoreUI((mSimonAsked) ? aiGuess.getGuessValue() : -1)));
                 mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
                 Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
-                Dispatcher.Invoke(new Action(() => updateScoreUI(aiGuess.getGuessValue())));
                 Dispatcher.Invoke(new Action(() => restartCountDown()));
                 System.Diagnostics.Debug.WriteLine("\n*** Correct gesture\n");
             }
@@ -356,9 +412,9 @@ namespace SimonSays
             {
                 //get next target gesture
                 // display new target gesture
+                Dispatcher.Invoke(new Action(() => updateScoreUI((mSimonAsked) ? aiGuess.getGuessValue() : -1)));
                 mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
                 Dispatcher.Invoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
-                Dispatcher.Invoke(new Action(() => updateScoreUI(aiGuess.getGuessValue())));
                 Dispatcher.Invoke(new Action(() => restartCountDown()));
                 System.Diagnostics.Debug.WriteLine("\n*** Correct gesture\n");
             }
