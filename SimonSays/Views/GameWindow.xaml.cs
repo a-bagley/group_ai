@@ -746,8 +746,11 @@ namespace SimonSays.Views
         {
             var window = new MainWindow();
             _timer.Stop();
-            mNoneSimonTimer.Stop();
-            mNoneSimonTimer.Dispose();
+            if (mNoneSimonTimer != null)
+            {
+                mNoneSimonTimer.Stop();
+                mNoneSimonTimer.Dispose();
+            }
             window.Show();
             this.Close();
         }
