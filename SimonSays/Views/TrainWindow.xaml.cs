@@ -102,11 +102,6 @@ namespace SimonSays.Views
 
         private int captureCount = 0;
 
-        /// <summary>
-        /// Recording time for data sets (milliseconds)
-        /// </summary>
-        private readonly int RECORDING_TIME_PERIOD = 8000;
-
         public TrainWindow()
         {
             InitializeComponent();
@@ -235,6 +230,7 @@ namespace SimonSays.Views
             {
                 btnRecordData.IsEnabled = false;
                 btnHome.IsEnabled = false;
+                btnAdd.IsEnabled = false;
                 captureCount = 0;
                 String gestureName = comboBox.SelectedItem.ToString();
                 tdManager.startAddNewTrainingSet(gestureName);
@@ -289,6 +285,7 @@ namespace SimonSays.Views
                                 captureCount = 0;
                                 btnRecordData.IsEnabled = true;
                                 btnHome.IsEnabled = true;
+                                btnAdd.IsEnabled = true;
                             }
                         }
 
