@@ -68,7 +68,7 @@
     <Compile Include="NeuralNetwork\NeuralNetwork.cs" />
     <Compile Include="NeuralNetwork\NeuronLayer.cs" />
     <Compile Include="TrainingDataManager.cs" />
-    <Compile Include="SkeletonDataRow.cs" />
+    <Compile Include="Utils\SkeletonDataRow.cs" />
     <Compile Include="Views\TrainWindow.xaml.cs">
       <DependentUpon>TrainWindow.xaml</DependentUpon>
     </Compile>
