@@ -1,16 +1,10 @@
-﻿using System.Windows;
-using SimonSays.Utils;
-using Microsoft.Kinect;
+﻿using Microsoft.Kinect;
 using Microsoft.Speech.AudioFormat;
 using Microsoft.Speech.Recognition;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Linq;
-using System.IO;
-using System.Threading;
+using SimonSays.Utils;
 using System;
-using SimonSays.Views;
+using System.Linq;
+using System.Windows;
 
 namespace SimonSays.Views
 {

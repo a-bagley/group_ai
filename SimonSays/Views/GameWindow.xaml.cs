@@ -1,24 +1,13 @@
-﻿﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Timers;
-using Microsoft.Kinect;
+﻿﻿using Microsoft.Kinect;
+using SimonSays.NaiveBayes;
+using SimonSays.NeuralNetwork;
+using SimonSays.Utils;
+using System;
 using System.IO;
 using System.Threading;
-using SimonSays.Utils;
-using SimonSays.NeuralNetwork;
-using SimonSays.NaiveBayes;
-using SimonSays.Views;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace SimonSays.Views
 {

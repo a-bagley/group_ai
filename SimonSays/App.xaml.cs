@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using SimonSays.Views;
 using System.Windows;
-using SimonSays.Views;
 
 namespace SimonSays
 {
@@ -18,7 +12,6 @@ namespace SimonSays
         {
             base.OnStartup(e);
 
-            //add speech engine here
             MainWindow startWindow = new MainWindow();
             startWindow.Show();
         }

@@ -1,19 +1,15 @@
 ﻿using Microsoft.Kinect;
+using SimonSays.Utils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
 using System.Windows;
-using SimonSays.Utils;
 
 namespace SimonSays
 {
     class TrainingDataManager
     {
-        private Skeleton mSkeleton;
-
         private int mNumberOfGestures;
 
         private List<String> mGestureNameList = new List<String>();

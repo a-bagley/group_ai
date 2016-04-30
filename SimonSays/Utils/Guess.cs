@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SimonSays.Utils
+﻿namespace SimonSays.Utils
 {
     /// <summary>
     /// Used to show the results of AI systems.

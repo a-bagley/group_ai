@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 // Number of hidden neurons is roughly equal to the square root of the product of the number of inputs and outputs
 // Test 
