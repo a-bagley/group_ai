@@ -78,6 +78,7 @@ namespace SimonSays.NeuralNetwork
             }
             System.Diagnostics.Debug.WriteLine("************Post training*******************");
             neuralNetwork.PrintInfo();
+            testMLP(trainingData);
         }
 
         /// <summary>
@@ -102,9 +103,29 @@ namespace SimonSays.NeuralNetwork
             return new Guess(resultId, resultValue);
         }
 
-        public void testMLP()
+        public void testMLP(double[,] trainingData)
         {
-
+            int totalCorrect = 0;
+            int totalIncorrect = 0;
+            double[] testRow = new double[trainingData.GetLength(1)];
+            for (int i = 0; i < trainingData.GetLength(0); i++)
+            {
+                for (int j = 0; j < trainingData.GetLength(1); j++)
+                {
+                    testRow[j] = trainingData[i, j];
+                }
+                Guess testResult = GenerateMLPResult(testRow);
+                if (trainingData[i, testResult.getGuessId() + nInputs] == 0.9)
+                {
+                    totalCorrect++;
+                }
+                else
+                {
+                    totalIncorrect++;
+                }
+            }
+            double error = (double)totalIncorrect / (double)trainingData.GetLength(0);
+            System.Diagnostics.Debug.WriteLine("Correct tests: " + totalCorrect + "\nIncorrect tests: " + totalIncorrect + "\nError: " + error);
         }
 
         public double getLearningRate()

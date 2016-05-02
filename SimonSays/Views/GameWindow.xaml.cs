@@ -269,8 +269,11 @@ namespace SimonSays.Views
         private void subtractLife()
         {
             mLives--;
-            mNoneSimonTimer.Stop();
-            mNoneSimonTimer.Dispose();
+            if (mNoneSimonTimer != null)
+            {
+                mNoneSimonTimer.Stop();
+                mNoneSimonTimer.Dispose();
+            }
             if (mLives == 0)
             {
                 var window = new GameOver(mScoreTotal);
