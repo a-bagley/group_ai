@@ -24,42 +24,62 @@ namespace SimonSays.NeuralNetwork
         /// </summary>
         private double[,] weights;
 
-        //
+        /// <summary>
+        /// Changes in to weights
+        /// </summary>
         private double[,] weightChanges;
 
-        //
+        /// <summary>
+        /// The neuron values of the layer
+        /// </summary>
         private double[] neuronVals;
 
-        //
+        /// <summary>
+        /// Target neuron values
+        /// </summary>
         private double[] desiredVals;
 
-        //
+        /// <summary>
+        /// Error values of neurons
+        /// </summary>
         private double[] errorVals;
 
-        //
+        /// <summary>
+        /// Bias wieghts for the layer
+        /// </summary>
         private double[] biasWeights;
 
-        //
+        /// <summary>
+        /// Bias values used
+        /// </summary>
         private double[] biasVals;
 
-        //
+        /// <summary>
+        /// Learning rate of the layer
+        /// </summary>
         private double learningRate;
 
-        //
+        /// <summary>
+        /// Momentum factor used
+        /// </summary>
         private double momentum;
 
-        //
+        /// <summary>
+        /// The connected child layer
+        /// </summary>
         private NeuronLayer childLayer;
 
-        //
+        /// <summary>
+        /// The connected parent layer
+        /// </summary>
         private NeuronLayer parentLayer;
 
         /// <summary>
-        /// 
+        /// Construct a Neuron layer
         /// </summary>
-        /// <param name="nNodes"></param>
-        /// <param name="nChildNodes"></param>
-        /// <param name="nParentNodes"></param>
+        /// <param name="nNodes">Number of Nodes in the layer</param>
+        /// <param name="nChildNodes">Number of connected child nodes</param>
+        /// <param name="nParentNodes">Number of connected parent nodes</param>
         /// <param name="learningRate"></param>
         /// <param name="momentum"></param>
         public NeuronLayer(int nNodes, int nChildNodes, int nParentNodes, double learningRate, double momentum)
@@ -74,7 +94,7 @@ namespace SimonSays.NeuralNetwork
 
             int i, j;
 
-            // Allocate memory
+            // Allocate array memory
             neuronVals = new double[nNodes];
             desiredVals = new double[nNodes];
             errorVals = new double[nNodes];
@@ -91,7 +111,6 @@ namespace SimonSays.NeuralNetwork
             {
                 for (j = 0; j < nChildNodes; j++)
                 {
-
                     weights[i, j] = rand.NextDouble();
                     weightChanges[i, j] = 0;
                 }
@@ -101,11 +120,10 @@ namespace SimonSays.NeuralNetwork
                 biasVals[j] = -1;
                 biasWeights[j] = rand.NextDouble();
             }
-
         }
 
         /// <summary>
-        /// 
+        /// Link the layer to its child and parent
         /// </summary>
         /// <param name="parentLayer"></param>
         /// <param name="childLayer"></param>
@@ -115,26 +133,18 @@ namespace SimonSays.NeuralNetwork
             this.childLayer = childLayer;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public int getNumberNodes()
         {
             return nNodes;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public int getNumberChildNodes()
         {
             return nChildNodes;
         }
 
         /// <summary>
-        /// 
+        /// Get neuron value at selected node
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
@@ -144,7 +154,7 @@ namespace SimonSays.NeuralNetwork
         }
 
         /// <summary>
-        /// 
+        /// Set the value of desired node
         /// </summary>
         /// <param name="node"></param>
         /// <param name="val"></param>
@@ -153,38 +163,23 @@ namespace SimonSays.NeuralNetwork
             neuronVals[node] = val;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
         public double getDesiredValue(int node)
         {
             return desiredVals[node];
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="node"></param>
-        /// <param name="val"></param>
         public void setDesiredValue(int node, double val)
         {
             desiredVals[node] = val;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
         public double getBiasWeight(int node)
         {
             return biasWeights[node];
         }
 
         /// <summary>
-        /// 
+        /// Use Sigmoid function to calculate neuron values
         /// </summary>
         public void CalculateNeuronValues()
         {
@@ -201,17 +196,13 @@ namespace SimonSays.NeuralNetwork
                         x += parentLayer.neuronVals[i] * parentLayer.weights[i,j];
                     }
                     x += parentLayer.biasVals[j] * parentLayer.biasWeights[j];
-
-                    //if ((childLayer == null) && linearOutput)
-                    //    neuronVals[j] = x;
-                    // else
-                        neuronVals[j] = 1.0f / (1.0f + (double)Math.Exp(-x));
+                    neuronVals[j] = 1.0f / (1.0f + (double)Math.Exp(-x));
                 }
             }
         }
 
         /// <summary>
-        /// 
+        /// Calculate the errors from desired values
         /// </summary>
         public void calculateErrors()
         {
@@ -246,7 +237,7 @@ namespace SimonSays.NeuralNetwork
         }
 
         /// <summary>
-        /// 
+        /// Adjust the weights appropriately
         /// </summary>
         public void adjustWeights()
         {
@@ -272,9 +263,8 @@ namespace SimonSays.NeuralNetwork
             }
         }
 
-        // Debug, possibly remove later
         /// <summary>
-        /// 
+        /// Print neuron layer info
         /// </summary>
         /// <returns></returns>
         public String toString()

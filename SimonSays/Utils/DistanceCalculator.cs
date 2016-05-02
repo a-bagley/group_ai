@@ -2,6 +2,10 @@
 
 namespace SimonSays.Utils
 {
+    /// <summary>
+    /// Calculates the euclidean distance between Kinect skeletal points.
+    /// Methods are named in a self-explanatory manner.
+    /// </summary>
     class DistanceCalculator
     {
         private SkeletonDataRow mSkeleton;
@@ -11,6 +15,14 @@ namespace SimonSays.Utils
             mSkeleton = skeletonData;
         }
 
+        /// <summary>
+        /// Calculate the euclidean distance between two points using X and Y coordinates.
+        /// </summary>
+        /// <param name="point1x"></param>
+        /// <param name="point1y"></param>
+        /// <param name="point2x"></param>
+        /// <param name="point2y"></param>
+        /// <returns></returns>
         private double getDistanceBetweenPoints(double point1x, double point1y, double point2x, double point2y)
         {
             return Math.Sqrt(Math.Pow((point1x - point2x), 2) + Math.Pow((point1y - point2y), 2));

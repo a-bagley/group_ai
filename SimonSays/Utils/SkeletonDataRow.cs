@@ -1,5 +1,8 @@
 ﻿namespace SimonSays.Utils
 {
+    /// <summary>
+    /// Storage class for X and Y skeletal coordinates.
+    /// </summary>
     class SkeletonDataRow
     {
         public double headX { get; set; }
