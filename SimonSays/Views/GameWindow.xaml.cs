@@ -165,6 +165,10 @@ namespace SimonSays.Views
             }
         }
 
+        /// <summary>
+        /// Set the difficulty of the game
+        /// </summary>
+        /// <param name="difficulty">The difficulty level</param>
         private void SetDifficulty(DifficultyEnum difficulty)
         {
             switch (difficulty)
@@ -192,6 +196,10 @@ namespace SimonSays.Views
             }
         }
 
+        /// <summary>
+        /// Updates the UI relating to the score and lives
+        /// </summary>
+        /// <param name="score">The players score</param>
         private void updateScoreUI(double score)
         {
             setStarRating(score);
@@ -199,6 +207,10 @@ namespace SimonSays.Views
             lblScore.Content = "Score: " + mScoreTotal;
         }
 
+        /// <summary>
+        /// Set the amount of stars the player has achieved
+        /// </summary>
+        /// <param name="score">The players score</param>
         private void setStarRating(double score)
         {
             String imageName = "";
@@ -256,16 +268,25 @@ namespace SimonSays.Views
             imgScore.Source = new BitmapImage(new Uri("pack://application:,,,/Images/" + imageName));
         }
 
+        /// <summary>
+        /// Updates the score on the UI
+        /// </summary>
         private void updateScoreUI()
         {
              Dispatcher.BeginInvoke(new Action(() =>lblScore.Content = "Score: " + mScoreTotal));
         }
-
+        
+        /// <summary>
+        /// Updates the amount of lives on the UI
+        /// </summary>
         private void updateLivesUI()
         {
              Dispatcher.BeginInvoke(new Action(() => lblLives.Content = "Lives: " + mLives));
         }
 
+        /// <summary>
+        /// Removes a life from the player
+        /// </summary>
         private void subtractLife()
         {
             mLives--;
@@ -283,6 +304,10 @@ namespace SimonSays.Views
             }
         }
 
+        /// <summary>
+        /// Responsible for setting the command in the game
+        /// </summary>
+        /// <param name="command">The gesture</param>
         private void setSimonSaysCommand(String command)
         {
             int isSimon = rand.Next(2);
@@ -299,6 +324,10 @@ namespace SimonSays.Views
             }
         }
 
+        /// <summary>
+        /// Disable UI elements
+        /// </summary>
+        /// <param name="block">Decides if the UI should be blocked</param>
         private void blockUI(bool block)
         {
             if (block)
@@ -313,6 +342,9 @@ namespace SimonSays.Views
             }
         }
 
+        /// <summary>
+        /// Starts the count down
+        /// </summary>
         private void StartCountdown()
         {
             _time = TimeSpan.FromSeconds(mCountdownSeconds);
@@ -321,12 +353,20 @@ namespace SimonSays.Views
             _timer.Start();
         }
 
+        /// <summary>
+        /// Restarts the count down
+        /// </summary>
         private void restartCountDown()
         {
             _time = TimeSpan.FromSeconds(mCountdownSeconds);
             _timer.Start();
         }
 
+        /// <summary>
+        /// Called on each timer tick
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             lblSeconds.Content = _time.ToString("ss");
@@ -369,11 +409,19 @@ namespace SimonSays.Views
             System.Diagnostics.Debug.WriteLine("\n---Player passed None Simon says round\n");
         }
 
+        /// <summary>
+        /// Restart the game button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnRestartGame_Click(object sender, RoutedEventArgs e)
         {
             restartGame();
         }
 
+        /// <summary>
+        /// Restarts the game
+        /// </summary>
         private void restartGame()
         {
             mScoreTotal = 0;
@@ -385,6 +433,10 @@ namespace SimonSays.Views
             restartCountDown();
         }
 
+        /// <summary>
+        /// Tests if the players gesture matches
+        /// </summary>
+        /// <param name="currentPlayerSkel"></param>
         private void testPlayerGesture(Skeleton currentPlayerSkel)
         {
             if (mAIReady)
@@ -412,6 +464,10 @@ namespace SimonSays.Views
             }
         }
 
+        /// <summary>
+        /// Decides if a guess is correct using the NN
+        /// </summary>
+        /// <param name="aiGuess"></param>
         private void processGuess(Guess aiGuess)
         {
             // Update UI here
@@ -433,6 +489,10 @@ namespace SimonSays.Views
             mAIBusy = false;
         }
 
+        /// <summary>
+        /// Decides if a guess is correct using Naive Bayes
+        /// </summary>
+        /// <param name="aiGuess"></param>
         private void processGuessNB(Guess aiGuess)
         {
             // Update UI here

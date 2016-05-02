@@ -212,6 +212,11 @@ namespace SimonSays.Views
             }
         }
 
+        /// <summary>
+        /// Record data button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnRecordData_Click(object sender, RoutedEventArgs e)
         {
             if (bCapture == false)
@@ -418,6 +423,11 @@ namespace SimonSays.Views
             this.Close();
             }
 
+        /// <summary>
+        /// The add button click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             String newGesture = this.textBox.Text;

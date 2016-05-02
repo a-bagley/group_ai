@@ -24,11 +24,19 @@ namespace SimonSays.Views
             this.rbANN.IsChecked = true;
         }
 
+        /// <summary>
+        /// Easy button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnEasy_Click(object sender, RoutedEventArgs e)
         {
             EasyClickFunctionality();
         }
 
+        /// <summary>
+        /// Easy click 
+        /// </summary>
         private void EasyClickFunctionality() 
         {
             killKinect();
@@ -37,11 +45,19 @@ namespace SimonSays.Views
             this.Close();
         }
 
+        /// <summary>
+        /// Medium button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnMedium_Click(object sender, RoutedEventArgs e)
         {
             MediumClickFunctionality();
         }
 
+        /// <summary>
+        /// Medium click
+        /// </summary>
         private void MediumClickFunctionality()
         
         {
@@ -51,11 +67,19 @@ namespace SimonSays.Views
             this.Close();
         }
 
+        /// <summary>
+        /// Hard button click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnHard_Click(object sender, RoutedEventArgs e)
         {
             HardClickFunctionality();
         }
 
+        /// <summary>
+        /// Hard click
+        /// </summary>
         private void HardClickFunctionality()
         {
             killKinect();
@@ -64,11 +88,19 @@ namespace SimonSays.Views
             this.Close();
         }
 
+        /// <summary>
+        /// Training button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnTrain_Click(object sender, RoutedEventArgs e)
         {
             TrainClickFunctionality();
         }
 
+        /// <summary>
+        /// Train click
+        /// </summary>
         private void TrainClickFunctionality()
         {
             killKinect();
@@ -77,6 +109,11 @@ namespace SimonSays.Views
             this.Close();
         }
 
+        /// <summary>
+        /// Radio button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             if (this.rbANN.IsChecked == true)
@@ -89,6 +126,10 @@ namespace SimonSays.Views
             }
         }
 
+        /// <summary>
+        /// Get the speech recognizer
+        /// </summary>
+        /// <returns></returns>
         private static RecognizerInfo GetKinectRecognizer()
         {
             Func<RecognizerInfo, bool> matchingFunc = r =>
@@ -134,6 +175,10 @@ namespace SimonSays.Views
             sensor.AudioSource.AutomaticGainControlEnabled = false;
         }
 
+        /// <summary>
+        /// Responsible for recognising the speech
+        /// </summary>
+        /// <returns></returns>
         private SpeechRecognitionEngine CreateSpeechRecognizer()
         {
             RecognizerInfo ri = GetKinectRecognizer();
@@ -220,6 +265,9 @@ namespace SimonSays.Views
             }
         }
 
+        /// <summary>
+        /// Kill the kinect system
+        /// </summary>
         private void killKinect()
         {
             if (this.sensor != null)
