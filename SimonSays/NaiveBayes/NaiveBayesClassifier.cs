@@ -17,11 +17,11 @@ namespace SimonSays.NaiveBayes
 
         private List<String> mGestureNameList;
 
-        private static readonly String VERY_SHORT  = "v_short";
-        private static readonly String SHORT       = "short";
-        private static readonly String MEDIUM      = "medium";
-        private static readonly String LONG        = "long";
-        private static readonly String VERY_LONG   = "v_long";
+        private static readonly String VERY_SHORT = "v_short";
+        private static readonly String SHORT = "short";
+        private static readonly String MEDIUM = "medium";
+        private static readonly String LONG = "long";
+        private static readonly String VERY_LONG = "v_long";
 
 
         public NaiveBayesClassifier()
@@ -34,6 +34,10 @@ namespace SimonSays.NaiveBayes
             mGestureNameList = sdp.getGestureNameList();
             Dictionary<String, List<List<String>>> trainingDataDic = new Dictionary<String, List<List<String>>>(createNaiveBayesData(sdp));
             mNB = new NaiveBayesEngine(NUMBER_OF_ATTRIBUTES, sdp.getTotalGestures(), sdp.getTotalDataRows(), trainingDataDic);
+#if DEBUG
+            // Test in debug because it takes a noticeable amount of time
+            testNB(trainingDataDic);
+#endif
         }
 
         public Guess makeGuess(SkeletonDataRow skelDataRow)
@@ -47,6 +51,11 @@ namespace SimonSays.NaiveBayes
                 results[i] = mNB.ClassifyFromDic(lengths, mGestureNameList.ElementAt(i));
             }
 
+            return getBestGuess(results);
+        }
+
+        private Guess getBestGuess(double[] results)
+        {
             double max = -1000.0;
             int max_position = -1;
             for (int i = 0; i < mNB.mNumberOfCategories; i++)
@@ -62,8 +71,6 @@ namespace SimonSays.NaiveBayes
 
         private Dictionary<String, List<List<String>>> createNaiveBayesData(RawSkeletalDataPackage sdp)
         {
-            // hack
-            //int i = 0;
             Dictionary<String, List<SkeletonDataRow>> skelDataDic = sdp.getSkeletalDataDic();
             Dictionary<String, List<List<String>>> nbTrainingDic = new Dictionary<String, List<List<String>>>();
             foreach (String key in skelDataDic.Keys)
@@ -74,9 +81,6 @@ namespace SimonSays.NaiveBayes
                     double[] values = calculateDistances(row);
                     List<String> inputs = new List<String>(convertDistancesToLengths(values));
                     categoryTrainingData.Add(inputs);
-                    //i++;
-                    //if (i == 50)
-                        //break;
                 }
                 nbTrainingDic.Add(key, categoryTrainingData);
             }
@@ -150,5 +154,33 @@ namespace SimonSays.NaiveBayes
                 return VERY_LONG;
         }
 
+        private void testNB(Dictionary<String, List<List<String>>> testData)
+        {
+            int testTotal = 0;
+            int totalCorrect = 0;
+            int totalIncorrect = 0;
+            int keyIndex = 0;
+            double[] results = new double[mNB.mNumberOfCategories];
+            foreach (String key in testData.Keys)
+            {
+                foreach (List<String> testSet in testData[key])
+                {
+                    for (int i = 0; i < mNB.mNumberOfCategories; i++)
+                    {
+                        string[] testLengths = testSet.Select(j => j.ToString()).ToArray();
+                        results[i] = mNB.ClassifyFromDic(testLengths, mGestureNameList.ElementAt(i));
+                    }
+                    Guess g = getBestGuess(results);
+                        if (g.getGuessId() == keyIndex)
+                            totalCorrect++;
+                        else
+                            totalIncorrect++;
+                    testTotal++;
+                }
+                keyIndex++;
+            }
+            double error = (double)totalIncorrect / (double)testTotal;
+            System.Diagnostics.Debug.WriteLine("Correct tests: " + totalCorrect + "\nIncorrect tests: " + totalIncorrect + "\nError: " + error);
+        }
     }
 }
