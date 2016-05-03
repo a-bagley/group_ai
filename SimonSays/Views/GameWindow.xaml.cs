@@ -83,32 +83,102 @@ namespace SimonSays.Views
         private DrawingImage imageSource;
         #endregion
 
-        System.Windows.Threading.DispatcherTimer _timer = new System.Windows.Threading.DispatcherTimer();
-        TimeSpan _time;
+        /// <summary>
+        /// Round countdown timer
+        /// </summary>
+        System.Windows.Threading.DispatcherTimer mRoundTimer = new System.Windows.Threading.DispatcherTimer();
+        TimeSpan mRoundTimeSpan;
+
+        /// <summary>
+        // Max round countdown time
+        /// </summary>
         int mCountdownSeconds = 0;
+
+        /// <summary>
+        /// Number of lives for difficulty
+        /// </summary>
         int mLivesReset;
+
+        /// <summary>
+        /// Current number of lives left
+        /// </summary>
         int mLives;
+
+        /// <summary>
+        /// Current score total
+        /// </summary>
         int mScoreTotal = 0;
 
+        /// <summary>
+        /// Gesture the player must do
+        /// </summary>
         private String mTargetGesture = "unassigned";
 
-        private AISystemEnum mCurrentAI;
+        /// <summary>
+        /// Traing data manager
+        /// </summary>
         private TrainingDataManager mTDManager;
+
+        /// <summary>
+        /// AI system in use
+        /// </summary>
         private AISystemEnum mAIType = AISystemEnum.NN;
+
+        /// <summary>
+        /// MLP (ANN) Classifier
+        /// </summary>
         private MLPClassifier mBrain;
+
+        /// <summary>
+        /// Naive Bayes Classifier
+        /// </summary>
         private NaiveBayesClassifier mNaiveBayes;
+
+        /// <summary>
+        /// Track if AI is ready for use
+        /// </summary>
         private Boolean mAIReady = false;
+
+        /// <summary>
+        /// Track if AI is free to start a classification
+        /// </summary>
         private Boolean mAIBusy = false;
+
+        /// <summary>
+        /// Track Kinect FPS
+        /// </summary>
         private int mTickCounter = 0;
+
+        /// <summary>
+        /// Random number source
+        /// </summary>
         private Random rand = new Random();
+
+        /// <summary>
+        /// Is the current gesture being asked by Simon or not
+        /// </summary>
         private Boolean mSimonAsked = false;
+
+        /// <summary>
+        /// Timer for non-Siomn asked gestures
+        /// </summary>
         private System.Timers.Timer mNoneSimonTimer;
+
+        /// <summary>
+        /// Period to wait before clearing a non-Simon gesture command
+        /// </summary>
         private int mNoneSimonWaitPeriod;
 
+        /// <summary>
+        /// Constructs game window for playing the main game
+        /// </summary>
+        /// <param name="ai"></param>
+        /// <param name="difficulty"></param>
         public GameWindow(AISystemEnum ai, DifficultyEnum difficulty)
         {
+            // Init Kinect
             InitializeComponent();
-            mCurrentAI = ai;
+            // Disable UI whilst loading AI
             blockUI(true);
             mAIType = ai;
 
@@ -119,12 +189,14 @@ namespace SimonSays.Views
             lblSeconds.Content = mCountdownSeconds;
             mNoneSimonWaitPeriod = 4500;
 
-            // NN stuff
             mTDManager = new TrainingDataManager();
+            // Load skeletal training data
             mTDManager.initForPlaying();
+            // Setup ANN
             if (mAIType == AISystemEnum.NN)
             {
-                mBrain = new MLPClassifier(0.1, 0.9); //learning rate 0.2, and momentum 0.9
+                mBrain = new MLPClassifier(0.1, 0.9); //learning rate 0.1, and momentum 0.9
+                // Train in seperate thread
                 Thread aiTrainingThread = new System.Threading.Thread(delegate()
                 {
                     if (mTDManager.getNumberOfDataRows() > 0)
@@ -135,6 +207,7 @@ namespace SimonSays.Views
                         restartGame();
                         blockUI(false);
                         StartCountdown();
+                        // game starts
                     }
                     else
                     {
@@ -145,6 +218,7 @@ namespace SimonSays.Views
                 aiTrainingThread.IsBackground = true;
                 aiTrainingThread.Start();
             }
+            // Setup Naive Bayes
             else if (mAIType == AISystemEnum.NaiveBayes)
             {
                 if (mTDManager.getNumberOfDataRows() > 0)
@@ -156,6 +230,7 @@ namespace SimonSays.Views
                     restartGame();
                     blockUI(false);
                     StartCountdown();
+                    // Game starts
                 }
                 else
                 {
@@ -214,7 +289,7 @@ namespace SimonSays.Views
         private void setStarRating(double score)
         {
             String imageName = "";
-            if (mCurrentAI == AISystemEnum.NN)
+            if (mAIType == AISystemEnum.NN)
             {
                 if (score != -1)
                 {
@@ -252,7 +327,8 @@ namespace SimonSays.Views
                     subtractLife();
                 }
             }
-            else if (mCurrentAI == AISystemEnum.NaiveBayes)
+            // Tick or Cross for NB
+            else if (mAIType == AISystemEnum.NaiveBayes)
             {
                 if (score != -1)
                 {
@@ -298,7 +374,7 @@ namespace SimonSays.Views
             if (mLives == 0)
             {
                 var window = new GameOver(mScoreTotal);
-                _timer.Stop();
+                mRoundTimer.Stop();
                 window.Show();
                 this.Close();
             }
@@ -347,10 +423,10 @@ namespace SimonSays.Views
         /// </summary>
         private void StartCountdown()
         {
-            _time = TimeSpan.FromSeconds(mCountdownSeconds);
-            _timer.Tick += new EventHandler(dispatcherTimer_Tick);
-            _timer.Interval = new TimeSpan(0, 0, 1);
-            _timer.Start();
+            mRoundTimeSpan = TimeSpan.FromSeconds(mCountdownSeconds);
+            mRoundTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            mRoundTimer.Interval = new TimeSpan(0, 0, 1);
+            mRoundTimer.Start();
         }
 
         /// <summary>
@@ -358,8 +434,8 @@ namespace SimonSays.Views
         /// </summary>
         private void restartCountDown()
         {
-            _time = TimeSpan.FromSeconds(mCountdownSeconds);
-            _timer.Start();
+            mRoundTimeSpan = TimeSpan.FromSeconds(mCountdownSeconds);
+            mRoundTimer.Start();
         }
 
         /// <summary>
@@ -369,18 +445,18 @@ namespace SimonSays.Views
         /// <param name="e"></param>
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            lblSeconds.Content = _time.ToString("ss");
+            lblSeconds.Content = mRoundTimeSpan.ToString("ss");
 
-            if (_time == TimeSpan.Zero)
+            if (mRoundTimeSpan == TimeSpan.Zero)
             {
-                _timer.Stop();
+                mRoundTimer.Stop();
                 subtractLife();
                 updateLivesUI();
                 restartCountDown();
                 mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
                 Dispatcher.BeginInvoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
             }
-            _time = _time.Add(TimeSpan.FromSeconds(-1));
+            mRoundTimeSpan = mRoundTimeSpan.Add(TimeSpan.FromSeconds(-1));
         }
 
         /// <summary>
@@ -392,7 +468,7 @@ namespace SimonSays.Views
             mNoneSimonTimer = new System.Timers.Timer();
             mNoneSimonTimer.AutoReset = false;
             mNoneSimonTimer.Interval = mNoneSimonWaitPeriod;
-            mNoneSimonTimer.Elapsed += onTimerExpired;
+            mNoneSimonTimer.Elapsed += onNonSimonTimerExpired;
             mNoneSimonTimer.Start();
         }
 
@@ -401,12 +477,12 @@ namespace SimonSays.Views
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
-        private void onTimerExpired(Object source, System.Timers.ElapsedEventArgs e)
+        private void onNonSimonTimerExpired(Object source, System.Timers.ElapsedEventArgs e)
         {
             mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
             Dispatcher.BeginInvoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
             Dispatcher.BeginInvoke(new Action(() => restartCountDown()));
-            System.Diagnostics.Debug.WriteLine("\n---Player passed None Simon says round\n");
+            System.Diagnostics.Debug.WriteLine("\n---Player passed Non-Simon Says round\n");
         }
 
         /// <summary>
@@ -434,7 +510,7 @@ namespace SimonSays.Views
         }
 
         /// <summary>
-        /// Tests if the players gesture matches
+        /// Tests if the player's current gesture in a background thread
         /// </summary>
         /// <param name="currentPlayerSkel"></param>
         private void testPlayerGesture(Skeleton currentPlayerSkel)
@@ -474,8 +550,7 @@ namespace SimonSays.Views
             String gestureMatched = mTDManager.getGestureName(aiGuess.getGuessId());
             if (gestureMatched.Equals(mTargetGesture) && aiGuess.getGuessValue() > 0.7)
             {
-                //get next target gesture
-                // display new target gesture
+                // Thread safe UI calls
                 Dispatcher.BeginInvoke(new Action(() => updateScoreUI((mSimonAsked) ? aiGuess.getGuessValue() : -1)));
                 mTargetGesture = mTDManager.getRandomGesture(mTargetGesture);
                 Dispatcher.BeginInvoke(new Action(() => setSimonSaysCommand(mTargetGesture)));
@@ -497,10 +572,9 @@ namespace SimonSays.Views
         {
             // Update UI here
             String gestureMatched = mTDManager.getGestureName(aiGuess.getGuessId());
-            if (gestureMatched.Equals(mTargetGesture))// && aiGuess.getGuessValue() > 0.7)
+            if (gestureMatched.Equals(mTargetGesture))
             {
-                //get next target gesture
-                // display new target gesture
+                // Thread safe UI calls
                 if (mNoneSimonTimer != null)
                     mNoneSimonTimer.Dispose();
                 Dispatcher.BeginInvoke(new Action(() => updateScoreUI((mSimonAsked) ? aiGuess.getGuessValue() : -1)));
@@ -514,47 +588,7 @@ namespace SimonSays.Views
                 System.Diagnostics.Debug.WriteLine("\n%%% Wrong gesture\n");
             }
             mAIBusy = false;
-        }
-
-        /// <summary>
-        /// Draws indicators to show which edges are clipping skeleton data
-        /// </summary>
-        /// <param name="skeleton">skeleton to draw clipping information for</param>
-        /// <param name="drawingContext">drawing context to draw to</param>
-        private static void RenderClippedEdges(Skeleton skeleton, DrawingContext drawingContext)
-        {
-            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Bottom))
-            {
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(0, RenderHeight - ClipBoundsThickness, RenderWidth, ClipBoundsThickness));
-            }
-
-            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Top))
-            {
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(0, 0, RenderWidth, ClipBoundsThickness));
-            }
-
-            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Left))
-            {
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(0, 0, ClipBoundsThickness, RenderHeight));
-            }
-
-            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Right))
-            {
-                drawingContext.DrawRectangle(
-                    Brushes.Red,
-                    null,
-                    new Rect(RenderWidth - ClipBoundsThickness, 0, ClipBoundsThickness, RenderHeight));
-            }
-        }
+        }        
 
         /// <summary>
         /// Execute startup tasks
@@ -575,7 +609,6 @@ namespace SimonSays.Views
             // Look through all sensors and start the first connected one.
             // This requires that a Kinect is connected at the time of app startup.
             // To make your app robust against plug/unplug, 
-            // it is recommended to use KinectSensorChooser provided in Microsoft.Kinect.Toolkit (See components in Toolkit Browser).
             foreach (var potentialSensor in KinectSensor.KinectSensors)
             {
                 if (potentialSensor.Status == KinectStatus.Connected)
@@ -626,7 +659,8 @@ namespace SimonSays.Views
         }
 
         /// <summary>
-        /// Event handler for Kinect sensor's SkeletonFrameReady event
+        /// Event handler for Kinect sensor's SkeletonFrameReady event.
+        /// Calls AI system, sending the player's current skeletal data at set intervals.
         /// </summary>
         /// <param name="sender">object sending the event</param>
         /// <param name="e">event arguments</param>
@@ -657,8 +691,10 @@ namespace SimonSays.Views
                         if (skel.TrackingState == SkeletonTrackingState.Tracked)
                         {
                             this.DrawBonesAndJoints(skel, dc);
+                            // Should run roughly every 1.5s
                             if (mTickCounter % 45 == 0)
                             {
+                                // If AI setup and not busy, attempt to classify the player's current gesture
                                 if (mAIReady && !mAIBusy)
                                 {
                                     mAIBusy = true;
@@ -683,6 +719,46 @@ namespace SimonSays.Views
 
                 // prevent drawing outside of our render area
                 this.drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, RenderWidth, RenderHeight));
+            }
+        }
+
+        /// <summary>
+        /// Draws indicators to show which edges are clipping skeleton data
+        /// </summary>
+        /// <param name="skeleton">skeleton to draw clipping information for</param>
+        /// <param name="drawingContext">drawing context to draw to</param>
+        private static void RenderClippedEdges(Skeleton skeleton, DrawingContext drawingContext)
+        {
+            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Bottom))
+            {
+                drawingContext.DrawRectangle(
+                    Brushes.Red,
+                    null,
+                    new Rect(0, RenderHeight - ClipBoundsThickness, RenderWidth, ClipBoundsThickness));
+            }
+
+            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Top))
+            {
+                drawingContext.DrawRectangle(
+                    Brushes.Red,
+                    null,
+                    new Rect(0, 0, RenderWidth, ClipBoundsThickness));
+            }
+
+            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Left))
+            {
+                drawingContext.DrawRectangle(
+                    Brushes.Red,
+                    null,
+                    new Rect(0, 0, ClipBoundsThickness, RenderHeight));
+            }
+
+            if (skeleton.ClippedEdges.HasFlag(FrameEdges.Right))
+            {
+                drawingContext.DrawRectangle(
+                    Brushes.Red,
+                    null,
+                    new Rect(RenderWidth - ClipBoundsThickness, 0, ClipBoundsThickness, RenderHeight));
             }
         }
 
@@ -797,7 +873,7 @@ namespace SimonSays.Views
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
             var window = new MainWindow();
-            _timer.Stop();
+            mRoundTimer.Stop();
             if (mNoneSimonTimer != null)
             {
                 mNoneSimonTimer.Stop();

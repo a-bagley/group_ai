@@ -7,6 +7,10 @@ namespace SimonSays.Views
     /// </summary>
     public partial class GameOver : Window
     {
+        /// <summary>
+        /// Construct Game Over window
+        /// </summary>
+        /// <param name="score"></param>
         public GameOver(int score)
         {
             InitializeComponent();

@@ -14,10 +14,24 @@ namespace SimonSays.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        private AISystemEnum aiTechniqueEnum;
+        /// <summary>
+        /// AI system to use
+        /// </summary>
+        private AISystemEnum aiSystem;
+
+        /// <summary>
+        /// Kinect sensor object
+        /// </summary>
         private KinectSensor sensor;
+
+        /// <summary>
+        /// Kinect speech recognition engine
+        /// </summary>
         private SpeechRecognitionEngine speechRecognizer;
 
+        /// <summary>
+        /// Construct Main menu window
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -40,7 +54,7 @@ namespace SimonSays.Views
         private void EasyClickFunctionality() 
         {
             killKinect();
-            var window = new GameWindow(aiTechniqueEnum, DifficultyEnum.Easy);
+            var window = new GameWindow(aiSystem, DifficultyEnum.Easy);
             window.Show();
             this.Close();
         }
@@ -62,7 +76,7 @@ namespace SimonSays.Views
         
         {
             killKinect();
-            var window = new GameWindow(aiTechniqueEnum, DifficultyEnum.Medium);
+            var window = new GameWindow(aiSystem, DifficultyEnum.Medium);
             window.Show();
             this.Close();
         }
@@ -83,7 +97,7 @@ namespace SimonSays.Views
         private void HardClickFunctionality()
         {
             killKinect();
-            var window = new GameWindow(aiTechniqueEnum, DifficultyEnum.Hard);
+            var window = new GameWindow(aiSystem, DifficultyEnum.Hard);
             window.Show();
             this.Close();
         }
@@ -110,7 +124,7 @@ namespace SimonSays.Views
         }
 
         /// <summary>
-        /// Radio button
+        /// Toggle AI system to use
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -118,11 +132,11 @@ namespace SimonSays.Views
         {
             if (this.rbANN.IsChecked == true)
             {
-                aiTechniqueEnum = AISystemEnum.NN;
+                aiSystem = AISystemEnum.NN;
             } 
             else if (this.rbNB.IsChecked == true) 
             {
-                aiTechniqueEnum = AISystemEnum.NaiveBayes;
+                aiSystem = AISystemEnum.NaiveBayes;
             }
         }
 
@@ -201,15 +215,13 @@ namespace SimonSays.Views
             var g = new Grammar(gb);
             sre.LoadGrammar(g);
 
-            // set events for recogizing, hypothesising and rejecting speech
+            // set events for recogizing and rejecting speech
             sre.SpeechRecognized += SreSpeechRecognised;
-            //sre.SpeechHypothesized += SreSpeechHypothesized;
             sre.SpeechRecognitionRejected += SreSpeechRecognitionRejected;
             return sre;
 
         }
 
-        // if speech is rejected
         private void RejectSpeech(RecognitionResult result)
         {
             System.Diagnostics.Debug.WriteLine("Sorry Simon didn't quite understand that");

@@ -5,24 +5,39 @@ namespace SimonSays.NeuralNetwork
     class MultilayerPerceptron
     {
         /// <summary>
-        /// Neural network
+        /// Neural network object
         /// </summary>
         private NeuralNetwork neuralNetwork;
 
+        /// <summary>
+        /// List of nodes for each layer
+        /// </summary>
         private int[] nodeList;
 
+        /// <summary>
+        /// Number of inputs
+        /// </summary>
         private int nInputs;
 
+        /// <summary>
+        /// number of outputs
+        /// </summary>
         private int nOutputs;
 
+        /// <summary>
+        /// Learning rate
+        /// </summary>
         private double learningRate;
 
+        /// <summary>
+        /// Momentum factor
+        /// </summary>
         private double momentum;
 
         /// <summary>
-        /// 
+        /// Construct an MLP
         /// </summary>
-        /// <param name="nodeList"></param>
+        /// <param name="nodeList">List of layers and associated neurons</param>
         /// <param name="learningRate"></param>
         /// <param name="momentum"></param>
         public MultilayerPerceptron(int[] nodeList, double learningRate, double momentum)
@@ -50,11 +65,12 @@ namespace SimonSays.NeuralNetwork
             int setMarker = 0;
 
             System.Diagnostics.Debug.WriteLine("************Pre training*******************");
-            int c = 0;
-            while ((error > 0.001) && (c<50000)) // error 0.0001, 0.001
+            // Ensure training will end by tracking cycles
+            int maxCycles = 0;
+            while ((error > 0.001) && (maxCycles<50000)) // 0.001 is the optimal error rate
             {
                 error = 0;
-                c++;
+                maxCycles++;
                 for (i = 0; i < nTrainingSets; i++)
                 {
                     for (j = 0; j < nInputs; j++)
@@ -103,6 +119,11 @@ namespace SimonSays.NeuralNetwork
             return new Guess(resultId, resultValue);
         }
 
+        /// <summary>
+        /// Test the MLP with the traing data to see how
+        /// well it has been learned
+        /// </summary>
+        /// <param name="trainingData"></param>
         public void testMLP(double[,] trainingData)
         {
             int totalCorrect = 0;

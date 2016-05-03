@@ -10,24 +10,54 @@ namespace SimonSays
 {
     class TrainingDataManager
     {
+        /// <summary>
+        /// Number of gestures in use
+        /// </summary>
         private int mNumberOfGestures;
 
+        /// <summary>
+        /// LIst of gesture names
+        /// </summary>
         private List<String> mGestureNameList = new List<String>();
 
-        private List<SkeletonDataRow> mCurrentTrainingDataList = new List<SkeletonDataRow>();
+        /// <summary>
+        /// Current skeletal data list
+        /// </summary>
+        private List<SkeletonDataRow> mCurrentSkeletalDataList = new List<SkeletonDataRow>();
 
+        /// <summary>
+        /// Skeletal data dictionary
+        /// </summary>
         private Dictionary<String, List<SkeletonDataRow>> mRawDataDictionary;
 
+        /// <summary>
+        /// Text Writer for writing to files
+        /// </summary>
         private TextWriter mTextWriter;
 
+        /// <summary>
+        /// Text Reader for reading files
+        /// </summary>
         private TextReader mTextReader;
 
+        /// <summary>
+        /// Used to write to CSV files
+        /// </summary>
         private CsvHelper.CsvWriter mCsvWriter;
 
+        /// <summary>
+        /// Used to read CSV files
+        /// </summary>
         private CsvHelper.CsvReader mCsvReader;
 
+        /// <summary>
+        /// Data save location
+        /// </summary>
         private readonly String RAW_DATA_PATH = @"C:\simon_training_data\";
 
+        /// <summary>
+        /// Total number of training data rows
+        /// </summary>
         private int mNumberOfDataRows = 0;
 
         public TrainingDataManager()
@@ -35,6 +65,9 @@ namespace SimonSays
 
         }
 
+        /// <summary>
+        /// Prepare for training
+        /// </summary>
         public void initForTraining()
         {
             if (!Directory.Exists(RAW_DATA_PATH))
@@ -44,6 +77,9 @@ namespace SimonSays
             loadTrainingDataInfo();
         }
 
+        /// <summary>
+        /// Prepare for playing
+        /// </summary>
         public void initForPlaying()
         {
             if (!Directory.Exists(RAW_DATA_PATH))
@@ -54,6 +90,9 @@ namespace SimonSays
             loadRawDataFiles();
         }
 
+        /// <summary>
+        /// Load existing gesture names from disk
+        /// </summary>
         public void loadTrainingDataInfo()
         {
             mGestureNameList.Clear();
@@ -65,12 +104,14 @@ namespace SimonSays
             mNumberOfGestures = mGestureNameList.Count;
         }
 
+        /// <summary>
+        /// Load skeletal training data fiels from disk
+        /// </summary>
         private void loadRawDataFiles()
         {
             String[] files = Directory.GetFiles(RAW_DATA_PATH);
             mNumberOfDataRows = 0;
             mRawDataDictionary = new Dictionary<String, List<SkeletonDataRow>>();
-
 
             foreach (String file in files)
             {
@@ -87,10 +128,16 @@ namespace SimonSays
             }
             else
             {
-                MessageBox.Show("No CSV Files detected");
+                // Show warning
+                MessageBox.Show("No trainig data detected, please use the training window to create some.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
+        /// <summary>
+        /// Extract name from file name
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         private String getFileNameFromPath(String filePath)
         {
             String name = Path.GetFileName(filePath);
@@ -100,27 +147,41 @@ namespace SimonSays
             return name;
         }
 
+        /// <summary>
+        /// Setup CSV writing for new skeletal training data
+        /// </summary>
+        /// <param name="gestureName"></param>
         public void startAddNewTrainingSet(String gestureName)
         {
             String gestureFileName = RAW_DATA_PATH + gestureName + ".csv";
             mTextWriter = File.CreateText(gestureFileName);
             mCsvWriter = new CsvHelper.CsvWriter(mTextWriter);
-            mCurrentTrainingDataList = new List<SkeletonDataRow>();
+            mCurrentSkeletalDataList = new List<SkeletonDataRow>();
         }
 
+        /// <summary>
+        /// Finish saving new skeletal training data
+        /// </summary>
         public void finishAddNewTrainingSet()
         {
-            mCsvWriter.WriteRecords(mCurrentTrainingDataList);
+            mCsvWriter.WriteRecords(mCurrentSkeletalDataList);
             mTextWriter.Close();
-            //mCurrentTrainingDataList.Clear();
         }
 
+        /// <summary>
+        /// Add skeletal training data row to current CSV file
+        /// </summary>
+        /// <param name="skel"></param>
         public void saveRawSkeletalSet(Skeleton skel)
         {
             SkeletonDataRow row = createSkeletalDataRow(skel);
-            mCurrentTrainingDataList.Add(row);
+            mCurrentSkeletalDataList.Add(row);
         }
 
+        /// <summary>
+        /// Get the list of gestures
+        /// </summary>
+        /// <returns></returns>
         public List<String> getGestureList()
         {
             return mGestureNameList;
@@ -146,6 +207,13 @@ namespace SimonSays
             mGestureNameList.Add(gesture);
         }
 
+        /// <summary>
+        /// Get a random gesture.
+        /// Fake random to ensure the same gesture does
+        /// not appear back-to-back
+        /// </summary>
+        /// <param name="lastGesture"></param>
+        /// <returns></returns>
         public String getRandomGesture(String lastGesture)
         {
             Random rand = new Random();
@@ -157,6 +225,12 @@ namespace SimonSays
             return nextGesture;
         }
 
+        /// <summary>
+        /// Convert Kinect skeleton object to custom
+        /// SkeletonDataRown object
+        /// </summary>
+        /// <param name="skel"></param>
+        /// <returns>Current player position in X and Y coordinates</returns>
         public SkeletonDataRow createSkeletalDataRow(Skeleton skel)
         {
             SkeletonDataRow trainingDataRow = new SkeletonDataRow();

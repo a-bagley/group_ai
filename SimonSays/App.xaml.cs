@@ -4,7 +4,7 @@ using System.Windows;
 namespace SimonSays
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// Starting point of application
     /// </summary>
     public partial class App : Application
     {

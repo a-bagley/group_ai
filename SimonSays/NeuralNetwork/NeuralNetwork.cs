@@ -1,7 +1,5 @@
 ﻿using System;
 
-// Number of hidden neurons is roughly equal to the square root of the product of the number of inputs and outputs
-// Test 
 namespace SimonSays.NeuralNetwork
 {
     class NeuralNetwork
@@ -51,6 +49,7 @@ namespace SimonSays.NeuralNetwork
             this.nHiddenLayers = nAllLayers - 2;
 	        this.allLayers = new NeuronLayer[nAllLayers];
 	
+            // Create ANN layers with different numbers of nodes
 	        for (int i = 0; i < nAllLayers; i++) 
 	        {
 		        if (i == 0)
@@ -62,30 +61,24 @@ namespace SimonSays.NeuralNetwork
 		        else
                     allLayers[i] = outputLayer = new NeuronLayer(nodeList[i], 0, allLayers[i - 1].getNumberNodes(), fLearningRate, fMomentum);
 	        }
-
-
-	
+            // Link neuron layers together
 	        inputLayer.linkNeurons(null, allLayers[1]);
 	        for (int i = 1; i < nAllLayers - 1; i++)
 		        allLayers[i].linkNeurons(allLayers[i - 1], allLayers[i + 1]);
 	        outputLayer.linkNeurons(allLayers[nHiddenLayers], null);
-	
-	        //Todo move this to init/constructor of NeuronLayer
-	        //for (int i = 0; i < nAllLayers; i++)
-		    //    allLayers[i].RandomizeWeights();
-            ///Done?
-	
+            // Display ANN structure
 	        for (int i = 0; i < nAllLayers; i++)
 		        System.Diagnostics.Debug.WriteLine(allLayers[i].toString());
         }
 
         /// <summary>
-        /// 
+        /// Set the input value of an inout node
         /// </summary>
-        /// <param name="i"></param>
-        /// <param name="value"></param>
+        /// <param name="i">node to set</param>
+        /// <param name="value">value to set</param>
         public void setInput(int i, double val)
         {
+            // Ensure desired node is accessible
             if ((i >= 0) && (i < inputLayer.getNumberNodes()))
             {
                 inputLayer.setNeuronValue(i, val);
@@ -93,12 +86,13 @@ namespace SimonSays.NeuralNetwork
         }
 
         /// <summary>
-        /// 
+        /// Get the value of a specific output node
         /// </summary>
         /// <param name="i"></param>
         /// <returns></returns>
         public double getOutput(int i)
         {
+            // Ensure desired node is accessible
             if ((i >= 0) && (i < outputLayer.getNumberNodes()))
             {
                 return outputLayer.getNeuronValue(i);
@@ -108,7 +102,7 @@ namespace SimonSays.NeuralNetwork
         }
 
         /// <summary>
-        /// 
+        /// Set the desired value of a specific output node
         /// </summary>
         /// <param name="i"></param>
         /// <param name="value"></param>
@@ -121,7 +115,7 @@ namespace SimonSays.NeuralNetwork
         }
 
         /// <summary>
-        /// 
+        /// Process inputs through the ANN
         /// </summary>
         public void feedForward()
         {
@@ -132,7 +126,7 @@ namespace SimonSays.NeuralNetwork
         }
 
         /// <summary>
-        /// 
+        /// Teach the ANN using back propogation algorithm
         /// </summary>
         public void backPropagate()
         {
@@ -144,9 +138,9 @@ namespace SimonSays.NeuralNetwork
         }
 
         /// <summary>
-        /// 
+        /// Get the ID of the highest node output (confidence)
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The guessed classification node ID</returns>
         public int getMaxOutputID()
         {
             int i, id;
@@ -168,9 +162,9 @@ namespace SimonSays.NeuralNetwork
         }
 
         /// <summary>
-        /// 
+        /// Calculate the errors from the desired values
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Error rate</returns>
         public double calculateError()
         {
             int i;
@@ -187,12 +181,10 @@ namespace SimonSays.NeuralNetwork
         }
 
         /// <summary>
-        /// 
+        /// Print information about the ANN
         /// </summary>
         public void PrintInfo()
         {
-            // Test this properly
-            System.Diagnostics.Debug.WriteLine("If this is junk, come back soon...");
             int i, j;
 
             for (i = 0; i < nAllLayers; i++)
