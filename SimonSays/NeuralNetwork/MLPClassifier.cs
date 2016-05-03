@@ -8,46 +8,66 @@ namespace SimonSays.NeuralNetwork
     {
         private MultilayerPerceptron mMLP;
         
+        /// <summary>
+        /// Learning rate value
+        /// </summary>
         private double mLearningRate;
 
+        /// <summary>
+        /// Momentum value
+        /// </summary>
         private double mMomentum;
 
         /// <summary>
         /// Number of desired inputs to MLP.
+        /// This should match the numebr of Skeletal distances used.
         /// </summary>
-        private readonly int NUMBER_OF_INPUTS = 12; //9
+        private readonly int NUMBER_OF_INPUTS = 12;
 
         public MLPClassifier(double learningRate, double momentum)
         {
             mLearningRate = learningRate;
             mMomentum = momentum;
-            //mMLP = new MultilayerPerceptron(nodeList, learningRate, momentum);
         }
 
+        /// <summary>
+        /// Train the ANN classifier
+        /// </summary>
+        /// <param name="sdp"></param>
         public void trainAI(RawSkeletalDataPackage sdp)
         {
-            //square root of the product of the number of inputs and outputs
-            //int n = (int)Math.Sqrt(9 * sdp.getTotalGestures());
-            int n = 2; // 1 or 2 works
+            // 2 hidden layers is optimal
+            int n = 2;
             // add input and output
             n += 2;
             int[] nodeSet = new int[n];
             nodeSet[0] = NUMBER_OF_INPUTS;
             for (int i = 1; i < nodeSet.Length - 1; i++)
             {
-                nodeSet[i] = NUMBER_OF_INPUTS; //3
+                nodeSet[i] = NUMBER_OF_INPUTS;
             }
             nodeSet[nodeSet.Length - 1] = sdp.getTotalGestures();
             mMLP = new MultilayerPerceptron(nodeSet, mLearningRate, mMomentum);          
             mMLP.trainMLP(createMLPTrainingData(sdp));
         }
 
+        /// <summary>
+        /// Get the classification guess off the ANN
+        /// from a set of skeletal inputs
+        /// </summary>
+        /// <param name="skelDataRow"></param>
+        /// <returns>Classification Guess</returns>
         public Guess makeGuess(SkeletonDataRow skelDataRow)
         {
             double[] values = calculateDistances(skelDataRow);
             return mMLP.GenerateMLPResult(values);
         }
 
+        /// <summary>
+        /// Create ANN training data from skeletal coordinate data
+        /// </summary>
+        /// <param name="sdp"></param>
+        /// <returns>2D traing data array</returns>
         private double[,] createMLPTrainingData(RawSkeletalDataPackage sdp)
         {
             double[,] tData = new double[sdp.getTotalDataRows(), NUMBER_OF_INPUTS + sdp.getTotalGestures()];
@@ -63,14 +83,16 @@ namespace SimonSays.NeuralNetwork
             Dictionary<String, List<SkeletonDataRow>> skelDataDic = sdp.getSkeletalDataDic();
             int columnIndex = 0, rowIndex, fileIndex = 0;
 
+            // For gesture
             foreach (String key in skelDataDic.Keys)
             {
+                // For data row of gesture
                 foreach (SkeletonDataRow row in skelDataDic[key])
                 {
-                    // Add method here to return double[] containg the distances we want from
-                    // the training data row values.
+                    // Get input disatnces for this data row
                     double[] values = calculateDistances(row);
 
+                    // Copy singular training data to row in full 2D traing data array
                     for (rowIndex = 0; rowIndex < values.Length; rowIndex++)
                     {
                         tData[columnIndex,rowIndex] = values[rowIndex];
@@ -85,6 +107,11 @@ namespace SimonSays.NeuralNetwork
             return tData;
         }
 
+        /// <summary>
+        /// Convert skeletal data to 12 useful distances
+        /// </summary>
+        /// <param name="dRow"></param>
+        /// <returns>Array of body-part distances</returns>
         private double[] calculateDistances(SkeletonDataRow dRow)
         {
             DistanceCalculator dCalc = new DistanceCalculator(dRow);
@@ -110,6 +137,11 @@ namespace SimonSays.NeuralNetwork
             return newTrainingDataRow;
         }
 
+        /// <summary>
+        /// Normalise value to between 0 and 1
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns>Normalised value</returns>
         private double normaliseData(double val)
         {
             return val / 2;

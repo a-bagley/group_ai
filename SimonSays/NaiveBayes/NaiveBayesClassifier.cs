@@ -11,12 +11,22 @@ namespace SimonSays.NaiveBayes
     class NaiveBayesClassifier : Classifier
     {
 
+        /// <summary>
+        /// Naive Byaes algorithm engine
+        /// </summary>
         private NaiveBayesEngine mNB;
 
+        /// <summary>
+        /// Number of attributes that describe the data set
+        /// </summary>
         private readonly int NUMBER_OF_ATTRIBUTES = 12;
 
+        /// <summary>
+        /// List of gesture names
+        /// </summary>
         private List<String> mGestureNameList;
 
+        // Descriptors for length
         private static readonly String VERY_SHORT = "v_short";
         private static readonly String SHORT = "short";
         private static readonly String MEDIUM = "medium";
@@ -29,6 +39,10 @@ namespace SimonSays.NaiveBayes
 
         }
 
+        /// <summary>
+        /// Create Naive Byaes engine and populate with appropriate training data
+        /// </summary>
+        /// <param name="sdp"></param>
         public void trainAI(RawSkeletalDataPackage sdp)
         {
             mGestureNameList = sdp.getGestureNameList();
@@ -40,6 +54,11 @@ namespace SimonSays.NaiveBayes
 #endif
         }
 
+        /// <summary>
+        /// Get a probabilistic classification guess from skeletal data
+        /// </summary>
+        /// <param name="skelDataRow"></param>
+        /// <returns>Classification guess</returns>
         public Guess makeGuess(SkeletonDataRow skelDataRow)
         {
             double[] values = calculateDistances(skelDataRow);
@@ -48,12 +67,17 @@ namespace SimonSays.NaiveBayes
 
             for (int i = 0; i < mNB.mNumberOfCategories; i++)
             {
+                // Compute probability of each category (class)
                 results[i] = mNB.ClassifyFromDic(lengths, mGestureNameList.ElementAt(i));
             }
-
             return getBestGuess(results);
         }
 
+        /// <summary>
+        /// Find the most probable category based on probability
+        /// </summary>
+        /// <param name="results"></param>
+        /// <returns>Probabilistic Guess</returns>
         private Guess getBestGuess(double[] results)
         {
             double max = -1000.0;
@@ -69,24 +93,37 @@ namespace SimonSays.NaiveBayes
             return new Guess(max_position, max);
         }
 
+        /// <summary>
+        /// Create appropriate traingin data for the Naive Bayes engine, from skeletal training data.
+        /// </summary>
+        /// <param name="sdp"></param>
+        /// <returns>NB Training data Dictionary</returns>
         private Dictionary<String, List<List<String>>> createNaiveBayesData(RawSkeletalDataPackage sdp)
         {
             Dictionary<String, List<SkeletonDataRow>> skelDataDic = sdp.getSkeletalDataDic();
             Dictionary<String, List<List<String>>> nbTrainingDic = new Dictionary<String, List<List<String>>>();
             foreach (String key in skelDataDic.Keys)
             {
+                // For each gesture
                 List<List<String>> categoryTrainingData = new List<List<String>>();
                 foreach (SkeletonDataRow row in skelDataDic[key])
                 {
+                    // get distances
                     double[] values = calculateDistances(row);
                     List<String> inputs = new List<String>(convertDistancesToLengths(values));
                     categoryTrainingData.Add(inputs);
                 }
+                // Add to new training data Dictionary
                 nbTrainingDic.Add(key, categoryTrainingData);
             }
             return nbTrainingDic;
         }
 
+        /// <summary>
+        /// Calculate useful distances from skeletal coordinates
+        /// </summary>
+        /// <param name="dRow"></param>
+        /// <returns>NB training data row</returns>
         private double[] calculateDistances(SkeletonDataRow dRow)
         {
             DistanceCalculator dCalc = new DistanceCalculator(dRow);
@@ -111,6 +148,11 @@ namespace SimonSays.NaiveBayes
             return newTrainingDataRow;
         }
 
+        /// <summary>
+        /// Normalise value to between 0 and 1
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns>Normalised value</returns>
         private double normaliseData(double val)
         {
             return val / 2;
@@ -118,7 +160,7 @@ namespace SimonSays.NaiveBayes
 
         /// <summary>
         /// Convert an array of numerical distances to
-        /// and array of size strings.
+        /// and array of descriptive length Strings.
         /// </summary>
         /// <param name="distances"></param>
         /// <returns></returns>
@@ -134,7 +176,7 @@ namespace SimonSays.NaiveBayes
         }
 
         /// <summary>
-        /// Convert numerical distances to named sizes.
+        /// Convert numerical distances to a descriptive length.
         /// </summary>
         /// <param name="distance">
         /// Numerical distance
@@ -154,6 +196,11 @@ namespace SimonSays.NaiveBayes
                 return VERY_LONG;
         }
 
+        /// <summary>
+        /// Feed Testing data back into Naive Bayes engine and
+        /// test classification accuracy
+        /// </summary>
+        /// <param name="testData"></param>
         private void testNB(Dictionary<String, List<List<String>>> testData)
         {
             int testTotal = 0;
@@ -171,10 +218,10 @@ namespace SimonSays.NaiveBayes
                         results[i] = mNB.ClassifyFromDic(testLengths, mGestureNameList.ElementAt(i));
                     }
                     Guess g = getBestGuess(results);
-                        if (g.getGuessId() == keyIndex)
-                            totalCorrect++;
-                        else
-                            totalIncorrect++;
+                    if (g.getGuessId() == keyIndex)
+                        totalCorrect++;
+                    else
+                        totalIncorrect++;
                     testTotal++;
                 }
                 keyIndex++;
